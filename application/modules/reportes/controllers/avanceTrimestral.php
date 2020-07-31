@@ -228,14 +228,11 @@ class avanceTrimestral extends MX_Controller
             ),
         );
 
-        /* $objDrawing = new PHPExcel_Worksheet_Drawing();
-        $objDrawing->setName('Logo');
-        $objDrawing->setDescription('Logo');
-        $objDrawing->setPath(base_url('/images/logo1-TEDF.png'));
-        $objDrawing->setHeight(45);
-        $objDrawing->setOffsetX(30);
-        $objDrawing->setOffsetY(12);
-        $objDrawing->setWorksheet($this->excel->getActiveSheet()); */
+		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing->setName('Logo');
+		$drawing->setDescription('Logo');
+		$drawing->setPath('./images/officelogo.jpg');
+		$drawing->setHeight(36);
 
         $sheet->getStyle("B1")->getFont()->setBold(true);
         $sheet->getStyle("B2")->getFont()->setBold(true);
