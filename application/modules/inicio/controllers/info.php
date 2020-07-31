@@ -273,7 +273,7 @@ class info extends MX_Controller
             } else {
                 $porcentajes = $this->info_model->getTipoUnidad($this->input->post('unidad'));
                 $registro = $this->info_model->getExistResueltos($meta);
-                if($registro && $porcentajes->porcentajes == '1'){
+                if(!$registro && $porcentajes->porcentajes == '1'){
                     for($i = 1; $i <= 12; $i++){
                         $datos = array(
                             'meta_id' => $meta,
@@ -326,6 +326,7 @@ class info extends MX_Controller
                     'proyecto_id'       => $this->input->post('proyecto'),
                     'unidad_medida_id'  => $this->input->post('unidad'),
                     'tipo'              => 'complementaria',
+                    'orden'				=> '0',
                     'nombre'            => $this->input->post('nombre'),
                     'peso'              => $this->input->post('peso')
                 );
@@ -338,14 +339,14 @@ class info extends MX_Controller
                             'numero'    => '1'
                         );
                         $datos1 = array(
-                            'meta_id'   => $meta_id,
-                            'mes_id'    => $i,
-                            'numero'    => '0'
+                            'meta_id'   	=> $meta_id,
+                            'mes_id'    	=> $i,
+                            'numero'    	=> '0',
+							'explicacion' 	=> ''
                         );
                         $this->general->insertaBase('meses_metas_programadas', $datos);
                         $this->general->insertaBase('meses_metas_alcanzadas', $datos1);
                     }
-                    // if($this->input->post('unidad') == '1047'){
                     $porcentajes = $this->info_model->getTipoUnidad($this->input->post('unidad'));
                     if($porcentajes->porcentajes == '1'){
                         for($i = 1; $i<=12; $i++){
