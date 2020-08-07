@@ -30,6 +30,9 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/hover.css'); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/bootstrap-select.css'); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/select2.min.css'); ?>">
+    <!-- Bootstrap core JavaScript-->
+    <script src="<?php echo base_url("vendor/jquery/jquery.min.js"); ?>"></script>
+    <script src="<?php echo base_url("vendor/bootstrap/js/bootstrap.bundle.min.js"); ?>"></script>
 </head>
 
 <body id="page-top">
@@ -61,9 +64,6 @@
     </a>
     <!-- Logout Modal-->
     <?php if (isset($salir)) echo $salir; ?>
-    <!-- Bootstrap core JavaScript-->
-    <script src="<?php echo base_url("vendor/jquery/jquery.min.js"); ?>"></script>
-    <script src="<?php echo base_url("vendor/bootstrap/js/bootstrap.bundle.min.js"); ?>"></script>
     <!-- Core plugin JavaScript-->
     <script src="<?php echo base_url("vendor/jquery-easing/jquery.easing.min.js"); ?>"></script>
     <!-- Core plugin JavaScript-->
