@@ -26,10 +26,10 @@
     <link  href="<?php echo base_url("css/jquery.fancybox.css"); ?>" rel="stylesheet">
     <link  href="<?php echo base_url("css/bootstrap-switch.css"); ?>" rel="stylesheet">
     <link  href="<?php echo base_url("css/sweetalert2.css"); ?>" rel="stylesheet">
-    <!--<link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/material-kit.css'; ?>">-->
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/hover.css'; ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/bootstrap-select.css'; ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/select2.min.css'; ?>">
+    <!--<link rel="stylesheet" type="text/css" href="<?php echo base_url('css/material-kit.css'); ?>">-->
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/hover.css'); ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/bootstrap-select.css'); ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/select2.min.css'); ?>">
 </head>
 
 <body id="page-top">

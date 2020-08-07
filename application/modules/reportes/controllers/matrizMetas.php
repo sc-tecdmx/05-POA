@@ -3,7 +3,11 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 class matrizMetas extends MX_Controller
 {
@@ -155,192 +159,192 @@ class matrizMetas extends MX_Controller
         $sheet->setActiveSheetIndex(0);
         $sheet->setTitle('Matriz Avance');
 
-        // Estilos
-        $styleArray = array(
-            'font' => array(
-                'type' => 'Arial',
-                'bold' => true,
-                'size' => 12
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            ),
-        );
+		// Estilos
+		$styleArray = array(
+			'font' => array(
+				'type' => 'Arial',
+				'bold' => true,
+				'size' => 12
+			),
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+			),
+		);
 
-        $estilo_izquierdo = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
-            ),
-        );
+		$estilo_izquierdo = array(
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_LEFT,
+				'vertical' => Alignment::VERTICAL_TOP,
+			),
+		);
 
-        $estilo_bordes_internos = array(
-            'borders' => array(
-                'allborders' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
-                ),
-            ),
-        );
+		$estilo_bordes_internos = array(
+			'borders' => array(
+				'allborders' => array(
+					'style' => Border::BORDER_THIN,
+					'color' => array('argb' => '00000000'),
+				),
+			),
+		);
 
-        $estilo_encabezado = array(
-            'font' => array(
-                'size' => 10,
-                'color' => array(
-                    'argb' => 'FFFFFFFF',
-                ),
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            ),
-            'fill' => array(
-                'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                'rotation' => 90,
-                'startcolor' => array(
-                    'argb' => 'FF000000',
-                ),
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00FFFFFF'),
-                ),
-            ),
-        );
+		$estilo_encabezado = array(
+			'font' => array(
+				'size' => 10,
+				'color' => array(
+					'argb' => 'FFFFFFFF',
+				),
+				'bold' => true,
+			),
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+				'vertical' => Alignment::VERTICAL_CENTER,
+			),
+			'fill' => array(
+				'fillType' => Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => array(
+					'argb' => '00000000'
+				),
+			),
+			'borders' => array(
+				'outline' => array(
+					'style' => Border::BORDER_THIN,
+					'color' => array('argb' => '00FFFFFF')
+				),
+			),
+		);
 
-        $estilo_celda = array(
-            'font' => array(
-                'size' => 9,
-                'color' => array(
-                    'argb' => 'FF000000',
-                ),
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            ),
-            'fill' => array(
-                'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                'rotation' => 90,
-                'startcolor' => array(
-                    'argb' => 'FFFFFFFF',
-                ),
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
-                ),
-            ),
-        );
+		$estilo_celda = array(
+			'font' => array(
+				'size' => 9,
+				'color' => array(
+					'argb' => 'FF000000',
+				),
+			),
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+				'vertical' => Alignment::VERTICAL_CENTER,
+			),
+			'fill' => array(
+				'type' => Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startcolor' => array(
+					'argb' => 'FFFFFFFF',
+				),
+			),
+			'borders' => array(
+				'outline' => array(
+					'style' => Border::BORDER_THIN,
+					'color' => array('argb' => '00000000'),
+				),
+			),
+		);
 
-        $estilo_programas = array(
-            'font' => array(
-                'size' => 10,
-                'color' => array(
-                    'argb' => 'FFFFFFFF',
-                ),
-                'bold' => true
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            ),
-            'fill' => array(
-                'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                'rotation' => 90,
-                'startcolor' => array(
-                    'argb' => 'FF244062',
-                ),
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
-                ),
-            ),
-        );
+		$estilo_programas = array(
+			'font' => array(
+				'size' => 10,
+				'color' => array(
+					'argb' => 'FFFFFFFF',
+				),
+				'bold' => true
+			),
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+				'vertical' => Alignment::VERTICAL_CENTER,
+			),
+			'fill' => array(
+				'fillType' => Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => array(
+					'argb' => 'FF244062'
+				),
+			),
+			'borders' => array(
+				'outline' => array(
+					'style' => Border::BORDER_THIN,
+					'color' => array('argb' => '00000000'),
+				),
+			),
+		);
 
-        $estilo_subprogramas = array(
-            'font' => array(
-                'size' => 10,
-                'color' => array(
-                    'argb' => 'FF000000',
-                ),
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            ),
-            'fill' => array(
-                'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                'rotation' => 90,
-                'startcolor' => array(
-                    'argb' => 'FFA5D6FE',
-                ),
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
-                ),
-            ),
-        );
+		$estilo_subprogramas = array(
+			'font' => array(
+				'size' => 10,
+				'color' => array(
+					'argb' => 'FF000000',
+				),
+				'bold' => true,
+			),
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+				'vertical' => Alignment::VERTICAL_CENTER,
+			),
+			'fill' => array(
+				'fillType' => Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => array(
+					'argb' => 'FFA5D6FE',
+				),
+			),
+			'borders' => array(
+				'outline' => array(
+					'style' => Border::BORDER_THIN,
+					'color' => array('argb' => '00000000'),
+				),
+			),
+		);
 
-        $estilo_proyectos = array(
-            'font' => array(
-                'size' => 9,
-                'color' => array(
-                    'argb' => 'FF000000',
-                ),
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            ),
-            'fill' => array(
-                'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                'rotation' => 90,
-                'startcolor' => array(
-                    'argb' => 'FFD8E4BC',
-                ),
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
-                ),
-            ),
-        );
+		$estilo_proyectos = array(
+			'font' => array(
+				'size' => 9,
+				'color' => array(
+					'argb' => 'FF000000',
+				),
+			),
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+				'vertical' => Alignment::VERTICAL_CENTER,
+			),
+			'fill' => array(
+				'fillType' => Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => array(
+					'argb' => 'FFD8E4BC',
+				),
+			),
+			'borders' => array(
+				'outline' => array(
+					'style' => Border::BORDER_THIN,
+					'color' => array('argb' => '00000000'),
+				),
+			),
+		);
 
-        $estilo_meta_principal = array(
-            'font' => array(
-                'size' => 9,
-                'color' => array(
-                    'argb' => 'FF000000',
-                ),
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            ),
-            'fill' => array(
-                'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                'rotation' => 90,
-                'startcolor' => array(
-                    'argb' => 'FFEEECE1',
-                ),
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
-                ),
-            ),
-        );
+		$estilo_meta_principal = array(
+			'font' => array(
+				'size' => 9,
+				'color' => array(
+					'argb' => 'FF000000',
+				),
+			),
+			'alignment' => array(
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+				'vertical' => Alignment::VERTICAL_CENTER,
+			),
+			'fill' => array(
+				'fillType' => Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => array(
+					'argb' => 'FFEEECE1',
+				),
+			),
+			'borders' => array(
+				'outline' => array(
+					'style' => Border::BORDER_THIN,
+					'color' => array('argb' => '00000000'),
+				),
+			)
+		);
 
         /* $objDrawing = new PHPExcel_Worksheet_Drawing();
         $objDrawing->setName('Logo');
@@ -362,6 +366,9 @@ class matrizMetas extends MX_Controller
         $sheet->mergeCells("F3:G4");
         $sheet->mergeCells("H3:H4");
         $sheet->mergeCells("I3:I4");
+
+		$sheet->getStyle('A1:O2')->applyFromArray($styleArray);
+		$sheet->getStyle('A3:O4')->applyFromArray($estilo_encabezado);
 
         // Definición de encabezados dinamicos
         $letra = $this->_obtenerLetra($mes);
@@ -432,7 +439,13 @@ class matrizMetas extends MX_Controller
                             $this->excel->getActiveSheet()->mergeCells($columnas[$j-1].$i.":".$columnas[$j-1].$indice);
                         } */
 
-                        $metat = $meta->tipo == 'principal' ? 'MP' : 'MC';
+                        // $metat = $meta->tipo == 'principal' ? 'MP' : 'MC';
+						if($meta->tipo == 'principal'){
+							$metat = 'MP';
+							$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_meta_principal);
+						} else {
+							$metat = 'MC';
+						}
                         $tituloP = $meta->porcentajes == '1' ? 'Atendido':'Programado';
                         $tituloA = $meta->porcentajes == '1' ? 'Recibido':'Alcanzado';
                         $tabla = $meta->porcentajes == '1' ? 'meses_metas_complementarias_resueltos':'meses_metas_programadas';
@@ -464,15 +477,6 @@ class matrizMetas extends MX_Controller
                 }
             }
         }
-
-        /* $archivo = "matriz_avance_".$mnombre.".xls";
-        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
-        ob_end_clean();
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'.$archivo.'"');
-        header('Cache-Control: max-age=0');
-        //Hacemos una salida al navegador con el archivo Excel.
-        $objWriter->save('php://output'); */
 
 		$writer = new Xlsx($spreadsheet); // instantiate Xlsx
 

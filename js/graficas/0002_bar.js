@@ -306,16 +306,17 @@ $(document).ready(function() {
      */
     $('#trimestreAvanceTrimestral').on('change', function () {
         const trimestre = $('#trimestreAvanceTrimestral').val()
-        $.ajax({
-            url: base_url+'reportes/avanceTrimestral/avanceTrimestral/'+trimestre,
+		window.open(base_url+'reportes/avanceTrimestral/index/'+trimestre, '_blank');
+        /* $.ajax({
+            url: base_url+'reportes/avanceTrimestral/index/'+trimestre,
             method: "GET",
             success: function(data) {
-                window.open(base_url+'reportes/avanceTrimestral/avanceTrimestral/'+trimestre, '_blank');
+                window.open(base_url+'reportes/avanceTrimestral/index/'+trimestre, '_blank');
             },
             error: function(data) {
                 console.log(data);
             }
-        })
+        }) */
     })
 
     /**
