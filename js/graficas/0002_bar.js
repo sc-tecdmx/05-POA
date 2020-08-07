@@ -324,7 +324,7 @@ $(document).ready(function() {
      */
     $('#mesMatrizMetas').on('change', function () {
         const mes = $('#mesMatrizMetas').val()
-		window.open(base_url+'reportes/matrizMetas/matrizMetas/index/'+mes, '_blank');
+		window.open(base_url+'reportes/matrizMetas/index/'+mes, '_blank');
         /* $.ajax({
             url: base_url+'reportes/matrizMetas/matrizMetas/'+mes,
             method: "GET",

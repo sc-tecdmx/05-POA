@@ -156,8 +156,6 @@ class matrizMetas extends MX_Controller
 		$spreadsheet = new Spreadsheet(); // instantiate Spreadsheet
 
 		$sheet = $spreadsheet->getActiveSheet();
-        $sheet->setActiveSheetIndex(0);
-        $sheet->setTitle('Matriz Avance');
 
 		// Estilos
 		$styleArray = array(
@@ -367,14 +365,13 @@ class matrizMetas extends MX_Controller
         $sheet->mergeCells("H3:H4");
         $sheet->mergeCells("I3:I4");
 
-		$sheet->getStyle('A1:O2')->applyFromArray($styleArray);
-		$sheet->getStyle('A3:O4')->applyFromArray($estilo_encabezado);
-
         // Definición de encabezados dinamicos
         $letra = $this->_obtenerLetra($mes);
         $sheet->mergeCells("J3:".$letra.'3');
         $ultimaLetra = $this->_obtenerUltimaLetra($letra);
         $sheet->mergeCells($ultimaLetra."3:".$ultimaLetra."4");
+        $sheet->getStyle('A1:'.$ultimaLetra.'2')->applyFromArray($styleArray);
+		$sheet->getStyle('A3:'.$ultimaLetra.'4')->applyFromArray($estilo_encabezado);
 
         $sheet->setCellValue("A1", 'PROGRAMA OPERATIVO ANUAL '.$this->session->userdata('anio'));
         $sheet->setCellValue("A2", 'AVANCE DE PROYECTOS');
@@ -403,11 +400,13 @@ class matrizMetas extends MX_Controller
         foreach($programas as $programa) {
             $sheet->setCellValue("C".$i, $programa->numero);
             $sheet->setCellValue("F".$i, $programa->nombre);
+            $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_programas);
             $subprogramas = $this->reportes->getSubprogramas($programa->programa_id);
             foreach($subprogramas as $subprograma){
                 $i++;
                 $sheet->setCellValue("D".$i, $subprograma->numero);
                 $sheet->setCellValue("F".$i, $subprograma->nombre);
+                $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_subprogramas);
                 $proyectos = $this->reportes->getProyectos($subprograma->subprograma_id);
                 foreach($proyectos as $proyecto){
                     $i++;
@@ -420,6 +419,8 @@ class matrizMetas extends MX_Controller
 
                     $sheet->mergeCells("F".$i.":G".$i);
                     $sheet->setCellValue("F".$i, $proyecto->pynom);
+
+                    $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_proyectos);
 
                     $metas = $this->reportes->getMetas($proyecto->proyecto_id);
                     foreach($metas as $meta){
@@ -442,7 +443,7 @@ class matrizMetas extends MX_Controller
                         // $metat = $meta->tipo == 'principal' ? 'MP' : 'MC';
 						if($meta->tipo == 'principal'){
 							$metat = 'MP';
-							$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_meta_principal);
+							$sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_meta_principal);
 						} else {
 							$metat = 'MC';
 						}
