@@ -285,7 +285,7 @@ class seguimiento extends MX_Controller
                 <tr>
                     <td></td>';
         // obtener el nombre del mes
-        $nombreMes = $this->seguimientoModel->getNombreMes($mes);
+        /* $nombreMes = $this->seguimientoModel->getNombreMes($mes);
         $tabla .= '<td class="text-center">'.ucfirst($nombreMes->nombre).'</td>';
         // consultar si es meta con porcentajes
         $porcentaje = $this->seguimientoModel->getTipoMeta($meta);
@@ -341,6 +341,84 @@ class seguimiento extends MX_Controller
         $porcentaje = $this->seguimientoModel->getPorcentajeAvance($meta, $mes);
         $porcentajeA = $porcentaje->porcentaje?$porcentaje->porcentaje:'0.0';
         $tabla .= '<td class="text-center">'.$porcentajeA.'%</td>';
+        $tabla .= '</tr>';
+        $tabla .= '</tbody>';
+        $tabla .= '</table></div>';
+        echo $tabla; */
+        $mesesVisibles = array();
+        if($mes == '1'){
+            array_push($mesesVisibles, $mes);
+        } else {
+            for($i = 1; $i <= $mes; $i++){
+                array_push($mesesVisibles, $i);
+            }
+        }
+        $meses = array();
+        // obtener los nombres de los meses
+        for($i = 0; $i < count($mesesVisibles); $i++){
+            $mes = $this->seguimientoModel->getNombreMes($mesesVisibles[$i]);
+            $tabla .= '<td class="text-center">'.ucfirst($mes->nombre).'</td>';
+        }
+        $tabla .= '</tr></thead>';
+        $porcentaje = $this->seguimientoModel->getTipoMeta($meta);
+        if($porcentaje->porcentajes != '1'){
+            $tabla .= '
+            <tbody>
+            <tr>
+                <td>Programado</td>
+        ';
+            for($i = 0; $i < count($mesesVisibles); $i++){
+                $programados = $this->seguimientoModel->getMetasProgramados($meta, $mesesVisibles[$i]);
+                $tabla .= '<td class="text-center">'.$programados->numero.'</td>';
+            }
+            $tabla .= '</tr>';
+            $tabla .= '<tr>
+            <td>Alcanzado</td>
+        ';
+            for($i = 0; $i < count($mesesVisibles); $i++){
+                $alcanzadas = $this->seguimientoModel->getMetasAlcanzadas($meta, $mesesVisibles[$i]);
+                $tabla .= '<td class="text-center">'.$alcanzadas->numero.'</td>';
+            }
+            $tabla .= '</tr>';
+        } else {
+            $tabla .= '
+            <tbody>
+            <tr>
+                <td>Recibidos</td>
+            ';
+            for($i = 0; $i < count($mesesVisibles); $i++){
+                $programados = $this->seguimientoModel->getMetasAlcanzadas($meta, $mesesVisibles[$i]);
+                $tabla .= '<td class="text-center">'.$programados->numero.'</td>';
+            }
+            $tabla .= '</tr>';
+            $tabla .= '<tr>
+            <td>Resueltos</td>
+            ';
+            for($i = 0; $i < count($mesesVisibles); $i++){
+                $alcanzadas = $this->seguimientoModel->getMetasResueltas($meta, $mesesVisibles[$i]);
+                $tabla .= '<td class="text-center">'.$alcanzadas->numero.'</td>';
+            }
+            $tabla .= '</tr>';
+        }
+        $tabla .= '
+            <tr>
+                <td>Porcentaje de Avance respecto del mes</td>
+        ';
+        for($i = 0; $i < count($mesesVisibles); $i++){
+            $porcentaje = $this->seguimientoModel->getPorcentajeAvance($meta, $mesesVisibles[$i]);
+            $porcentajeA = $porcentaje->porcentaje?$porcentaje->porcentaje:'0.0';
+            $tabla .= '<td class="text-center">'.$porcentajeA.'%</td>';
+        }
+        $tabla .= '</tr>';
+        $tabla .= '
+            <tr>
+                <td>Porcentaje de Avance Acumulado</td>
+        ';
+        for($i = 0; $i < count($mesesVisibles); $i++){
+            $porcentajeReal = $this->seguimientoModel->getPorcentajeReal($meta, $mesesVisibles[$i]);
+            $porcentajeR = $porcentajeReal->porcentaje_real?$porcentajeReal->porcentaje_real:'0.0';
+            $tabla .= '<td class="text-center">'.$porcentajeR.'%</td>';
+        }
         $tabla .= '</tr>';
         $tabla .= '</tbody>';
         $tabla .= '</table></div>';
