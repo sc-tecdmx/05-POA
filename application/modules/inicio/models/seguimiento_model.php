@@ -364,7 +364,7 @@ class seguimiento_model extends CI_Model
 
     public function getAvanceMesAlcanzado($mes, $meta)
     {
-        $this->db->select('numero,porcentaje,porcentaje_real');
+        $this->db->select('numero,porcentaje,porcentaje_real,explicacion');
         $this->db->where('mes_id', $mes);
         $this->db->where('meta_id', $meta);
         $this->db->from('meses_metas_alcanzadas');
@@ -393,6 +393,18 @@ class seguimiento_model extends CI_Model
         $this->db->where('mes_id <=', $mes);
         $this->db->where('meta_id', $meta);
         $this->db->from('meses_metas_alcanzadas');
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            return $query->row();
+        }
+    }
+
+    public function getAvanceResueltoAcumulado($mes, $meta)
+    {
+        $this->db->select_sum('numero');
+        $this->db->where('mes_id <=', $mes);
+        $this->db->where('meta_id', $meta);
+        $this->db->from('meses_metas_complementarias_resueltos');
         $query = $this->db->get();
         if($query->num_rows()>0){
             return $query->row();
@@ -448,7 +460,7 @@ class seguimiento_model extends CI_Model
 
     public function getPorcentajeAcumulado($meta, $mes)
     {
-        $this->db->select_sum('porcentaje_real');
+        $this->db->select_sum('porcentaje');
         $this->db->where('meta_id', $meta);
         $this->db->where('mes_id <=', $mes);
         $this->db->from('meses_metas_alcanzadas');

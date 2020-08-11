@@ -65,8 +65,8 @@ class avanceTrimestral extends MX_Controller
 
 		$estilo_bordes_internos = array(
 			'borders' => array(
-				'allborders' => array(
-					'style' => Border::BORDER_THIN,
+				'allBorders' => array(
+					'borderStyle' => Border::BORDER_THIN,
 					'color' => array('argb' => '00000000'),
 				),
 			),
@@ -93,7 +93,7 @@ class avanceTrimestral extends MX_Controller
 			),
 			'borders' => array(
 				'outline' => array(
-					'style' => Border::BORDER_THIN,
+					'borderStyle' => Border::BORDER_THIN,
 					'color' => array('argb' => '00FFFFFF')
 				),
 			),
@@ -292,25 +292,32 @@ class avanceTrimestral extends MX_Controller
         $sheet->setCellValue("H4", 'Unidad de medida');
         $sheet->setCellValue("I4", 'Avance Trimestral '.$mnombre);
         $sheet->setCellValue("L4", 'Avance Acumulado '.$mnombre);
-        $sheet->setCellValue("I5", 'Programada (1)');
-        $sheet->setCellValue("J5", 'Alcanzada (2)');
+        $sheet->setCellValue("I5", 'Programada o Recibido (1)');
+        $sheet->setCellValue("J5", 'Alcanzada o Atendido (2)');
         $sheet->setCellValue("K5", 'Avance % (2)(1)');
-        $sheet->setCellValue("L5", 'Programada (3)');
-        $sheet->setCellValue("M5", 'Alcanzda (4)');
+        $sheet->setCellValue("L5", 'Programada o Recibido (3)');
+        $sheet->setCellValue("M5", 'Alcanzda o Atendido (4)');
         $sheet->setCellValue("N5", 'Avance % (4)(3)');
 
         $programas = $this->reportes->getProgramas($this->session->userdata('ejercicio'));
-        $i = 7;
+        $i = 6;
         foreach($programas as $programa) {
+			$i++;
+			$sheet->mergeCells('F'.$i.':G'.$i);
             $sheet->setCellValue("C".$i, $programa->numero);
             $sheet->setCellValue("F".$i, $programa->nombre);
 			$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_programas);
+			$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
+			$sheet->getStyle('A'.$i.':N'.$i)->getAlignment()->setWrapText(true);
             $subprogramas = $this->reportes->getSubprogramas($programa->programa_id);
             foreach($subprogramas as $subprograma){
-                $i++;
+				$i++;
+				$sheet->mergeCells('F'.$i.':G'.$i);
                 $sheet->setCellValue("D".$i, $subprograma->numero);
                 $sheet->setCellValue("F".$i, $subprograma->nombre);
 				$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_subprogramas);
+				$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
+				$sheet->getStyle('A'.$i.':N'.$i)->getAlignment()->setWrapText(true);
                 $proyectos = $this->reportes->getProyectos($subprograma->subprograma_id);
                 foreach($proyectos as $proyecto){
                     $i++;
@@ -323,10 +330,13 @@ class avanceTrimestral extends MX_Controller
                     $sheet->mergeCells("F".$i.":G".$i);
                     $sheet->setCellValue("F".$i, $proyecto->pynom);
 					$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_proyectos);
+					$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
+					$sheet->getStyle('A'.$i.':N'.$i)->getAlignment()->setWrapText(true);
 
                     $metas = $this->reportes->getMetas($proyecto->proyecto_id);
                     foreach($metas as $meta){
-                        $i++;
+						$i++;
+						$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
                         if($meta->tipo == 'principal'){
                             $metat = 'MP';
 							$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_meta_principal);
@@ -354,30 +364,36 @@ class avanceTrimestral extends MX_Controller
                         }
 
 						for($j = $primerMes; $j <= $mes; $j++){
-							$programado = $this->seguimiento_model->getAvanceMesProgramado($j, $meta->meta_id);
-							$alcanzado = $this->seguimiento_model->getAvanceMesAlcanzado($j, $meta->meta_id);
-							$programadoNumero += $programado->numero;
-							$alcanzadoNumero += $alcanzado->numero;
-							$alcanzadoPorcentaje += $alcanzado->porcentaje_real;
-							if($meta->tipo != 'principal' && $meta->porcentajes == '1'){
-								$resuelto = $this->reportes->getAvanceMesResuelto($j, $meta->meta_id);
-								$numeroResueltos += $resuelto?$resuelto->numero:0;
+							if($meta->porcentajes == '1'){
+								$programado = $this->seguimiento_model->getAvanceMesAlcanzado($j, $meta->meta_id);
+								$alcanzado = $this->reportes->getAvanceMesResuelto($j, $meta->meta_id);
+								$programadoNumero += $programado->numero;
+								$alcanzadoNumero += $alcanzado?$alcanzado->numero:0;
+								$alcanzadoPorcentaje += $programado->porcentaje;
+							} else {
+								$programado = $this->seguimiento_model->getAvanceMesProgramado($j, $meta->meta_id);
+								$alcanzado = $this->seguimiento_model->getAvanceMesAlcanzado($j, $meta->meta_id);
+								$programadoNumero += $programado->numero;
+								$alcanzadoNumero += $alcanzado->numero;
+								$alcanzadoPorcentaje += $alcanzado->porcentaje;
 							}
 						}
-                        $sheet->setCellValue("I".$i, $programadoNumero);
-                        if($numeroResueltos == 0){
-                            $sheet->setCellValue("J".$i, $alcanzadoNumero);
-                            $sheet->setCellValue("K".$i, $alcanzadoPorcentaje);
-                        } else {
-                            $sheet->setCellValue("J".$i, $alcanzadoNumero.'/'.$numeroResueltos);
-                            $sheet->setCellValue("K".$i, $alcanzadoPorcentaje);
-                        }
-                        $acumulado = $this->seguimiento_model->getAvanceProgramadoAcumulado($mes, $meta->meta_id);
-                        $acumuladoa = $this->seguimiento_model->getAvanceAlcanzadoAcumulado($mes, $meta->meta_id);
-                        $pacm = $this->seguimiento_model->getPorcentajeAcumulado($meta->meta_id, $mes);
+						$sheet->setCellValue("I".$i, $programadoNumero);
+						$sheet->setCellValue("J".$i, $alcanzadoNumero);
+						$sheet->setCellValue("K".$i, $alcanzadoPorcentaje);
+
+						if($meta->porcentajes == '1'){
+							$acumulado = $this->seguimiento_model->getAvanceAlcanzadoAcumulado($mes, $meta->meta_id);
+							$acumuladoa = $this->seguimiento_model->getAvanceResueltoAcumulado($mes, $meta->meta_id);
+						} else {
+							$acumulado = $this->seguimiento_model->getAvanceProgramadoAcumulado($mes, $meta->meta_id);
+							$acumuladoa = $this->seguimiento_model->getAvanceAlcanzadoAcumulado($mes, $meta->meta_id);
+						}
+						$pacm = $this->seguimiento_model->getPorcentajeAcumulado($meta->meta_id, $mes);
+						
                         $sheet->setCellValue("L".$i, $acumulado->numero);
                         $sheet->setCellValue("M".$i, $acumuladoa->numero);
-                        $sheet->setCellValue("N".$i, $pacm->porcentaje_real);
+                        $sheet->setCellValue("N".$i, $pacm->porcentaje);
                     }
                 }
             }
