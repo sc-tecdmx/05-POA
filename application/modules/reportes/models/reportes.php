@@ -88,7 +88,8 @@ class reportes extends CI_Model
             indicadores.metodo_calculo,
             indicadores.meta,
             frecuencias.nombre as frecuenciaNombre,
-            unidades_medidas.nombre as medidaNombre'
+            unidades_medidas.nombre as medidaNombre,
+            indicadores.meta_id'
         );
         $this->db->join('frecuencias', 'indicadores.frecuencia_id = frecuencias.frecuencia_id');
         $this->db->join('unidades_medidas', 'indicadores.unidad_medida_id = unidades_medidas.unidad_medida_id');
@@ -96,5 +97,15 @@ class reportes extends CI_Model
         $this->db->from('indicadores');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getTipoMetas($meta)
+    {
+        $this->db->select('unidades_medidas.porcentajes');
+        $this->db->join('unidades_medidas', 'metas.unidad_medida_id = unidades_medidas.unidad_medida_id');
+        $this->db->where('metas.meta_id', $meta);
+        $this->db->from('metas');
+        $query = $this->db->get();
+        return $query->row();
     }
 }
