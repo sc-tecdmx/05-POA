@@ -178,8 +178,8 @@ class matrizMetas extends MX_Controller
 
 		$estilo_bordes_internos = array(
 			'borders' => array(
-				'allborders' => array(
-					'style' => Border::BORDER_THIN,
+				'allBorders' => array(
+					'borderStyle' => Border::BORDER_THIN,
 					'color' => array('argb' => '00000000'),
 				),
 			),
@@ -206,7 +206,7 @@ class matrizMetas extends MX_Controller
 			),
 			'borders' => array(
 				'outline' => array(
-					'style' => Border::BORDER_THIN,
+					'borderStyle' => Border::BORDER_THIN,
 					'color' => array('argb' => '00FFFFFF')
 				),
 			),
@@ -232,7 +232,7 @@ class matrizMetas extends MX_Controller
 			),
 			'borders' => array(
 				'outline' => array(
-					'style' => Border::BORDER_THIN,
+					'borderStyle' => Border::BORDER_THIN,
 					'color' => array('argb' => '00000000'),
 				),
 			),
@@ -396,17 +396,22 @@ class matrizMetas extends MX_Controller
         $sheet->setCellValue($ultimaLetra."3", 'Total');
 
         $programas = $this->reportes->getProgramas($this->session->userdata('ejercicio'));
-        $i = 5;
+        $i = 4;
         foreach($programas as $programa) {
+            $i++;
+            $sheet->mergeCells('F'.$i.':G'.$i);
             $sheet->setCellValue("C".$i, $programa->numero);
             $sheet->setCellValue("F".$i, $programa->nombre);
             $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_programas);
+            $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_bordes_internos);
             $subprogramas = $this->reportes->getSubprogramas($programa->programa_id);
             foreach($subprogramas as $subprograma){
                 $i++;
+                $sheet->mergeCells('F'.$i.':G'.$i);
                 $sheet->setCellValue("D".$i, $subprograma->numero);
                 $sheet->setCellValue("F".$i, $subprograma->nombre);
                 $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_subprogramas);
+                $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_bordes_internos);
                 $proyectos = $this->reportes->getProyectos($subprograma->subprograma_id);
                 foreach($proyectos as $proyecto){
                     $i++;
@@ -421,11 +426,13 @@ class matrizMetas extends MX_Controller
                     $sheet->setCellValue("F".$i, $proyecto->pynom);
 
                     $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_proyectos);
+                    $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_bordes_internos);
 
                     $metas = $this->reportes->getMetas($proyecto->proyecto_id);
                     foreach($metas as $meta){
                         $i++;
                         $indice = $i + 1;
+                        $sheet->getStyle('A'.$i.':'.$ultimaLetra.$indice)->applyFromArray($estilo_bordes_internos);
 
                         $sheet->mergeCells("A". $i .":A". $indice);
                         $sheet->mergeCells("B". $i .":B". $indice);
@@ -443,7 +450,7 @@ class matrizMetas extends MX_Controller
                         // $metat = $meta->tipo == 'principal' ? 'MP' : 'MC';
 						if($meta->tipo == 'principal'){
 							$metat = 'MP';
-							$sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_meta_principal);
+							$sheet->getStyle('A'.$i.':'.$ultimaLetra.$indice)->applyFromArray($estilo_meta_principal);
 						} else {
 							$metat = 'MC';
 						}
@@ -467,6 +474,10 @@ class matrizMetas extends MX_Controller
 
                             $sheet->setCellValue($columnas[$j-1].$i, $programado?$programado->numero:'');
                             $sheet->setCellValue($columnas[$j-1].$indice, $alcanzado?$alcanzado->numero:'');
+                            
+                            if($meta->tipo != 'principal') {
+                                $sheet->getComment($columnas[$j-1].$indice)->getText()->createTextRun($alcanzado?$alcanzado->explicacion:'');
+                            }
 
                             $totalProgramado += $programado?$programado->numero:0;
                             $totalAlcanzados += $alcanzado?$alcanzado->numero:0;
