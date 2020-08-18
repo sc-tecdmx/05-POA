@@ -38,6 +38,13 @@ class seguimiento extends MX_Controller
             }
             return $meses;
         }
+		$mesActual = date('n');
+		$meses = $this->seguimiento_model->getMesesHabilitadosNoConfigurados($mesActual);
+		$arrayMeses = array('' => '- Seleccione uno -');
+		foreach($meses as $mes){
+			$arrayMeses[$mes->mes_id] = ucfirst($mes->nombre);
+		}
+		return $arrayMeses;
     }
 
     private function _obtenerMesesHabilitadosC($id_proy)
@@ -52,6 +59,14 @@ class seguimiento extends MX_Controller
             $tabla .= '</tr>';
             return $tabla;
         }
+		$mesActual = date('n');
+		$meses = $this->seguimiento_model->getMesesHabilitadosNoConfigurados($mesActual);
+		$tabla = '<tr>';
+		foreach($meses as $mes){
+			$tabla .= '<th>'.$mes->small.'</th>';
+		}
+		$tabla .= '</tr>';
+		return $tabla;
     }
 
 
@@ -62,10 +77,10 @@ class seguimiento extends MX_Controller
      */
     private function _encabezadomp()
     {
-        $ejercicio = $this->home_inicio->get_ejercicio();
         // Función para obtener el último mes habilitado
-        $mesUlt = $this->seguimiento_model->getMesesMax($ejercicio->ejercicio_id);
-        $meses = $this->seguimiento_model->getMeses($ejercicio->ejercicio_id, $mesUlt->mes_id);
+        $mesUlt = $this->seguimiento_model->getMesesMax($this->session->userdata('ejercicio'));
+		$mesHabilitado = $mesUlt->mes_id ? $mesUlt->mes_id : date('n');
+        $meses = $this->seguimiento_model->getMeses($this->session->userdata('ejercicio'), $mesHabilitado);
         if($meses){
             $num = 0;
             $tm = '<tr>';
@@ -96,10 +111,10 @@ class seguimiento extends MX_Controller
      */
     private function _encabezadomc()
     {
-        $ejercicio = $this->home_inicio->get_ejercicio();
         // Función para obtener el último mes habilitado
-        $ultimo = $this->seguimiento_model->getMesesMax($ejercicio->ejercicio_id);
-        $meses = $this->seguimiento_model->getMeses($ejercicio->ejercicio_id, $ultimo->mes_id);
+        $ultimo = $this->seguimiento_model->getMesesMax($this->session->userdata('ejercicio'));
+		$mesHabilitado = $ultimo->mes_id ? $ultimo->mes_id : date('n');
+        $meses = $this->seguimiento_model->getMeses($this->session->userdata('ejercicio'), $mesHabilitado);
         if($meses){
             $num = 0;
             $tm = '<tr>';
@@ -132,9 +147,9 @@ class seguimiento extends MX_Controller
      */
     private function _encabezadomps()
     {
-        $ejercicio = $this->home_inicio->get_ejercicio();
-        $ultimo = $this->seguimiento_model->getMesesMax($ejercicio->ejercicio_id);
-        $meses = $this->seguimiento_model->getMeses($ejercicio->ejercicio_id, $ultimo->mes_id);
+        $ultimo = $this->seguimiento_model->getMesesMax($this->session->userdata('ejercicio'));
+		$mesHabilitado = $ultimo->mes_id ? $ultimo->mes_id : date('n');
+        $meses = $this->seguimiento_model->getMeses($this->session->userdata('ejercicio'), $mesHabilitado);
         if($meses){
             $num = 0;
             $tm = '<tr>';
@@ -166,12 +181,12 @@ class seguimiento extends MX_Controller
     private function _tablamc($id_pry)
     {
         $res = $this->seguimiento_model->getMetas($id_pry, 'complementaria');
-        $ejercicio = $this->home_inicio->get_ejercicio();
-        $ultimo = $this->seguimiento_model->getMesesMax($ejercicio->ejercicio_id);
+        $ultimo = $this->seguimiento_model->getMesesMax($this->session->userdata('ejercicio'));
+		$mesHabilitado = $ultimo->mes_id ? $ultimo->mes_id : date('n');
+		$seguimientoHabilitado = $ultimo->mes_id ? true : false;
         $tabla = '';
         if ($res) {
             foreach ($res as $row) {
-                $ejecuta = $this->seguimiento_model->getContarMeses($row->proyecto_id);
                 $totalmp = 0;
                 $totalmc = 0;
                 $totalp = 0;
@@ -182,7 +197,7 @@ class seguimiento extends MX_Controller
                         <td rowspan="3">' . $row->umnombre . '</td>
                         <td rowspan="3" class="text-center">'.$row->peso.'%</td>
                         <td>Programada</td>';
-                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     foreach($ren as $metap){
                         $tabla .= '<td class="text-center">'.$metap->numero.'</td>';
                         $totalmp += $metap->numero;
@@ -198,7 +213,10 @@ class seguimiento extends MX_Controller
                     if($valida->peso == '0'){
                         $tabla .= '<td rowspan="3">Necesitas agregar peso a tu meta complementaria para darle seguimiento.</td>';
                     }
-                    if($mesesEjecuta && $valida->peso != '0'){
+					if(!$seguimientoHabilitado){
+						$tabla .= '<td rowspan="3">Por el momento no hay un mes configurado al que puedas dar seguimiento.</td>';
+					}
+                    if($mesesEjecuta && $valida->peso != '0' && $seguimientoHabilitado){
                         $tabla .= '<td rowspan="3">
                                 <button class="btn btn-primary" onclick="darSeguimientoNormal('.$row->meta_id.')"><i class="fa fa-fw fa-plus"></i></button>
                         </td>';
@@ -208,7 +226,7 @@ class seguimiento extends MX_Controller
                     <tr>
                         <td>Alcanzada</td>
                     ';
-                    $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     $nx = 'No existe explicación del avance físico para este mes';
                     if($ren){
                         $i = 0;
@@ -245,7 +263,7 @@ class seguimiento extends MX_Controller
                         <td rowspan="4">' . $row->umnombre . '</td>
                         <td rowspan="4" class="text-center">'.$row->peso.'%</td>
                         <td>Programada</td>';
-                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     foreach($ren as $metap){
                         $tabla .= '<td class="text-center">'.$metap->numero.'</td>';
                         $totalmp += $metap->numero;
@@ -253,10 +271,18 @@ class seguimiento extends MX_Controller
                     $tabla .= '
                         <td class="text-center">'.$totalmp.'</td>
                         <td class="text-center">100%</td>';
+					$mesesEjecuta = $this->seguimiento_model->getMesesEjecucion($id_pry);
+					if(!$mesesEjecuta){
+						$tabla .= '<td rowspan="4">Necesitas contar con la información de meses de ejecución para darle seguimiento a este proyecto.</td>';
+					}
                     $valida = $this->seguimiento_model->getPreviousWeight($row->meta_id);
                     if($valida->peso == '0'){
                         $tabla .= '<td rowspan="4">Necesitas agregar peso a tu meta complementaria para darle seguimiento</td>';
-                    } else {
+                    }
+					if(!$seguimientoHabilitado){
+						$tabla .= '<td rowspan="4">Por el momento no hay un mes configurado al que puedas dar seguimiento.</td>';
+					}
+					if($mesesEjecuta && $valida->peso != '0' && $seguimientoHabilitado){
                         $tabla .= '
                             <td rowspan="4">
                                 <button class="btn btn-primary" onclick="darSeguimientoPorcentajes('.$row->meta_id.')"><i class="fa fa-fw fa-plus"></i></button>
@@ -267,7 +293,7 @@ class seguimiento extends MX_Controller
                     $tabla .= '
                     <tr>
                         <td>Atendidos</td>';
-                    $glon = $this->seguimiento_model->getMesesMetasResueltos($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $glon = $this->seguimiento_model->getMesesMetasResueltos($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     $totalr = 0;
                     if($glon){
                         foreach($glon as $mmr){
@@ -282,7 +308,7 @@ class seguimiento extends MX_Controller
                     $tabla .= '
                     <tr>
                         <td>Recibidos</td>';
-                        $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                        $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                         $nx = 'No existe explicación del avance físico para este mes para este mes';
                         if($ren){
                             $i = 0;
@@ -325,8 +351,8 @@ class seguimiento extends MX_Controller
     private function _tablamp($id_pry)
     {
         $res = $this->seguimiento_model->getMetas($id_pry, 'principal');
-        $ejercicio = $this->home_inicio->get_ejercicio();
-        $ultimo = $this->seguimiento_model->getMesesMax($ejercicio->ejercicio_id);
+        $ultimo = $this->seguimiento_model->getMesesMax($this->session->userdata('ejercicio'));
+		$mesHabilitado = $ultimo->mes_id ? $ultimo->mes_id : date('n');
         $tabla = '';
         if ($res) {
             foreach ($res as $row) {
@@ -337,7 +363,7 @@ class seguimiento extends MX_Controller
                 <td rowspan="2">' . $row->mnombre . '</td>
                 <td rowspan="2">' . $row->umnombre . '</td>
                 <td>Programada</td>';
-                $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                 $i = 0;
                 foreach($ren as $metap){
                     $tabla .= '<td class="text-center">'.$metap->numero.'</td>';
@@ -349,7 +375,7 @@ class seguimiento extends MX_Controller
                 </tr>
                 <tr>
                 <td>Alcanzada</td>';
-                $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                 if($ren){
                     $i = 1;
                     $totalpr = 0;
@@ -384,8 +410,9 @@ class seguimiento extends MX_Controller
         $res = $this->seguimiento_model->getMetas($id_pry, 'principal');
         $tabla = '';
         if ($res) {
-            $ejercicio = $this->home_inicio->get_ejercicio();
-            $ultimo = $this->seguimiento_model->getMesesMax($ejercicio->ejercicio_id);
+            $ultimo = $this->seguimiento_model->getMesesMax($this->session->userdata('ejercicio'));
+			$mesHabilitado = $ultimo->mes_id ? $ultimo->mes_id : date('n');
+			$seguimientoHabilitado = $ultimo->mes_id ? true : false;
             foreach ($res as $row) {
                 $totalmpp = 0;
                 $totalmc = 0;
@@ -398,7 +425,7 @@ class seguimiento extends MX_Controller
                         <td rowspan="4">' . $row->umnombre . '</td>
                         <td rowspan="4" class="text-center">'.$row->peso.'%</td>
                         <td>Programada</td>';
-                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     foreach($ren as $metap){
                         $tabla .= '<td class="text-center">'.$metap->numero.'</td>';
                         $totalmp += $metap->numero;
@@ -406,10 +433,18 @@ class seguimiento extends MX_Controller
                     $tabla .= '
                         <td class="text-center">'.$totalmp.'</td>
                         <td class="text-center">100%</td>';
+					$mesesEjecuta = $this->seguimiento_model->getMesesEjecucion($id_pry);
+					if(!$mesesEjecuta){
+						$tabla .= '<td rowspan="4">Necesitas contar con la información de meses de ejecución para darle seguimiento a este proyecto.</td>';
+					}
                     $valida = $this->seguimiento_model->getPreviousWeight($row->meta_id);
                     if($valida->peso == '0'){
                         $tabla .= '<td rowspan="4">Necesitas agregar peso a tu meta complementaria para darle seguimiento</td>';
-                    } else {
+                    }
+					if(!$seguimientoHabilitado){
+						$tabla .= '<td rowspan="4">Por el momento no hay un mes configurado al que puedas dar seguimiento.</td>';
+					}
+					if($mesesEjecuta && $valida->peso != '0' && $seguimientoHabilitado){
                         $tabla .= '
                             <td rowspan="4">
                                 <button class="btn btn-primary" onclick="seguimientoPrincipalPorcentajes('.$row->meta_id.')"><i class="fa fa-fw fa-plus"></i></button>
@@ -420,7 +455,7 @@ class seguimiento extends MX_Controller
                     $tabla .= '
                     <tr>
                         <td>Atendidos</td>';
-                    $glon = $this->seguimiento_model->getMesesMetasResueltos($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $glon = $this->seguimiento_model->getMesesMetasResueltos($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     $totalr = 0;
                     if($glon){
                         foreach($glon as $mmr){
@@ -435,7 +470,7 @@ class seguimiento extends MX_Controller
                     $tabla .= '
                     <tr>
                         <td>Recibidos</td>';
-                    $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     $nx = 'No existe explicación del avance físico para este mes para este mes';
                     if($ren){
                         $i = 0;
@@ -463,7 +498,7 @@ class seguimiento extends MX_Controller
                         <td rowspan="3">' . $row->mnombre . '</td>
                         <td rowspan="3">' . $row->umnombre . '</td>
                         <td>Programada</td>';
-                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $ren = $this->seguimiento_model->getMesesMetasProgramadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     foreach($ren as $metap){
                         $tabla .= '<td>'.$metap->numero.'</td>';
                         $totalmpp += $metap->numero;
@@ -479,7 +514,7 @@ class seguimiento extends MX_Controller
                     $tabla .= '</tr>
                         <tr class="text-center">
                         <td>Alcanzada</td>';
-                    $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $ejercicio->ejercicio_id, $ultimo->mes_id);
+                    $ren = $this->seguimiento_model->getMesesMetasAlcanzadas($row->meta_id, $this->session->userdata('ejercicio'), $mesHabilitado);
                     if($ren){
                         $i = 1;
                         foreach($ren as $metaa){
@@ -1133,7 +1168,15 @@ class seguimiento extends MX_Controller
                 $data['nombre'][] = $row->nombre;
             }
             echo json_encode($data);
-        }
+        } else {
+			$mesActual = date('n');
+			$meses = $this->seguimiento_model->getMesesHabilitadosNoConfigurados($mesActual);
+			foreach($meses as $mes){
+				$data['mes'][] = $mes->mes_id;
+				$data['nombre'][] = $mes->nombre;
+			}
+			echo json_encode($data);
+		}
     }
 
     public function getMesesTrimestrales()
@@ -1731,7 +1774,7 @@ class seguimiento extends MX_Controller
 		} else {
 			$data['encabezadomp'] = $this->_encabezadomps();
 			// meses para arreglo
-			$data['meses'] = $this->_getMesesArray();
+			// $data['meses'] = $this->_getMesesArray();
 			// tabla con la meta principal
 			$data["tablamp"] = $this->_tablamps($id_pry);
 			// vista
