@@ -541,4 +541,16 @@ class seguimiento_model extends CI_Model
 		$query = $this->db->get();
 		return $query->row();
 	}
+
+	public function getMesesHabilitadosNoConfigurados($mes)
+	{
+		$this->db->select('small,nombre,mes_id');
+		$this->db->where('mes_id <=', $mes);
+		$this->db->from('meses');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+		return false;
+	}
 }

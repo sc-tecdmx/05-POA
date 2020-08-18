@@ -39,6 +39,7 @@
                         <table class="table table-striped" id="tabla_proyectos">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>URG</th>
                                 <th>RO</th>
                                 <th>PG</th>
