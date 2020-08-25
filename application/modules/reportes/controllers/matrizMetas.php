@@ -390,10 +390,12 @@ class matrizMetas extends MX_Controller
             $nombreMes = $this->home_inicio->getMesesSmall($j);
             if($nombreMes){
                 $sheet->setCellValue($columnas[$j-1]."4", $nombreMes->small);
+				$sheet->getColumnDimension($columnas[$j-1])->setWidth(6);
             }
         }
 
         $sheet->setCellValue($ultimaLetra."3", 'Total');
+		$sheet->getColumnDimension($ultimaLetra)->setWidth(6);
 
         $programas = $this->reportes->getProgramas($this->session->userdata('ejercicio'));
         $i = 4;
@@ -427,6 +429,12 @@ class matrizMetas extends MX_Controller
 
                     $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_proyectos);
                     $sheet->getStyle('A'.$i.':'.$ultimaLetra.$i)->applyFromArray($estilo_bordes_internos);
+
+					$sheet->getStyle('F' . $i)->getAlignment()->setWrapText(true);
+					$caracteres_nombre_proyecto = strlen($proyecto->pynom);
+					if ($caracteres_nombre_proyecto > 93) {
+						$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_nombre_proyecto / 93) * 13 + 13);
+					}
 
                     $metas = $this->reportes->getMetas($proyecto->proyecto_id);
                     foreach($metas as $meta){
@@ -464,6 +472,22 @@ class matrizMetas extends MX_Controller
                         $sheet->setCellValue("I".$i, $tituloP);
                         $sheet->setCellValue("I".$indice, $tituloA);
 
+						$caracteres_nombre_meta = strlen($meta->nombre);
+						if ($caracteres_nombre_meta > 89) {
+							$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_nombre_meta / 89) * 14 + 14);
+						}
+
+						// Mejorar formato de celdas (denominacion de meta y unidad de medida)
+						$sheet->getStyle('G' . $i)->getAlignment()->setWrapText(true);
+						$sheet->getStyle('H' . $i)->getAlignment()->setWrapText(true);
+
+						$uno = $sheet->getRowDimension($i)->getRowHeight();
+						$dos = $sheet->getRowDimension($i + 1)->getRowHeight();
+
+						$altura = ($uno + $dos) / 2;
+						$sheet->getRowDimension($i)->setRowHeight($altura);
+						$sheet->getRowDimension($i + 1)->setRowHeight($altura);
+
 
                         // Obtener el avance del mes
                         $totalProgramado = 0;
@@ -476,21 +500,6 @@ class matrizMetas extends MX_Controller
                             $sheet->setCellValue($columnas[$j-1].$indice, $alcanzado?$alcanzado->numero:'');
 
                             if($meta->tipo != 'principal') {
-                            	/*
-                            	$objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setAuthor('TEDF');
-                            $objCommentRichText = $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->getText()->createTextRun('Explicación:');
-                            $objCommentRichText->getFont()->setBold(true);
-                            $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->getText()->createTextRun("\r\n");
-                            $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->getText()->createTextRun($explicacion);
-                            $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setWidth('252pt');
-
-                            $caracteres_explicacion = strlen($explicacion);
-                            if ($caracteres_explicacion > 56) {
-                                $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setHeight(ceil($caracteres_explicacion / 53) * 17 + 32 . "pt");
-                            } else {
-                                $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setHeight('32pt');
-                            }
-                            	*/
 								$sheet->getComment($columnas[$j-1].$indice)->setAuthor('TECDMX');
 								$commentRichText = $sheet
 									->getComment($columnas[$j-1].$indice)
@@ -522,6 +531,16 @@ class matrizMetas extends MX_Controller
                 }
             }
         }
+
+		$sheet->getColumnDimension('A')->setWidth(4);
+		$sheet->getColumnDimension('B')->setWidth(3);
+		$sheet->getColumnDimension('C')->setWidth(3);
+		$sheet->getColumnDimension('D')->setWidth(3);
+		$sheet->getColumnDimension('E')->setWidth(3);
+		$sheet->getColumnDimension('F')->setWidth(3);
+		$sheet->getColumnDimension('G')->setWidth(70);
+		$sheet->getColumnDimension('H')->setWidth(20);
+		$sheet->getColumnDimension('I')->setWidth(16);
 
 		$writer = new Xlsx($spreadsheet); // instantiate Xlsx
 
