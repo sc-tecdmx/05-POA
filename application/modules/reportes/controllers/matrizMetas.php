@@ -474,9 +474,42 @@ class matrizMetas extends MX_Controller
 
                             $sheet->setCellValue($columnas[$j-1].$i, $programado?$programado->numero:'');
                             $sheet->setCellValue($columnas[$j-1].$indice, $alcanzado?$alcanzado->numero:'');
-                            
+
                             if($meta->tipo != 'principal') {
+                            	/*
+                            	$objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setAuthor('TEDF');
+                            $objCommentRichText = $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->getText()->createTextRun('Explicación:');
+                            $objCommentRichText->getFont()->setBold(true);
+                            $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->getText()->createTextRun("\r\n");
+                            $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->getText()->createTextRun($explicacion);
+                            $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setWidth('252pt');
+
+                            $caracteres_explicacion = strlen($explicacion);
+                            if ($caracteres_explicacion > 56) {
+                                $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setHeight(ceil($caracteres_explicacion / 53) * 17 + 32 . "pt");
+                            } else {
+                                $objPHPExcel->getActiveSheet()->getComment($letra . ($i + 1))->setHeight('32pt');
+                            }
+                            	*/
+								$sheet->getComment($columnas[$j-1].$indice)->setAuthor('TECDMX');
+								$commentRichText = $sheet
+									->getComment($columnas[$j-1].$indice)
+									->getText()->createTextRun('Explicación:');
+								$commentRichText->getFont()->setBold(true);
+								$spreadsheet->getActiveSheet()
+									->getComment($columnas[$j-1].$indice)
+									->getText()->createTextRun("\r\n");
                                 $sheet->getComment($columnas[$j-1].$indice)->getText()->createTextRun($alcanzado?$alcanzado->explicacion:'');
+								$sheet->getComment($columnas[$j-1].$indice)->setWidth('252pt');
+
+								if ($alcanzado) {
+									$caracteres_explicacion = strlen($alcanzado->explicacion);
+									if ($caracteres_explicacion > 56) {
+										$sheet->getComment($columnas[$j-1].$indice)->setHeight(ceil($caracteres_explicacion / 53) * 17 + 32 . "pt");
+									} else {
+										$sheet->getComment($columnas[$j-1].$indice)->setHeight('32pt');
+									}
+								}
                             }
 
                             $totalProgramado += $programado?$programado->numero:0;
