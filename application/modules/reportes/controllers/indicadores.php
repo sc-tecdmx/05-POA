@@ -261,12 +261,29 @@ class indicadores extends MX_Controller
         $sheet->mergeCells("G3:G4");
         $sheet->mergeCells("H3:I3");
 
-        /* $sheet->getColumnDimension('A')->setAutoSize(true);
-        $sheet->getColumnDimension('B')->setAutoSize(true);
-        $sheet->getColumnDimension('C')->setAutoSize(true);
-        $sheet->getColumnDimension('D')->setAutoSize(true);
-        $sheet->getColumnDimension('E')->setAutoSize(true);
-        $sheet->getColumnDimension('F')->setAutoSize(true); */
+		$i = 3;
+		$sheet->getStyle('A' . $i . ':A' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('B' . $i . ':B' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('C' . $i . ':C' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('D' . $i . ':D' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('E' . $i . ':E' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('F' . $i . ':F' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('G' . $i . ':G' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('H' . ($i + 1) . ':H' . ($i + 1))->getAlignment()->setWrapText(true);
+		$sheet->getStyle('I' . ($i + 1) . ':I' . ($i + 1))->getAlignment()->setWrapText(true);
+
+		$sheet->getColumnDimension('A')->setWidth(12);
+		$sheet->getColumnDimension('B')->setWidth(18);
+		$sheet->getColumnDimension('C')->setWidth(11);
+		$sheet->getColumnDimension('D')->setWidth(40);
+		$sheet->getColumnDimension('E')->setWidth(50);
+		$sheet->getColumnDimension('F')->setWidth(20);
+		$sheet->getColumnDimension('G')->setWidth(8);
+		$sheet->getColumnDimension('H')->setWidth(12);
+		$sheet->getColumnDimension('I')->setWidth(12);
+
+		$sheet->getRowDimension($i)->setRowHeight(30);
+		$sheet->getRowDimension($i + 1)->setRowHeight(30);
 
         $sheet->getStyle('A1:I2')->applyFromArray($styleArray);
 		$sheet->getStyle('A3:I4')->applyFromArray($estilo_encabezado);
@@ -302,7 +319,27 @@ class indicadores extends MX_Controller
                 $sheet->setCellValue("G".$i, $indicador->meta);
                 $sheet->getStyle('A' . $i . ':I' . $i)->applyFromArray($estilo_bordes_internos);
 
-                $programadoNumero = 0;
+				$caracteres_nombre_indicador = strlen($indicador->indicadorNombre);
+				if ($caracteres_nombre_indicador > 47) {
+					$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_nombre_indicador / 47) * 13 + 13);
+				}
+
+				$caracteres_nombre_meta = strlen($indicador->definicion);
+				if ($caracteres_nombre_meta > 61 && (intval($caracteres_nombre_indicador / 47) * 13 + 13) < (intval($caracteres_nombre_meta / 61) * 13 + 13)) {
+					$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_nombre_meta / 61) * 13 + 13);
+				}
+
+				$caracteres_metodo_calculo = strlen($indicador->metodo_calculo);
+				if ($caracteres_metodo_calculo > 21 && (intval($caracteres_nombre_meta / 61) * 13 + 13) < (intval($caracteres_metodo_calculo / 21) * 15 + 18)) {
+					$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_metodo_calculo / 21) * 15 + 18);
+				}
+
+				$sheet->getStyle('D' . $i)->getAlignment()->setWrapText(true);
+				$sheet->getStyle('E' . $i)->getAlignment()->setWrapText(true);
+				$sheet->getStyle('F' . $i)->getAlignment()->setWrapText(true);
+
+
+				$programadoNumero = 0;
                 $alcanzadoNumero = 0;
 
                 $meta = $this->reportes->getTipoMetas($indicador->meta_id);
@@ -324,18 +361,18 @@ class indicadores extends MX_Controller
                             $alcanzadoNumero += $alcanzado ? $alcanzado->numero : 0;
                         }
                     }
-    
+
                     if($alcanzadoNumero == 0 && $programadoNumero == 0){
                         $avance = 100;
                     } else {
-                        $avance = number_format(($alcanzadoNumero / $programadoNumero) * 100, 1);   
+                        $avance = number_format(($alcanzadoNumero / $programadoNumero) * 100, 1);
                     }
                     if($acumulado->numero == 0){
                         $trimestreAcumulado = number_format(($acumuladoa->numero / 100) * 100, 1);
                     } else {
                         $trimestreAcumulado = number_format(($acumuladoa->numero / $acumulado->numero) * 100, 1);
                     }
-                    
+
                     $sheet->setCellValue("H".$i, $avance);
                     $sheet->setCellValue("I".$i, $trimestreAcumulado);
                 }
