@@ -272,12 +272,22 @@ class avanceTrimestral extends MX_Controller
 		$sheet->getStyle('A1:N3')->applyFromArray($styleArray);
 		$sheet->getStyle('A4:N6')->applyFromArray($estilo_encabezado);
 
-        $sheet->getColumnDimension('A')->setAutoSize(true);
-        $sheet->getColumnDimension('B')->setAutoSize(true);
-        $sheet->getColumnDimension('C')->setAutoSize(true);
-        $sheet->getColumnDimension('D')->setAutoSize(true);
-        $sheet->getColumnDimension('E')->setAutoSize(true);
-        $sheet->getColumnDimension('F')->setAutoSize(true);
+		$sheet->getColumnDimension('A')->setWidth(4);
+		$sheet->getColumnDimension('B')->setWidth(3);
+		$sheet->getColumnDimension('C')->setWidth(3);
+		$sheet->getColumnDimension('D')->setWidth(3);
+		$sheet->getColumnDimension('E')->setWidth(3);
+		$sheet->getColumnDimension('F')->setWidth(3);
+		$sheet->getColumnDimension('G')->setWidth(70);
+		$sheet->getColumnDimension('H')->setWidth(20);
+		$sheet->getColumnDimension('I')->setWidth(11);
+		$sheet->getColumnDimension('J')->setWidth(10);
+		$sheet->getColumnDimension('K')->setWidth(10);
+		$sheet->getColumnDimension('L')->setWidth(11);
+		$sheet->getColumnDimension('M')->setWidth(10);
+		$sheet->getColumnDimension('N')->setWidth(10);
+
+		$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 2);
 
         $sheet->setCellValue("A1", 'PROGRAMA OPERATIVO ANUAL '.$ejercicio->ejercicio);
         $sheet->setCellValue("A2", 'AVANCE DE PROYECTOS AL '.$ejercicio->ejercicio);
@@ -331,7 +341,12 @@ class avanceTrimestral extends MX_Controller
                     $sheet->setCellValue("F".$i, $proyecto->pynom);
 					$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_proyectos);
 					$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
-					$sheet->getStyle('A'.$i.':N'.$i)->getAlignment()->setWrapText(true);
+
+					$sheet->getStyle('F'.$i)->getAlignment()->setWrapText(true);
+					$caracteres_nombre_proyecto = strlen($proyecto->pynom);
+					if ($caracteres_nombre_proyecto > 93) {
+						$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_nombre_proyecto / 93) * 13 + 13);
+					}
 
                     $metas = $this->reportes->getMetas($proyecto->proyecto_id);
                     foreach($metas as $meta){
@@ -346,6 +361,14 @@ class avanceTrimestral extends MX_Controller
                         $sheet->setCellValue("F".$i, $metat);
                         $sheet->setCellValue("G".$i, $meta->nombre);
                         $sheet->setCellValue("H".$i, $meta->umnom);
+
+						$caracteres_nombre_meta = strlen($meta->nombre);
+						if ($caracteres_nombre_meta > 89) {
+							$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_nombre_meta / 89) * 13 + 13);
+						}
+
+						$sheet->getStyle('G' . $i)->getAlignment()->setWrapText(true);
+						$sheet->getStyle('H' . $i)->getAlignment()->setWrapText(true);
 
                         // Obtener el avance del mes acorde al trimestre seleccionado
                         $programadoNumero = 0;
@@ -390,7 +413,7 @@ class avanceTrimestral extends MX_Controller
 							$acumuladoa = $this->seguimiento_model->getAvanceAlcanzadoAcumulado($mes, $meta->meta_id);
 						}
 						$pacm = $this->seguimiento_model->getPorcentajeAcumulado($meta->meta_id, $mes);
-						
+
                         $sheet->setCellValue("L".$i, $acumulado->numero);
                         $sheet->setCellValue("M".$i, $acumuladoa->numero);
                         $sheet->setCellValue("N".$i, $pacm->porcentaje);
