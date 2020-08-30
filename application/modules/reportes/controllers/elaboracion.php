@@ -11,6 +11,7 @@ class elaboracion extends MX_Controller
         $models = array(
             'graficas_model',
             'home/home_inicio',
+			'seguimientoModel',
             'reportes'
         );
         $this->load->model($models);
@@ -187,6 +188,60 @@ class elaboracion extends MX_Controller
         $objWriter->save('php://output');
     }
 
+	private function _programas()
+	{
+		if ($query = $this->seguimientoModel->getProgramas($this->session->userdata('ejercicio'))) {
+			$programas = array('' => '-Seleccione un programa -');
+			foreach ($query as $row) {
+				$programas[$row->programa_id] = $row->nombre;
+			}
+			return $programas;
+		}
+	}
+
+	public function getAperturaProgramatica($meta = false)
+	{
+		$tabla = '';
+		$tabla .= '
+            <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <td></td>';
+		$mesVisible = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
+		$mes = $mesVisible ? $mesVisible->mes_id : date('n');
+		$mesesVisibles = array();
+		if($mes == '1'){
+			array_push($mesesVisibles, $mesVisible->mes_id);
+		} else {
+			for($i = 1; $i <= $mes; $i++){
+				array_push($mesesVisibles, $i);
+			}
+		}
+		$meses = array();
+		// obtener los nombres de los meses
+		for($i = 0; $i < count($mesesVisibles); $i++){
+			$mes = $this->seguimientoModel->getNombreMes($mesesVisibles[$i]);
+			$tabla .= '<td class="text-center">'.ucfirst($mes->nombre).'</td>';
+		}
+		$tabla .= '</tr></thead>';
+		$porcentaje = $this->seguimientoModel->getTipoMeta($meta);
+		$tabla .= '
+            <tbody>
+            <tr>
+                <td>Programado</td>
+        ';
+		for($i = 0; $i < count($mesesVisibles); $i++){
+			$programados = $this->seguimientoModel->getMetasProgramados($meta, $mesesVisibles[$i]);
+			$tabla .= '<td class="text-center">'.$programados->numero.'</td>';
+		}
+		$tabla .= '</tr>';
+		$tabla .= '</tr>';
+		$tabla .= '</tbody>';
+		$tabla .= '</table></div>';
+		echo $tabla;
+	}
+
     public function index()
     {
         $data = array();
@@ -198,22 +253,11 @@ class elaboracion extends MX_Controller
         $data['tabla']   = $this->_tablaProyectos();
         $data['seccion'] = 'Reportes Elaboración';
         $data['js']      = 'graficas/0001_pie.js';
+		$data['programas'] = $this->_programas();
         $data['header']  = $this->load->view('home/home_header', $data, TRUE);
         $data['menu']    = $this->load->view('home/home_menu_r', $data, TRUE);
         $data['main']    = $this->load->view('reportes', $data, TRUE);
         $data['salir']   = $this->load->view('home/home_salir', $data, TRUE);
-        /* $data = array(
-            'header'    => $this->load->view('home/home_header', $data, TRUE),
-            'seccion'   => "Reportes",
-            'tabla'     => $this->_tablaProyectos(),
-            'menu'      => $this->load->view('home/home_menu_r', $data, TRUE),
-            'main'      => $this->load->view('reportes', $data, TRUE),
-            'salir'     => $this->load->view('home/home_salir', $data, TRUE),
-            'js_k'      => array(
-                '<script src="' . base_url('js/graficas/0001_pie.js').'"></script>',
-                '<script src="' . base_url('js/graficas/0002_bar.js').'"></script>',
-            )
-        );*/
         $this->load->view('home/layout_general_graficas', $data);
     }
 }
