@@ -24,6 +24,7 @@
 	<link  href="<?php echo base_url("css/style.css"); ?>" rel="stylesheet">
     <link  href="<?php echo base_url("css/accordion.css"); ?>" rel="stylesheet">
     <link  href="<?php echo base_url("css/jquery.fancybox.css"); ?>" rel="stylesheet">
+	<link  href="<?php echo base_url("css/sweetalert2.css"); ?>" rel="stylesheet">
     <!--<link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/material-kit.css'; ?>">-->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/hover.css'; ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/bootstrap-select.css'; ?>">
@@ -99,6 +100,7 @@
     <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>-->
     <!--<script src="<?php echo base_url().'js/highcharts/highcharts.js'; ?>"></script>-->
     <!--Variable global JS-->
+	<script src="<?php echo base_url().'js/sweetalert2.js'; ?>"></script>
     <script src="<?php echo base_url('js/echarts.min.js');?>"></script>
     <script>
         var base_url = '<?php echo base_url(); ?>';

@@ -146,6 +146,48 @@ $(document).ready(function() {
 	})
 
 	$('#construirPdf').on('click', function () {
-		console.log($('input:checkbox[name=fichas]').val())
+		const fichas = document.getElementsByName('fichas[]')
+		let selected = []
+		for (var ficha of fichas) {
+			if (ficha.checked)
+				selected.push(ficha.value)
+		}
+		if (selected.length === 0) {
+			swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'No has seleccionado ningún proyecto para generar las fichas.'
+			});
+			return
+		}
+		console.log(selected)
+		$.ajax({
+			url: base_url+'seguimiento/metasComplementarias/putSeguimientoNormal',
+			type: 'POST',
+			data: { selected },
+			success: function(data) {
+				if(data === '422'){
+					swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'El número alcanzado es mayor al programado.'
+					});
+				} else {
+					Swal.fire({
+						icon: 'success',
+						title: 'El avance de la meta ha sido guardado con éxito.',
+						showConfirmButton: false,
+						timer: 5000
+					})
+					limpiarSeguimientoNormal()
+					setTimeout(function () {
+						location.reload()
+					}, 1000)
+				}
+			},
+			error: function(data) {
+				console.log(data);
+			}
+		})
 	})
 });

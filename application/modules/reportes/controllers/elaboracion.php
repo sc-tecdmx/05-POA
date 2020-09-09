@@ -25,7 +25,7 @@ class elaboracion extends MX_Controller
             foreach($res as $row){
                 $tabla .= '
                 <tr>
-                    <td><input type="checkbox" value='.$row->urnum.' name="fichas"></td>
+                    <td><input type="checkbox" value='.$row->proyecto_id.' name="fichas[]"></td>
 					<td>' . $row->urnum . '</td>
 					<td>' . $row->ronum . '</td>
 					<td>' . $row->pgnum . '</td>
