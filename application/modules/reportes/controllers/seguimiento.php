@@ -453,7 +453,8 @@ class seguimiento extends MX_Controller
                 $data[$i++] = array(
                     'name' => $this->_is_exist($key->numUniResGas) . ' ' . $this->_is_exist($key->numResOp) . ' ' . $this->_is_exist($key->progNum) . ' ' . $this->_is_exist($key->subNum) . ' ' . $this->_is_exist($key->proyNum) . ' ' . $this->_is_exist($key->metaNum),
                     // 'value' => $this->_is_exist($key->porcentaje_real, TRUE),
-                    'value' => $this->_is_exist($key->metaNum, TRUE),
+                    // 'value' => $this->_is_exist($key->metaPor, TRUE),
+                    'value' => $key->metaPor
                 );
             }
             echo json_encode($data);

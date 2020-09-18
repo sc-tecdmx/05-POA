@@ -43,7 +43,8 @@ class Graficas_model extends CI_Model
             'programas.numero as progNum',
             'subprogramas.numero as subNum',
             'proyectos.numero as proyNum',
-            'meses_metas_alcanzadas.numero as metaNum'
+            'meses_metas_alcanzadas.numero as metaNum',
+            'meses_metas_alcanzadas.porcentaje as metaPor'
         );
         $this->db->select($data);
         $this->db->from('meses_metas_alcanzadas');
@@ -55,8 +56,8 @@ class Graficas_model extends CI_Model
         $this->db->join('subprogramas', 'proyectos.subprograma_id = subprogramas.subprograma_id');
         $this->db->join('programas', 'programas.programa_id = subprogramas.subprograma_id');
         $this->db->where('meses_metas_alcanzadas.mes_id', $id);
-        // $this->db->where('unidades_responsables_gastos.ejercicio_id', $ejercicio);
-        $this->db->group_by('meses_metas_alcanzadas.numero', 'DESC');
+        $this->db->where('unidades_responsables_gastos.ejercicio_id', $ejercicio);
+        // $this->db->group_by('meses_metas_alcanzadas.numero', 'DESC');
         $query = $this->db->get();
 
         if($query->num_rows() > 0){

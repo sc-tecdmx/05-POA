@@ -6,6 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class avanceTrimestral extends MX_Controller
@@ -261,13 +262,7 @@ class avanceTrimestral extends MX_Controller
         $sheet->mergeCells("F4:G6");
         $sheet->mergeCells("H4:H6");
         $sheet->mergeCells("I4:K4");
-        $sheet->mergeCells("I5:I6");
-        $sheet->mergeCells("J5:J6");
-        $sheet->mergeCells("K5:K6");
         $sheet->mergeCells("L4:N4");
-        $sheet->mergeCells("L5:L6");
-        $sheet->mergeCells("M5:M6");
-		$sheet->mergeCells("N5:N6");
 
 		$sheet->getStyle('A1:N3')->applyFromArray($styleArray);
 		$sheet->getStyle('A4:N6')->applyFromArray($estilo_encabezado);
@@ -280,11 +275,11 @@ class avanceTrimestral extends MX_Controller
 		$sheet->getColumnDimension('F')->setWidth(3);
 		$sheet->getColumnDimension('G')->setWidth(70);
 		$sheet->getColumnDimension('H')->setWidth(20);
-		$sheet->getColumnDimension('I')->setWidth(11);
-		$sheet->getColumnDimension('J')->setWidth(10);
+		$sheet->getColumnDimension('I')->setWidth(20);
+		$sheet->getColumnDimension('J')->setWidth(20);
 		$sheet->getColumnDimension('K')->setWidth(10);
-		$sheet->getColumnDimension('L')->setWidth(11);
-		$sheet->getColumnDimension('M')->setWidth(10);
+		$sheet->getColumnDimension('L')->setWidth(20);
+		$sheet->getColumnDimension('M')->setWidth(20);
 		$sheet->getColumnDimension('N')->setWidth(10);
 
 		$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 2);
@@ -302,12 +297,18 @@ class avanceTrimestral extends MX_Controller
         $sheet->setCellValue("H4", 'Unidad de medida');
         $sheet->setCellValue("I4", 'Avance Trimestral '.$mnombre);
         $sheet->setCellValue("L4", 'Avance Acumulado '.$mnombre);
-        $sheet->setCellValue("I5", 'Programada o Recibido (1)');
-        $sheet->setCellValue("J5", 'Alcanzada o Atendido (2)');
-        $sheet->setCellValue("K5", 'Avance % (2)(1)');
-        $sheet->setCellValue("L5", 'Programada o Recibido (3)');
-        $sheet->setCellValue("M5", 'Alcanzda o Atendido (4)');
-        $sheet->setCellValue("N5", 'Avance % (4)(3)');
+        $sheet->setCellValue("I5", 'Programada o Recibido');
+		$sheet->setCellValue("I6", '(1)');
+        $sheet->setCellValue("J5", 'Alcanzada o Atendido');
+        $sheet->setCellValue("J6", '(2)');
+        $sheet->setCellValue("K5", 'Avance %');
+        $sheet->setCellValue("K6", '(2)(1)');
+        $sheet->setCellValue("L5", 'Programada o Recibido');
+        $sheet->setCellValue("L6", '(3)');
+        $sheet->setCellValue("M5", 'Alcanzda o Atendido');
+        $sheet->setCellValue("M6", '(4)');
+        $sheet->setCellValue("N5", 'Avance %');
+        $sheet->setCellValue("N6", '(4)(3)');
 
         $programas = $this->reportes->getProgramas($this->session->userdata('ejercicio'));
         $i = 6;
@@ -319,7 +320,12 @@ class avanceTrimestral extends MX_Controller
 			$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_programas);
 			$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
 			$sheet->getStyle('A'.$i.':N'.$i)->getAlignment()->setWrapText(true);
-            $subprogramas = $this->reportes->getSubprogramas($programa->programa_id);
+			$subprogramas = $this->reportes->getSubprogramas($programa->programa_id);
+			$posicion_programa = $i;
+
+			$letras_subprogramas = array();
+			$letras_subprogramas_acumulados = array();
+
             foreach($subprogramas as $subprograma){
 				$i++;
 				$sheet->mergeCells('F'.$i.':G'.$i);
@@ -328,7 +334,13 @@ class avanceTrimestral extends MX_Controller
 				$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_subprogramas);
 				$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
 				$sheet->getStyle('A'.$i.':N'.$i)->getAlignment()->setWrapText(true);
-                $proyectos = $this->reportes->getProyectos($subprograma->subprograma_id);
+				$proyectos = $this->reportes->getProyectos($subprograma->subprograma_id);
+
+				$posicion_subprograma = $i;
+
+				$letras_metas_principales = array();
+				$letras_metas_principales_acumuladas = array();
+
                 foreach($proyectos as $proyecto){
                     $i++;
                     $sheet->setCellValue("A".$i, $proyecto->urnum);
@@ -341,6 +353,8 @@ class avanceTrimestral extends MX_Controller
                     $sheet->setCellValue("F".$i, $proyecto->pynom);
 					$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_proyectos);
 					$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
+
+					$posicion_proyecto = $i;
 
 					$sheet->getStyle('F'.$i)->getAlignment()->setWrapText(true);
 					$caracteres_nombre_proyecto = strlen($proyecto->pynom);
@@ -392,13 +406,13 @@ class avanceTrimestral extends MX_Controller
 								$alcanzado = $this->reportes->getAvanceMesResuelto($j, $meta->meta_id);
 								$programadoNumero += $programado->numero;
 								$alcanzadoNumero += $alcanzado?$alcanzado->numero:0;
-								$alcanzadoPorcentaje += $programado->porcentaje;
+								$alcanzadoPorcentaje = $programado->porcentaje;
 							} else {
 								$programado = $this->seguimiento_model->getAvanceMesProgramado($j, $meta->meta_id);
 								$alcanzado = $this->seguimiento_model->getAvanceMesAlcanzado($j, $meta->meta_id);
 								$programadoNumero += $programado->numero;
 								$alcanzadoNumero += $alcanzado->numero;
-								$alcanzadoPorcentaje += $alcanzado->porcentaje;
+								$alcanzadoPorcentaje = $alcanzado->porcentaje;
 							}
 						}
 						$sheet->setCellValue("I".$i, $programadoNumero);
@@ -414,12 +428,61 @@ class avanceTrimestral extends MX_Controller
 						}
 						$pacm = $this->seguimiento_model->getPorcentajeAcumulado($meta->meta_id, $mes);
 
+						$porcentajeAcumulado = $pacm->porcentaje / $mes;
                         $sheet->setCellValue("L".$i, $acumulado->numero);
                         $sheet->setCellValue("M".$i, $acumuladoa->numero);
-                        $sheet->setCellValue("N".$i, $pacm->porcentaje);
+						$sheet->setCellValue("N".$i, $porcentajeAcumulado);
+
+						if ($meta->tipo == 'principal') {
+							$letras_metas_principales[] = 'K'. $i;
+							$letras_metas_principales_acumulados[] = 'N'.$i;
+						}
                     }
-                }
-            }
+                    $proyectos = $posicion_proyecto + 1;
+					$sheet->setCellValue('K' . $posicion_proyecto, "=+K$proyectos");
+
+					$sheet->setCellValue('N' . $posicion_proyecto, "=+N$proyectos");
+				}
+
+				$letras_metas_principales = implode(',', $letras_metas_principales);
+				if ($letras_metas_principales != "") {
+					$sheet->setCellValue('K' . $posicion_subprograma, "=IF(COUNT($letras_metas_principales)>0, AVERAGE($letras_metas_principales), \"No aplica\")");
+				} else {
+					$sheet->setCellValue('K' . $posicion_subprograma, "No aplica");
+				}
+				$sheet->getStyle('K' . $posicion_subprograma)->getNumberFormat()
+						->setFormatCode('##0.00');
+
+				$letras_metas_principales_acumuladas = implode(',', $letras_metas_principales_acumuladas);
+				if ($letras_metas_principales_acumuladas != "") {
+					$sheet->setCellValue('N' . $posicion_subprograma, "=IF(COUNT($letras_metas_principales_acumuladas)>0, AVERAGE($letras_metas_principales_acumuladas), \"No aplica\")");
+				} else {
+					$sheet->setCellValue('N' . $posicion_subprograma, "No aplica");
+				}
+				$sheet->getStyle('N' . $posicion_subprograma)->getNumberFormat()
+						->setFormatCode('##0.00');
+
+				$letras_subprogramas[] = 'K' . $posicion_subprograma;
+				$letras_subprogramas_acumulados[] = 'N' . $posicion_subprograma;
+			}
+
+			$letras_subprogramas = implode(',', $letras_subprogramas);
+			if ($letras_subprogramas != "") {
+				$sheet->setCellValue('K' . $posicion_programa, "=IF(COUNT($letras_subprogramas)>0, AVERAGE($letras_subprogramas), \"No aplica\")");
+			} else {
+				$sheet->setCellValue('K' . $posicion_programa, "No aplica");
+			}
+			$sheet->getStyle('K' . $posicion_programa)->getNumberFormat()
+					->setFormatCode('##0.00');
+
+			$letras_subprogramas_acumulados = implode(',', $letras_subprogramas_acumulados);
+			if ($letras_subprogramas_acumulados != "") {
+				$sheet->setCellValue('N' . $posicion_programa, "=IF(COUNT($letras_subprogramas_acumulados)>0, AVERAGE($letras_subprogramas_acumulados), \"No aplica\")");
+			} else {
+				$sheet->setCellValue('N' . $posicion_programa, "No aplica");
+			}
+			$sheet->getStyle('N' . $posicion_programa)->getNumberFormat()
+					->setFormatCode('##0.00');
         }
 
 		$writer = new Xlsx($spreadsheet); // instantiate Xlsx
