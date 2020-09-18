@@ -197,6 +197,10 @@ $(document).ready(function() {
     /**
      * Funciones para el Avance Mensual
      */
+    $('#mesAvanceMensual').on('change', function () {
+    	$('#colExportExcelMonthly').css('display', 'block')
+	})
+
     $('#programasAvanceMensual').on('change', function () {
         $('#subprogramasAvanceMensual').empty();
         $('#subprogramasAvanceMensual').append('<option value=""> - Seleccione un subprograma - </option>');
@@ -300,6 +304,11 @@ $(document).ready(function() {
             }
         })
     })
+
+	$('#exportExcelMonthly').on('click', function () {
+		const mes = $('#mesAvanceMensual').val()
+		window.open(base_url+'reportes/avanceMensual/index/'+mes, '_blank');
+	})
 
     /**
      * Función para mostrar el avance trimestral y acumulado

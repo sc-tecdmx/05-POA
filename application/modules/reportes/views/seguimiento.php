@@ -145,6 +145,9 @@
                                         <option value=""> - Selecciona una meta -</option>
                                     </select>
                                 </div>
+								<div class="col-md-6 mt-2" id="colExportExcelMonthly" style="display: none">
+									<button class="btn btn-success" id="exportExcelMonthly"><i class="mdi mdi-file-excel"></i> Excel</button>
+								</div>
                             </div>
                             <div class="row mt-4">
                                 <div class="col-md-12 mt-4" id="tablaAvanceMensual">
