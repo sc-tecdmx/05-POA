@@ -131,8 +131,10 @@ class Configuracion extends MX_Controller
                 'ejercicio'                                         => $ejercicio,
                 'permitir_edicion_seguimiento'                      => 'no',
                 'permitir_edicion_seguimiento_derechos_humanos'     => 'no',
-                'ultimo_mes_visible'                                => 'enero',
-                'ultimo_mes_consulta'                               => 'enero'
+                'permitir_edicion_elaboracion'                      => 'no',
+                'ultimo_mes_visible'                                => '1',
+                'ultimo_mes_consulta'                               => '1',
+                'tipo_captura_seguimiento'                          => 'global'
             );
             $insert = $this->proyectos_model->insertar($datos, 'ejercicios');
 
@@ -327,7 +329,8 @@ class Configuracion extends MX_Controller
 									$obtener_unidad = $this->elaboracion->getUnidad($indicador->unidad_medida_id);
 									$unidad_actual = $this->elaboracion->getUnidadActual($obtener_unidad->nombre, $insert);
 									$data3 = array(
-										'meta_id'           => $meta_id,
+                                        'meta_id'           => $meta_id,
+                                        'proyecto_id'       => $proyecto->proyecto_id,
 										'unidad_medida_id'  => $unidad_actual->unidad_medida_id, // obtener nueva unidad medida
 										'dimension_id'      => $indicador->dimension_id,
 										'frecuencia_id'     => $indicador->frecuencia_id,
