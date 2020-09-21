@@ -29,8 +29,9 @@ class seguimiento extends MX_Controller
 
     private function _getMesesArray()
     {
-        $ejercicio = $this->home_inicio->get_ejercicio();
-        $res = $this->seguimiento_model->getMesesHabilitados($ejercicio->ejercicio_id);
+        // $ejercicio = $this->home_inicio->get_ejercicio();
+		$ejercicio = $this->session->userdata('ejercicio');
+        $res = $this->seguimiento_model->getMesesHabilitados($ejercicio);
         if($res){
             $meses = array('' => '- Seleccione uno -');
             foreach ($res as $row){

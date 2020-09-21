@@ -316,7 +316,7 @@ class Configuracion extends MX_Controller
 										'mes_id'        => $i,
 										'numero'        => '0'
 									);
-									$this->general->insertaBase('meses_metas_alcanzadas', $data2);
+									$this->general->insertaBase('meses_metas_complementarias_resueltos', $data2);
 								}
 							}
 
