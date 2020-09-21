@@ -281,7 +281,9 @@ class Configuracion extends MX_Controller
 								'unidad_medida_id'  => $unidad_actual->unidad_medida_id, // obtener la nueva unidad de medida
 								'tipo'              => $meta->tipo,
 								'orden'             => $meta->orden,
-								'nombre'            => $meta->nombre
+								'nombre'            => $meta->nombre,
+								'peso'				=> $meta->peso,
+								'tmc'				=> $meta->tmc
 							);
 							$meta_id = $this->elaboracion->insert('metas', $data);
 
