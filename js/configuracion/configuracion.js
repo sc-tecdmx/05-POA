@@ -1,6 +1,5 @@
 function getDatos()
 {
-    console.log('datos')
     $.ajax({
         url: base_url+'configuracion/configuracion/getInfoConfiguracionElaboracion/',
         dataType: 'json',
@@ -47,6 +46,7 @@ $(document).ready(function () {
             method: "POST",
             data: { ejercicio, habilitar, edicion },
             success: function(data) {
+            	console.log(data)
                 swal.fire({
                     icon: 'success',
                     title: 'La configuración ha sido aplicada correctamente',

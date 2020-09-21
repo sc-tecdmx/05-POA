@@ -85,6 +85,12 @@ class Configuracion extends MX_Controller
         echo json_encode($data);
     }
 
+    private function _verifyPercentages($unidadId)
+	{
+		$percentages = $this->elaboracion->getTypeUnity($unidadId);
+		return $percentages->porcentajes != '0';
+	}
+
     public function elaboracion()
     {
         $ejercicio = $this->input->post('ejercicio');
@@ -92,7 +98,7 @@ class Configuracion extends MX_Controller
         $edicion = $this->input->post('edicion');
         /**
          * Proceso para la configuración de la elaboración de fichas POA
-         * 1. Validar si el ejercicio ya esta registrado en la BD
+         *   1. Validar si el ejercicio ya esta registrado en la BD
          *      1.1 Si no existe el ejercicio lo que tenemos que hacer es copiar y pegar todos los datos del ejercicio anterior
          *      1.2 Si el ejercicio ya existe solo es cuestión de actualizar los permisos
          */
@@ -128,14 +134,14 @@ class Configuracion extends MX_Controller
                 'ultimo_mes_visible'                                => 'enero',
                 'ultimo_mes_consulta'                               => 'enero'
             );
-            $insert = $this->proyecto_model->insertaBase($datos, 'ejercicios');
+            $insert = $this->proyectos_model->insertar($datos, 'ejercicios');
 
             if(!$insert){
                 echo '400';
             }
 
             // Creamos registros en la tabla de control de meses para el seguimiento de metas
-            for($i=1;$i<=12;$i++){
+            for($i = 1; $i <= 12; $i++){
                 $datos = array(
                     'ejercicio_id'  => $insert,
                     'mes_id'        => $i,
@@ -145,7 +151,7 @@ class Configuracion extends MX_Controller
             }
 
             // Creamos registros en la tabla de control de meses para el seguimiento de derechos humanos
-            for($i=1;$i<=12;$i++){
+            for($i = 1; $i <= 12; $i++){
                 $datos = array(
                     'ejercicio_id'  => $insert,
                     'mes_id'        => $i,
@@ -158,8 +164,8 @@ class Configuracion extends MX_Controller
             // solamente en caso de que exista uno anterior
             $ejercicio_anterior = $ejercicio - 1;
             $bus = $this->elaboracion->searchEjercicio($ejercicio_anterior);
-            if($bus){
-                $programas = $this->configuracion->getProgramas($bus->ejercicio_id);
+            if ($bus) {
+                $programas = $this->elaboracion->getProgramas($bus->ejercicio_id);
                 foreach($programas as $row){
                     $datos = array(
                         'ejercicio_id'  => $insert,
@@ -168,7 +174,7 @@ class Configuracion extends MX_Controller
                     );
                     $programa_id = $this->elaboracion->insert('programas', $datos);
 
-                    $subprogramas = $this->configuracion->getSubprogramas($row->programa_id);
+                    $subprogramas = $this->elaboracion->getSubprogramas($row->programa_id);
                     foreach($subprogramas as $subprograma){
                         $data = array(
                             'programa_id'   => $programa_id,
@@ -179,7 +185,8 @@ class Configuracion extends MX_Controller
                     }
                 }
 
-                $urgs = $this->configuracion->getUnidadesResponsablesGastos($bus->ejercicio_id);
+                // $urgs = $this->elaboracion->getUnidadesResponsablesGastos($bus->ejercicio_id);
+				$urgs = $this->elaboracion->getInfo('unidades_responsables_gastos', $bus->ejercicio_id);
                 foreach($urgs as $urg){
                     $datos = array(
                         'ejercicio_id'      => $insert,
@@ -189,7 +196,7 @@ class Configuracion extends MX_Controller
                     );
                     $urg_id = $this->elaboracion->insert('unidades_responsables_gastos', $datos);
 
-                    $responsables_operativos = $this->configuracion->getResponsablesOperativos($urg->unidad_responsable_gasto_id);
+                    $responsables_operativos = $this->elaboracion->getResponsablesOperativos($urg->unidad_responsable_gasto_id);
                     foreach ($responsables_operativos as $responsable_operativo){
                         $data = array(
                             'unidad_responsable_gasto_id'   => $urg_id,
@@ -201,9 +208,20 @@ class Configuracion extends MX_Controller
                 }
 
                 // Replicación de usuarios en caso de que sea necesario
+				// Actualización de usuarios en tabla usuarios ejercicios
+				$users = $this->elaboracion->getPreviousUsers($bus->ejercicio_id);
+                if ($users) {
+                	foreach ($users as $user) {
+						$datos = array(
+							'usuario_id'    => $user->usuario_id,
+							'ejercicio_id'  => $insert
+						);
+						$this->general->insertaBase('usuarios_ejercicios', $datos);
+					}
+				}
 
                 // Replicación de Unidades de Medida
-                $unidades_medidas = $this->configuracion->getInfo('unidades_medidas', $bus->ejercicio_id);
+                $unidades_medidas = $this->elaboracion->getInfo('unidades_medidas', $bus->ejercicio_id);
                 foreach ($unidades_medidas as $unidad_medida){
                     $datos = array(
                         'ejercicio_id'  => $insert,
@@ -215,11 +233,15 @@ class Configuracion extends MX_Controller
                 }
 
                 // Replicación de Proyectos
-                $proyectos = $this->configuracion->getInfo('proyectos', $bus->ejercicio_id);
+                $proyectos = $this->elaboracion->get_projects($bus->ejercicio_id);
                 foreach($proyectos as $proyecto){
-                    $datos = array(
-                        'responsable_operativo_id'      => $proyecto->responsable_operativo_id,
-                        'subprograma_id'                => $proyecto->subprograma_id,
+                	$responsable = $this->elaboracion->getInfoOperativeResponsable($proyecto->responsable_operativo_id);
+                	$nuevo_responsable = $this->elaboracion->getOperativeResponsable($responsable->nombre, $insert);
+                	$subprograma = $this->elaboracion->getInfoSubprogram($proyecto->subprograma_id);
+                	$nuevo_subprograma = $this->elaboracion->getSubprogram($subprograma->nombre, $insert);
+					$datos = array(
+                        'responsable_operativo_id'      => $nuevo_responsable->responsable_operativo_id,
+                        'subprograma_id'                => $nuevo_subprograma->subprograma_id,
                         'numero'                        => $proyecto->numero,
                         'nombre'                        => $proyecto->nombre,
                         'tipo'                          => $proyecto->tipo,
@@ -228,7 +250,7 @@ class Configuracion extends MX_Controller
                         'justificacion'                 => $proyecto->justificacion,
                         'descripcion'                   => $proyecto->descripcion,
                         'fecha'                         => $proyecto->fecha,
-                        'nombre_responsable_operativo'  => $proyecto->nombre_responsable_opertivo,
+                        'nombre_responsable_operativo'  => $proyecto->nombre_responsable_operativo,
                         'cargo_responsable_operativo'   => $proyecto->cargo_responsable_operativo,
                         'nombre_titular'                => $proyecto->nombre_titular,
                         'responsable_ficha'             => $proyecto->responsable_ficha,
@@ -238,7 +260,7 @@ class Configuracion extends MX_Controller
                     $proyecto_id = $this->elaboracion->insert('proyectos', $datos);
 
                     // Replicacion del Periodo de Ejecucion del Proyecto
-                    $meses_proyectos = $this->configuracion->getMesesProyectos($proyecto->proyecto_id);
+                    $meses_proyectos = $this->elaboracion->getMesesProyectos($proyecto->proyecto_id);
                     foreach($meses_proyectos as $mes_proyecto){
                         $data = array(
                             'proyecto_id'   => $proyecto_id,
@@ -249,70 +271,87 @@ class Configuracion extends MX_Controller
                     }
 
                     // Replicacion de Metas Principales y Complementarias
-                    $metas = $this->configuracion->getMetas($proyecto->proyecto_id);
-                    foreach($metas as $meta){
-                        $obtener_unidad = $this->configuracion->getUnidad($meta->unidad_medida_id);
-                        $unidad_actual = $this->configuracion->getUnidadActual($obtener_unidad->nombre, $insert);
-                        $data = array(
-                            'proyecto_id'       => $proyecto_id,
-                            'unidad_medida_id'  => $unidad_actual->unidad_medida_id, // obtener la nueva unidad de medida
-                            'tipo'              => $meta->tipo,
-                            'orden'             => $meta->orden,
-                            'nombre'            => $meta->nombre
-                        );
-                        $meta_id = $this->elaboracion->insert('proyectos', $datos);
+                    $metas = $this->elaboracion->getMetas($proyecto->proyecto_id);
+                    if ($metas) {
+						foreach($metas as $meta){
+							$obtener_unidad = $this->elaboracion->getUnidad($meta->unidad_medida_id);
+							$unidad_actual = $this->elaboracion->getUnidadActual($obtener_unidad->nombre, $insert);
+							$data = array(
+								'proyecto_id'       => $proyecto_id,
+								'unidad_medida_id'  => $unidad_actual->unidad_medida_id, // obtener la nueva unidad de medida
+								'tipo'              => $meta->tipo,
+								'orden'             => $meta->orden,
+								'nombre'            => $meta->nombre
+							);
+							$meta_id = $this->elaboracion->insert('metas', $data);
 
-                        // Replicacion de Metas Programadas
-                        $metas_programadas = $this->configuracion->getMetasProgramadas($meta->meta_id);
-                        foreach ($metas_programadas as $meta_programada){
-                            $data1 = array(
-                                'meta_id'   => $meta_id,
-                                'mes_id'    => $meta_programada->mes_id,
-                                'numero'    => $meta_programada->numero
-                            );
-                            $this->general->insertaBase('meses_metas_programadas', $data1);
-                        }
+							// Replicacion de Metas Programadas
+							$metas_programadas = $this->elaboracion->getMetasProgramadas($meta->meta_id);
+							foreach ($metas_programadas as $meta_programada){
+								$data1 = array(
+									'meta_id'   => $meta_id,
+									'mes_id'    => $meta_programada->mes_id,
+									'numero'    => $meta_programada->numero
+								);
+								$this->general->insertaBase('meses_metas_programadas', $data1);
+							}
 
-                        // Poblar nuevos registros para las Metas Alcanzadas
-                        for($i = 1; $i <= 12; $i++){
-                            $data2 = array(
-                                'meta_id'       => $meta_id,
-                                'mes_id'        => $i,
-                                'numero'        => '0',
-                                'explicacion'   => ''
-                            );
-                            $this->general->insertaBase('meses_metas_alcanzadas', $data2);
-                        }
+							// Poblar nuevos registros para las Metas Alcanzadas
+							for($i = 1; $i <= 12; $i++){
+								$data2 = array(
+									'meta_id'       => $meta_id,
+									'mes_id'        => $i,
+									'numero'        => '0',
+									'explicacion'   => ''
+								);
+								$this->general->insertaBase('meses_metas_alcanzadas', $data2);
+							}
 
-                        // Replicacion de Indicadores
-                        $indicadores = $this->configuracion->getIndicadores($meta->meta_id);
-                        foreach($indicadores as $indicador){
-                            $obtener_unidad = $this->configuracion->getUnidad($indicador->unidad_medida_id);
-                            $unidad_actual = $this->configuracion->getUnidadActual($obtener_unidad->nombre, $insert);
-                            $data3 = array(
-                                'meta_id'           => $meta_id,
-                                'unidad_medida_id'  => $unidad_actual->unidad_medida_id, // obtener nueva unidad medida
-                                'dimension_id'      => $indicador->dimension_id,
-                                'frecuencia_id'     => $indicador->frecuencia_id,
-                                'nombre'            => $indicador->nombre,
-                                'definicion'        => $indicador->definicion,
-                                'metodo_calculo'    => $indicador->metodo_calculo,
-                                'meta'              => $indicador->meta
-                            );
-                            $this->general->insertaBase('indicadores', $data3);
-                        }
-                    }
+							if ($this->_verifyPercentages($meta->unidad_medida_id)) {
+								for($i = 1; $i <= 12; $i++){
+									$data2 = array(
+										'meta_id'       => $meta_id,
+										'mes_id'        => $i,
+										'numero'        => '0'
+									);
+									$this->general->insertaBase('meses_metas_alcanzadas', $data2);
+								}
+							}
 
-                    // Replicacion de las Acciones Sustantivas del Proyecto
-                    $acciones_sustantivas = $this->configuracion->getAccionesSustantivas($proyecto->proyecto_id);
-                    foreach ($acciones_sustantivas as $accion_sustantiva){
-                        $data = array(
-                            'proyecto_id'   => $proyecto_id,
-                            'numero'        => $accion_sustantiva->numero,
-                            'descripcion'   => $accion_sustantiva->descripcion
-                        );
-                        $this->general->insertaBase('acciones_sustantivas', $data);
-                    }
+							// Replicacion de Indicadores
+							$indicadores = $this->elaboracion->getIndicadores($meta->meta_id);
+							if ($indicadores) {
+								foreach($indicadores as $indicador){
+									$obtener_unidad = $this->elaboracion->getUnidad($indicador->unidad_medida_id);
+									$unidad_actual = $this->elaboracion->getUnidadActual($obtener_unidad->nombre, $insert);
+									$data3 = array(
+										'meta_id'           => $meta_id,
+										'unidad_medida_id'  => $unidad_actual->unidad_medida_id, // obtener nueva unidad medida
+										'dimension_id'      => $indicador->dimension_id,
+										'frecuencia_id'     => $indicador->frecuencia_id,
+										'nombre'            => $indicador->nombre,
+										'definicion'        => $indicador->definicion,
+										'metodo_calculo'    => $indicador->metodo_calculo,
+										'meta'              => $indicador->meta
+									);
+									$this->general->insertaBase('indicadores', $data3);
+								}
+							}
+						}
+
+						// Replicacion de las Acciones Sustantivas del Proyecto
+						$acciones_sustantivas = $this->elaboracion->getAccionesSustantivas($proyecto->proyecto_id);
+						if ($acciones_sustantivas) {
+							foreach ($acciones_sustantivas as $accion_sustantiva){
+								$data = array(
+									'proyecto_id'   => $proyecto_id,
+									'numero'        => $accion_sustantiva->numero,
+									'descripcion'   => $accion_sustantiva->descripcion
+								);
+								$this->general->insertaBase('acciones_sustantivas', $data);
+							}
+						}
+					}
                 }
                 echo true;
             }

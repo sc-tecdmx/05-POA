@@ -38,22 +38,6 @@
             </div>
         </div>
         <div class="tab-pane" id="proyectos">
-            <!--<div class="row mt-4">
-                <div class="col-10 offset-1">
-                    <select class="form-control" id="seguimientOption">
-                        <option value=""> - Seleccionar - </option>
-                        <option value="1">Consolidado a la última fecha de corte (fin de mes)</option>
-                        <option value="2">Avance mensual y acumulado</option>
-                        <option value="3">Avance trimestral y acumulado</option>
-                        <option value="4">Matriz de metas programadas y alcanzadas</option>
-                        <option value="5">Avance trimestral y acumulado de indicadores</option>
-                        <option value="6">Avance trimestral de implementación de las LAPDHDF</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mt-4" id="proyectosSeguimiento">
-
-            </div>-->
             <div class="row mt-3">
                 <div class="col-3">
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">

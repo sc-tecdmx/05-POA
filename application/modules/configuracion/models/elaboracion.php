@@ -17,11 +17,10 @@ class elaboracion extends CI_Model
         $this->db->where('ejercicio', $ejercicio);
         $this->db->from('ejercicios');
         $query = $this->db->get();
-        if($query->num_rows()>0){
+        if($query->num_rows() > 0){
             return $query->row();
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function getProgramas($ejercicio)
@@ -59,6 +58,17 @@ class elaboracion extends CI_Model
             return false;
         }
     }
+
+    public function getResponsablesOperativos($urg)
+	{
+		$this->db->where('unidad_responsable_gasto_id', $urg);
+		$this->db->from('responsables_operativos');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->result();
+		}
+		return false;
+	}
 
     public function getMesesProyectos($proyecto)
     {
@@ -146,6 +156,7 @@ class elaboracion extends CI_Model
     {
         $this->db->where('nombre', $nombre);
         $this->db->where('ejercicio_id', $ejercicio);
+        $this->db->from('unidades_medidas');
         $query = $this->db->get();
         if($query->num_rows()>0){
             return $query->row();
@@ -411,4 +422,91 @@ class elaboracion extends CI_Model
             return false;
         }
     }
+
+    public function getTypeUnity($unityId)
+	{
+		$this->db->where('unidad_medida_id', $unityId);
+		$this->db->from('unidades_medidas');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->row();
+		}
+		return false;
+	}
+
+	public function getPreviousUsers($ejercicio)
+	{
+		$this->db->where('ejercicio_id', $ejercicio);
+		$this->db->from('usuarios_ejercicios');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+		return false;
+	}
+
+	public function get_projects($ejercicio)
+	{
+		$this->db->select('proyectos.*');
+		$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
+		$this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
+		$this->db->where('unidades_responsables_gastos.ejercicio_id', $ejercicio);
+		$this->db->from('proyectos');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->result();
+		} else {
+			return FALSE;
+		}
+	}
+
+	public function getInfoOperativeResponsable($responsable)
+	{
+		$this->db->where('responsable_operativo_id', $responsable);
+		$this->db->from('responsables_operativos');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+		return FALSE;
+	}
+
+	public function getOperativeResponsable($responsable, $ejercicio)
+	{
+		$this->db->select('responsables_operativos.*');
+		$this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
+		$this->db->where('responsables_operativos.nombre', $responsable);
+		$this->db->where('unidades_responsables_gastos.ejercicio_id', $ejercicio);
+		$this->db->from('responsables_operativos');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+		return FALSE;
+	}
+
+	public function getInfoSubprogram($subprograma)
+	{
+		$this->db->where('subprograma_id', $subprograma);
+		$this->db->from('subprogramas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+		return FALSE;
+	}
+
+	public function getSubprogram($subprograma, $ejercicio)
+	{
+		$this->db->select('subprogramas.*');
+		$this->db->join('programas', 'subprogramas.programa_id = programas.programa_id');
+		$this->db->where('subprogramas.nombre', $subprograma);
+		$this->db->where('programas.ejercicio_id', $ejercicio);
+		$this->db->from('subprogramas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+		return FALSE;
+	}
 }
