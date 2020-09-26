@@ -451,10 +451,10 @@ class seguimiento extends MX_Controller
             $i = 0;
             foreach($exist as $key){
                 $data[$i++] = array(
-                    'name' => $this->_is_exist($key->numUniResGas) . ' ' . $this->_is_exist($key->numResOp) . ' ' . $this->_is_exist($key->progNum) . ' ' . $this->_is_exist($key->subNum) . ' ' . $this->_is_exist($key->proyNum) . ' ' . $this->_is_exist($key->metaNum),
+                    'name' => $this->_is_exist($key->urnum) . ' ' . $this->_is_exist($key->ronum) . ' ' . $this->_is_exist($key->pgnum) . ' ' . $this->_is_exist($key->sbnum) . ' ' . $this->_is_exist($key->pynum),
                     // 'value' => $this->_is_exist($key->porcentaje_real, TRUE),
                     // 'value' => $this->_is_exist($key->metaPor, TRUE),
-                    'value' => $key->metaPor
+                    'value' => $key->porcentaje_real
                 );
             }
             echo json_encode($data);

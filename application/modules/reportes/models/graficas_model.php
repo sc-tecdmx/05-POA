@@ -27,9 +27,35 @@ class Graficas_model extends CI_Model
 
     }
 
-    public function getMetasComplementarias($id, $ejercicio)
+    public function getMetasComplementarias($mes, $ejercicio)
     {
-        $data = array(
+		$this->db->select('
+			proyectos.numero as pynum,
+			subprogramas.numero as sbnum,
+			programas.numero as pgnum,
+			responsables_operativos.numero as ronum,
+			unidades_responsables_gastos.numero as urnum,
+			meses_metas_alcanzadas.porcentaje_real
+		');
+		$this->db->join('meses_metas_alcanzadas', 'metas.meta_id = meses_metas_alcanzadas.meta_id');
+		$this->db->join('proyectos', 'metas.proyecto_id = proyectos.proyecto_id');
+		$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
+		$this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
+		$this->db->join('subprogramas', 'proyectos.subprograma_id = subprogramas.subprograma_id');
+		$this->db->join('programas', 'subprogramas.programa_id = programas.programa_id');
+		$this->db->join('ejercicios', 'unidades_responsables_gastos.ejercicio_id = ejercicios.ejercicio_id');
+		$this->db->where('ejercicios.ejercicio_id', $ejercicio);
+		$this->db->where('meses_metas_alcanzadas.mes_id', $mes);
+		$this->db->where('metas.tipo', 'principal');
+		$this->db->from('metas');
+		$this->db->order_by('urnum', 'DESC');
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		if($query->num_rows()>0){
+			return $query->result();
+		}
+		return false;
+        /* $data = array(
             'meses_metas_alcanzadas.mes_meta_alcanzada_id',
             //'meses_metas_alcanzadas.meta_id',
             //'meses_metas_alcanzadas.mes_id',
@@ -64,7 +90,7 @@ class Graficas_model extends CI_Model
             return $query->result();
         } else {
             return FALSE;
-        }
+        } */
     }
 
 }

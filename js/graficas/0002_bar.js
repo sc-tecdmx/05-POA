@@ -11,6 +11,7 @@ $(document).ready(function() {
             contentType: "application/json; charset=utf-8",
             method: "GET",
             success: function(data) {
+            	console.log(data)
                 var arr = [];
                 var arr0 = [];
                 data.forEach(function(e, i){
