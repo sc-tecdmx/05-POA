@@ -66,11 +66,6 @@ $config = array(
 			'rules' => 'trim|required|min_length[4]|max_length[80]'
 		),
 		array(
-			'field' => 'nacimiento',
-			'label' => 'nacimiento',
-			'rules' => 'trim|required'
-		),
-		array(
 			'field' => 'edad',
 			'label' => 'edad',
 			'rules' => 'trim|min_length[2]|max_length[2]|integer'
