@@ -29,7 +29,7 @@
                     <p>Apertura Programática</p>
                 </div>
                 <div class="col-md-4">
-                    <a href="<?php echo base_url('reportes/elaboracion/aperturaProgramatica') ?>" target="_blank" class="btn btn-success"><i class="fa fa-fw fa-file-excel"></i>Generar</a>
+                    <a href="<?php echo base_url('reportes/aperturaProgramatica/index') ?>" target="_blank" class="btn btn-success"><i class="fa fa-fw fa-file-excel"></i>Generar</a>
                 </div>
             </div>
 			<div class="row mt-3">

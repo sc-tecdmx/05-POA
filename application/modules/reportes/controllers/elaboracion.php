@@ -164,7 +164,7 @@ class elaboracion extends MX_Controller
                         $this->excel->getActiveSheet()->setCellValue("H".$i, $meta->umnom);
                         $programadas = $this->reportes->getProgramadas($meta->meta_id);
                         $lonprg = count($programadas);
-                        $arrm = ['I','J','K','L','M','N','O','P','Q','R','S','T'];
+                        $arrm = array('I','J','K','L','M','N','O','P','Q','R','S','T');
                         $j = 0;
                         $total = 0;
                         foreach($programadas as $programada){

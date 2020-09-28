@@ -25,7 +25,7 @@ class aperturaProgramatica extends MX_Controller
 
         $sheet = $spreadsheet->getActiveSheet();
         $ejercicio = $this->session->userdata('ejercicio');
-        $sheet->setTitle('Apertura Programatica '.$ejercicio->ejercicio);
+        // $sheet->setTitle('Apertura Programatica '.$this->session->userdata('anio'));
 
         // Estilos
 		$styleArray = array(
@@ -237,7 +237,29 @@ class aperturaProgramatica extends MX_Controller
         $sheet->getStyle('B1:R2')->applyFromArray($styleArray);
 		$sheet->getStyle('A3:U4')->applyFromArray($estilo_encabezado);
 
-        $sheet->setCellValue("B1", 'PROGRAMA OPERATIVO ANUAL '.$ejercicio->ejercicio);
+		$sheet->getColumnDimension('A')->setWidth(4);
+		$sheet->getColumnDimension('B')->setWidth(3);
+		$sheet->getColumnDimension('C')->setWidth(3);
+		$sheet->getColumnDimension('D')->setWidth(3);
+		$sheet->getColumnDimension('E')->setWidth(3);
+		$sheet->getColumnDimension('F')->setWidth(3);
+		$sheet->getColumnDimension('G')->setWidth(70);
+		$sheet->getColumnDimension('H')->setWidth(30);
+		$sheet->getColumnDimension('I')->setWidth(10);
+		$sheet->getColumnDimension('J')->setWidth(10);
+		$sheet->getColumnDimension('K')->setWidth(10);
+		$sheet->getColumnDimension('L')->setWidth(10);
+		$sheet->getColumnDimension('M')->setWidth(10);
+		$sheet->getColumnDimension('N')->setWidth(10);
+		$sheet->getColumnDimension('O')->setWidth(10);
+		$sheet->getColumnDimension('P')->setWidth(10);
+		$sheet->getColumnDimension('Q')->setWidth(10);
+		$sheet->getColumnDimension('R')->setWidth(10);
+		$sheet->getColumnDimension('S')->setWidth(10);
+		$sheet->getColumnDimension('T')->setWidth(10);
+		$sheet->getColumnDimension('U')->setWidth(10);
+
+        $sheet->setCellValue("B1", 'PROGRAMA OPERATIVO ANUAL '.$this->session->userdata('anio'));
         $sheet->setCellValue("B2", 'PROYECTOS');
 
         $sheet->setCellValue("A3", 'URG');
@@ -261,24 +283,26 @@ class aperturaProgramatica extends MX_Controller
         $sheet->setCellValue("T4", 'Dic');
         $sheet->setCellValue("U3", 'Total');
 
-        $programas = $this->reportes->getProgramas($this->session->userdata('ejercicio'));
+        $programas = $this->reportes->getProgramas($ejercicio);
         $i = 5;
         foreach($programas as $programa) {
+			$sheet->mergeCells("F".$i.":G".$i);
             $sheet->setCellValue("C".$i, $programa->numero);
             $sheet->setCellValue("F".$i, $programa->nombre);
+			$sheet->getStyle('A'.$i.':U'.$i)->applyFromArray($estilo_programas);
+			$sheet->getStyle('A'.$i.':U'.$i)->applyFromArray($estilo_bordes_internos);
+			$sheet->getStyle('A'.$i.':U'.$i)->getAlignment()->setWrapText(true);
             $subprogramas = $this->reportes->getSubprogramas($programa->programa_id);
-            // echo json_encode($programas);
-            // print_r($subprogramas);
-            // $lonsub = count($subprogramas);
             foreach($subprogramas as $subprograma){
-            // for($j = 0; $j < $lonsub; $j++){
                 $i++;
+				$sheet->mergeCells("F".$i.":G".$i);
                 $sheet->setCellValue("D".$i, $subprograma->numero);
                 $sheet->setCellValue("F".$i, $subprograma->nombre);
+				$sheet->getStyle('A'.$i.':U'.$i)->applyFromArray($estilo_subprogramas);
+				$sheet->getStyle('A'.$i.':U'.$i)->applyFromArray($estilo_bordes_internos);
+				$sheet->getStyle('A'.$i.':U'.$i)->getAlignment()->setWrapText(true);
                 $proyectos = $this->reportes->getProyectos($subprograma->subprograma_id);
-                // $lonpry = count($proyectos);
                 foreach($proyectos as $proyecto){
-                //for($k = 0; $k < $lonpry; $k++){
                     $i++;
                     $sheet->setCellValue("A".$i, $proyecto->urnum);
                     $sheet->setCellValue("B".$i, $proyecto->ronum);
@@ -289,16 +313,21 @@ class aperturaProgramatica extends MX_Controller
                     $sheet->mergeCells("F".$i.":G".$i);
                     $sheet->setCellValue("F".$i, $proyecto->pynom);
 
+					$sheet->getStyle('A'.$i.':U'.$i)->applyFromArray($estilo_proyectos);
+					$sheet->getStyle('A'.$i.':U'.$i)->applyFromArray($estilo_bordes_internos);
+
+					$sheet->getStyle('F'.$i)->getAlignment()->setWrapText(true);
+					$caracteres_nombre_proyecto = strlen($proyecto->pynom);
+					if ($caracteres_nombre_proyecto > 93) {
+						$sheet->getRowDimension($i)->setRowHeight(intval($caracteres_nombre_proyecto / 93) * 13 + 13);
+					}
+
                     $metas = $this->reportes->getMetas($proyecto->proyecto_id);
-                    /* echo '<pre>';
-                    var_dump($metas[3]);
-                    exit; */
-                    // $lonmet = count($metas);
                     foreach($metas as $meta){
-                    // for($l = 0; $l < $lonmet; $l++){
                         $i++;
                         if($meta->tipo == 'principal'){
                             $metat = 'MP';
+							$sheet->getStyle('A'.$i.':U'.$i)->applyFromArray($estilo_meta_principal);
                         } else {
                             $metat = 'MC';
                         }
@@ -306,12 +335,10 @@ class aperturaProgramatica extends MX_Controller
                         $sheet->setCellValue("G".$i, $meta->nombre);
                         $sheet->setCellValue("H".$i, $meta->umnom);
                         $programadas = $this->reportes->getProgramadas($meta->meta_id);
-                        $lonprg = count($programadas);
-                        $arrm = ['I','J','K','L','M','N','O','P','Q','R','S','T'];
+                        $arrm = array('I','J','K','L','M','N','O','P','Q','R','S','T');
                         $j = 0;
                         $total = 0;
                         foreach($programadas as $programada){
-                        // for($m = 0; $m < $lonprg; $m++){
                             $sheet->setCellValue($arrm[$j].$i, $programada->numero);
                             $total += $programada->numero;
                             $j++;
@@ -324,7 +351,7 @@ class aperturaProgramatica extends MX_Controller
 
         $writer = new Xlsx($spreadsheet);
 
-        $filename = 'apertura_programatica_'.$ejercicio;
+        $filename = 'apertura_programatica_'.$this->session->userdata('anio');
 
         header('Content-Type: application/vnd.ms-excel'); // generate excel file
 		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
