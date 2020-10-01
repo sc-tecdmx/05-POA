@@ -162,27 +162,21 @@ $(document).ready(function() {
 		}
 		console.log(selected)
 		$.ajax({
-			url: base_url+'seguimiento/metasComplementarias/putSeguimientoNormal',
+			url: base_url+'reportes/fichaPoaPdf/index',
 			type: 'POST',
-			data: { selected },
-			success: function(data) {
-				if(data === '422'){
+			data: { proyectos: selected },
+			success: function(response) {
+				console.log(response)
+				if(response === '422'){
 					swal.fire({
 						icon: 'error',
 						title: 'Oops...',
 						text: 'El número alcanzado es mayor al programado.'
 					});
 				} else {
-					Swal.fire({
-						icon: 'success',
-						title: 'El avance de la meta ha sido guardado con éxito.',
-						showConfirmButton: false,
-						timer: 5000
-					})
-					limpiarSeguimientoNormal()
-					setTimeout(function () {
-						location.reload()
-					}, 1000)
+					if( response.url ){
+						window.location = response.url;
+					}
 				}
 			},
 			error: function(data) {

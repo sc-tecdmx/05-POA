@@ -61,10 +61,10 @@
                                             </div>
                                         </div>
                                         <div class="row p-3">
-                                            <div class="col-12 col-sm-6">
+                                            <!--<div class="col-12 col-sm-6">
                                                 <i class="fas fa-venus-mars"></i> Sexo:
                                                 <?php echo $genero[$user->genero];?>
-                                            </div>
+                                            </div>-->
                                             <div class="col-12 col-sm-6">
                                                 <i class="fas fa-user-tag"></i> Usuario:
                                                 <?php echo $user->usuario;?>

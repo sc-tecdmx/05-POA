@@ -47,10 +47,10 @@ class infoUsuarios extends MX_Controller
                 foreach($responsables as $responsable){
                     array_push($responsablesJson, $responsable->responsable_operativo_id);
                 }
-                $nuevo = [
+                $nuevo = array(
                     'unidad' => $unidad->unidad_responsable_gasto_id,
                     'responsables' => $responsablesJson
-                ];
+				);
                 array_push($unidadesJson, $nuevo);
             }
         }
@@ -132,10 +132,10 @@ class infoUsuarios extends MX_Controller
                 );
                 $this->general->insertaBase('usuarios_responsables_operativos', $datos);
             } */
-            $datos = [
+            $datos = array(
                 'usuario_poa_id'            => $usuario,
                 'responsable_operativo_id'  => $responsables[$i]
-            ];
+			);
             $this->general->insertaBase('usuarios_responsables_operativos', $datos);
         }
         return true;

@@ -186,7 +186,7 @@
                         </div>
                     <?php endif;?>
 
-                    <!--<div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="permiso" class="control-label">Tipo de Usuario:</label>
                             <?php
@@ -194,7 +194,7 @@
                             ?>
                             <small class="form-text text-muted">*Campo obligatorio</small>
                         </div>
-                    </div>-->
+                    </div>
 
                     <?php  if(isset($activo)): ?>
                         <div class="col-md-6">

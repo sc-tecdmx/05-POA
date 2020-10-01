@@ -18,8 +18,42 @@ $(document).ready(function() {
                     arr.push(e.name);
                     arr0.push(e.value);
                 });
-                console.log(arr0);
+                console.log(Object.entries(data));
                 var myChart = echarts.init(document.getElementById('bar'));
+
+                /* var option = {
+                	dataset: {
+                		source: [
+                			data
+						]
+					},
+					grid: { containLabel: true },
+					xAxis: { name: 'percentage' },
+					yAxis: { type: 'category' },
+					visualMap: {
+                		orient: 'horizontal',
+						left: 'center',
+						min: 10,
+						max: 100,
+						text: ['High Score', 'Low Score'],
+						// Map the score column to color
+						dimension: 0,
+						inRange: {
+							color: ['#D7DA8B', '#E15457']
+						}
+					},
+					series: [
+						{
+							type: 'bar',
+							encode: {
+								// Map the "amount" column to X axis.
+								x: arr0,
+								// Map the "product" column to Y axis
+								y: arr
+							}
+						}
+					]
+				} */
 
                 // specify chart configuration item and data
                 var option = {
@@ -55,18 +89,11 @@ $(document).ready(function() {
                             name: '% de avance de metas',
                             type: 'bar',
                             data: arr0
-                        },
-                        /*
-                        {
-                            name: '2012年',
-                            type: 'bar',
-                            data: [19325, 23438, 31000, 121594, 134141, 681807]
                         }
-                         */
                     ]
                 };
 
-// use configuration item and data specified to show chart
+				// use configuration item and data specified to show chart
                 myChart.setOption(option);
             },
             error: function(data) {
