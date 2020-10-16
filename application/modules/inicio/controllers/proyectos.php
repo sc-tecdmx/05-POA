@@ -165,6 +165,17 @@ class Proyectos extends MX_Controller
         }
     }
 
+    private function _unidadesmp()
+    {
+        if ($query = $this->home_inicio->get_umedidas_principal()) {
+            $unidades = array('' => '-Seleccione uno-');
+            foreach ($query as $row) {
+                $unidades[$row->unidad_medida_id] = $row->numero.' - '.$row->nombre;
+            }
+            return $unidades;
+        }
+    }
+
     private function _unidadesm()
     {
         if ($query = $this->home_inicio->get_umedidas()) {
@@ -824,7 +835,7 @@ class Proyectos extends MX_Controller
 
         // $ejercicio = $this->home_inicio->get_ejercicio();
 
-
+        $data['unidadesmp'] = $this->_unidadesmp();
         $data['unidadesm'] = $this->_unidadesm();
         $data['unidades'] = $this->_unidades($this->session->userdata('ejercicio'));
         $data['responsables'] = $this->_responsables();

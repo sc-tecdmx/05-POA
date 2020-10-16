@@ -126,6 +126,24 @@ class Home_inicio extends CI_Model
         $this->db->from('unidades_medidas');
         $this->db->join('operaciones_ejercicios', 'unidades_medidas.ejercicio_id = operaciones_ejercicios.ejercicio_id');
         $this->db->where('operaciones_ejercicios.tipo', 'elaboracion_proyectos');
+        $this->db->where('unidades_medidas.nombre !=', 'porcentajes');
+        $query = $this->db->get();
+        if($query->num_rows() >= 1){
+            return $query->result();
+        }
+    }
+
+    /**
+     * Función para obtener todas las unidades de medida sin porcentajes
+     * @return mixed
+     */
+    public function get_umedidas_principal()
+    {
+        $this->db->select('unidades_medidas.*');
+        $this->db->from('unidades_medidas');
+        $this->db->join('operaciones_ejercicios', 'unidades_medidas.ejercicio_id = operaciones_ejercicios.ejercicio_id');
+        $this->db->where('operaciones_ejercicios.tipo', 'elaboracion_proyectos');
+        $this->db->where('unidades_medidas.porcentajes', '0');
         $query = $this->db->get();
         if($query->num_rows() >= 1){
             return $query->result();

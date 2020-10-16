@@ -556,7 +556,7 @@
                         <div class="col-md-12" style="display: none" id="selectUnidad">
                             <div class="form-group">
                                 <label class="control-label">Unidad Medida:</label>
-                                <?php echo form_dropdown('unidadMedidaP', $unidadesm, set_value('unidadMedidaP',isset($row->unidad_medida_id)?$row->unidad_medida_id:''),'class="form-control" id="unidadMedidaP" data-form="required"'); ?>
+                                <?php echo form_dropdown('unidadMedidaP', $unidadesmp, set_value('unidadMedidaP',isset($row->unidad_medida_id)?$row->unidad_medida_id:''),'class="form-control" id="unidadMedidaP" data-form="required"'); ?>
                                 <small class="form-text text-muted">*Campo obligatorio</small>
                             </div>
                         </div>
