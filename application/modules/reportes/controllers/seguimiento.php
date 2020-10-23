@@ -180,7 +180,30 @@ class seguimiento extends MX_Controller
 
     public function getConsolidadoRespuesta($meta = false)
     {
-        $tabla = '';
+        $mesVisible = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
+        $mes = $mesVisible ? $mesVisible->mes_id : date('n');
+        $mesesVisibles = array();
+        if($mes == '1'){
+            array_push($mesesVisibles, $mesVisible->mes_id);
+        } else {
+            for($i = 1; $i <= $mes; $i++){
+                array_push($mesesVisibles, $i);
+            }
+        }
+        $meses = array();
+        if ($mes === '1') {
+            $nombreMes = 'Enero';
+            $nombreAcumulado = $nombreMes;
+        } else {
+            $nombreMes = $this->seguimientoModel->getNombreMes($mes);
+            $nombreAcumulado = 'Enero - '.ucfirst($nombreMes->nombre);
+        }
+        $unidadMedida = $this->seguimientoModel->getUnidadMedida($meta) ? $this->seguimientoModel->getUnidadMedida($meta) : '';
+        $tabla = '
+        <div>
+            <h4>'.$nombreAcumulado.'</h4>
+            <h4>'.$unidadMedida->nombre.'</h4>
+        </div>';
         $tabla .= '
             <div class="table-responsive">
             <table class="table table-bordered">
@@ -193,17 +216,6 @@ class seguimiento extends MX_Controller
             $tabla .= '<td class="text-center">'.ucfirst($mes->nombre).'</td>';
             array_push($mesesVisibles, $mes->mes_id);
         } */
-        $mesVisible = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
-        $mes = $mesVisible ? $mesVisible->mes_id : date('n');
-        $mesesVisibles = array();
-        if($mes == '1'){
-            array_push($mesesVisibles, $mesVisible->mes_id);
-        } else {
-            for($i = 1; $i <= $mes; $i++){
-                array_push($mesesVisibles, $i);
-            }
-        }
-        $meses = array();
         // obtener los nombres de los meses
         for($i = 0; $i < count($mesesVisibles); $i++){
             $mes = $this->seguimientoModel->getNombreMes($mesesVisibles[$i]);

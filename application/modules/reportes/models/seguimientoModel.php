@@ -144,4 +144,17 @@ class seguimientoModel extends CI_Model
             return $query->row();
         }
     }
+
+    public function getUnidadMedida($meta)
+    {
+        $this->db->select('unidades_medidas.nombre');
+        $this->db->join('unidades_medidas', 'metas.unidad_medida_id = unidades_medidas.unidad_medida_id');
+        $this->db->where('metas.meta_id', $meta);
+        $this->db->from('metas');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        }
+        return false;
+    }
 }
