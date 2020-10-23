@@ -191,18 +191,18 @@ class seguimiento extends MX_Controller
             }
         }
         $meses = array();
-        if ($mes === '1') {
+        if ($mes == '1') {
             $nombreMes = 'Enero';
             $nombreAcumulado = $nombreMes;
         } else {
             $nombreMes = $this->seguimientoModel->getNombreMes($mes);
             $nombreAcumulado = 'Enero - '.ucfirst($nombreMes->nombre);
         }
-        $unidadMedida = $this->seguimientoModel->getUnidadMedida($meta) ? $this->seguimientoModel->getUnidadMedida($meta) : '';
+        $unidadMedida = $this->seguimientoModel->getUnidadMedida($meta) ? $this->seguimientoModel->getUnidadMedida($meta)->nombre : '';
         $tabla = '
         <div>
-            <h4>'.$nombreAcumulado.'</h4>
-            <h4>'.$unidadMedida->nombre.'</h4>
+            <h4>Periodo: '.$nombreAcumulado.'</h4>
+            <h4>Unidad de Medida: '.$unidadMedida.'</h4>
         </div>';
         $tabla .= '
             <div class="table-responsive">
@@ -289,74 +289,18 @@ class seguimiento extends MX_Controller
 
     public function getAvanceMensualRespuesta($meta = false, $mes = false)
     {
-        $tabla = '';
+        $unidadMedida = $this->seguimientoModel->getUnidadMedida($meta) ? $this->seguimientoModel->getUnidadMedida($meta)->nombre : '';
+        $tabla = '
+            <div>
+                <h4>Unidad de medida: '.$unidadMedida.'</h4>
+            </div>
+        ';
         $tabla .= '
             <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <td></td>';
-        // obtener el nombre del mes
-        /* $nombreMes = $this->seguimientoModel->getNombreMes($mes);
-        $tabla .= '<td class="text-center">'.ucfirst($nombreMes->nombre).'</td>';
-        // consultar si es meta con porcentajes
-        $porcentaje = $this->seguimientoModel->getTipoMeta($meta);
-        if($porcentaje->porcentajes != '1'){
-            // Obtener el avance del mes programado
-            $tabla .= '
-            <tbody>
-            <tr>
-                <td>Programado</td>
-        ';
-            $programados = $this->seguimientoModel->getMetasProgramados($meta, $mes);
-            $tabla .= '<td class="text-center">'.$programados->numero.'</td>';
-            $tabla .= '</tr>';
-            // Obtener el avance del mes acumulado
-            $tabla .= '<tr>
-            <td>Alcanzado</td>
-        ';
-            $alcanzadas = $this->seguimientoModel->getMetasAlcanzadas($meta, $mes);
-            $tabla .= '<td class="text-center">'.$alcanzadas->numero.'</td>';
-            $tabla .= '</tr>';
-        } else {
-            // Obtener el avance del mes programado
-            $tabla .= '
-            <tbody>
-            <tr>
-                <td>Recibido</td>
-            ';
-            $programados = $this->seguimientoModel->getMetasAlcanzadas($meta, $mes);
-            $tabla .= '<td class="text-center">'.$programados->numero.'</td>';
-            $tabla .= '</tr>';
-            // Obtener el avance del mes acumulado
-            $tabla .= '<tr>
-            <td>Resuelto</td>
-            ';
-            $alcanzadas = $this->seguimientoModel->getMetasResueltas($meta, $mes);
-            $tabla .= '<td class="text-center">'.$alcanzadas->numero.'</td>';
-            $tabla .= '</tr>';
-        }
-        // Obtener el porcentaje del mes
-        $tabla .= '
-            <tr>
-                <td>Porcentaje de Avance respecto del mes</td>
-        ';
-        $porcentaje = $this->seguimientoModel->getPorcentajeAvance($meta, $mes);
-        $porcentajeA = $porcentaje->porcentaje?$porcentaje->porcentaje:'0.0';
-        $tabla .= '<td class="text-center">'.$porcentajeA.'%</td>';
-        $tabla .= '</tr>';
-        // Obtener porcentaje del mes acumulado
-        $tabla .= '
-            <tr>
-                <td>Porcentaje de Avance Acumulado</td>
-        ';
-        $porcentaje = $this->seguimientoModel->getPorcentajeAvance($meta, $mes);
-        $porcentajeA = $porcentaje->porcentaje?$porcentaje->porcentaje:'0.0';
-        $tabla .= '<td class="text-center">'.$porcentajeA.'%</td>';
-        $tabla .= '</tr>';
-        $tabla .= '</tbody>';
-        $tabla .= '</table></div>';
-        echo $tabla; */
         $mesesVisibles = array();
         if($mes == '1'){
             array_push($mesesVisibles, $mes);
