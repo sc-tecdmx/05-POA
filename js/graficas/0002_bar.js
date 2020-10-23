@@ -18,42 +18,8 @@ $(document).ready(function() {
                     arr.push(e.name);
                     arr0.push(e.value);
                 });
-                console.log(Object.entries(data));
-                var myChart = echarts.init(document.getElementById('bar'));
-
-                /* var option = {
-                	dataset: {
-                		source: [
-                			data
-						]
-					},
-					grid: { containLabel: true },
-					xAxis: { name: 'percentage' },
-					yAxis: { type: 'category' },
-					visualMap: {
-                		orient: 'horizontal',
-						left: 'center',
-						min: 10,
-						max: 100,
-						text: ['High Score', 'Low Score'],
-						// Map the score column to color
-						dimension: 0,
-						inRange: {
-							color: ['#D7DA8B', '#E15457']
-						}
-					},
-					series: [
-						{
-							type: 'bar',
-							encode: {
-								// Map the "amount" column to X axis.
-								x: arr0,
-								// Map the "product" column to Y axis
-								y: arr
-							}
-						}
-					]
-				} */
+                console.log(Object.values(data));
+                /* var myChart = echarts.init(document.getElementById('bar'));
 
                 // specify chart configuration item and data
                 var option = {
@@ -94,7 +60,38 @@ $(document).ready(function() {
                 };
 
 				// use configuration item and data specified to show chart
-                myChart.setOption(option);
+                myChart.setOption(option); */
+                var densityCanvas = document.getElementById("bar");
+
+                var densityData = {
+                    label: 'Avance de Metas del Mes ',
+                    data: arr0,
+                    borderWidth: 2,
+                    hoverBorderWidth: 0,
+                    backgroundColor: 'rgba(110, 0, 101, 1)'
+                };
+
+                var chartOptions = {
+                    scales: {
+                        yAxes: [{
+                            barPercentage: 0.5
+                        }]
+                    },
+                    elements: {
+                        rectangle: {
+                            borderSkipped: 'left',
+                        }
+                    }
+                };
+
+                var barChart = new Chart(densityCanvas, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: arr,
+                        datasets: [densityData],
+                    },
+                    options: chartOptions
+                });
             },
             error: function(data) {
                 console.log(data);
