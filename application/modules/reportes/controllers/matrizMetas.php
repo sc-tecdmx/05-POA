@@ -456,7 +456,7 @@ class matrizMetas extends MX_Controller
                         } */
 
                         // $metat = $meta->tipo == 'principal' ? 'MP' : 'MC';
-						if($meta->tipo == 'principal'){
+						if($meta->tipo == 'principal' || $meta->tipo == 'Principal'){
 							$metat = 'MP';
 							$sheet->getStyle('A'.$i.':'.$ultimaLetra.$indice)->applyFromArray($estilo_meta_principal);
 						} else {
@@ -499,7 +499,7 @@ class matrizMetas extends MX_Controller
                             $sheet->setCellValue($columnas[$j-1].$i, $programado?$programado->numero:'');
                             $sheet->setCellValue($columnas[$j-1].$indice, $alcanzado?$alcanzado->numero:'');
 
-                            if($meta->tipo != 'principal') {
+                            if($meta->tipo != 'principal' || $meta->tipo != 'Principal') {
 								$sheet->getComment($columnas[$j-1].$indice)->setAuthor('TECDMX');
 								$commentRichText = $sheet
 									->getComment($columnas[$j-1].$indice)

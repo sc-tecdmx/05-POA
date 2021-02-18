@@ -324,7 +324,7 @@ class avanceTrimestral extends MX_Controller
 			$posicion_programa = $i;
 
 			$letras_subprogramas = array();
-			$letras_subprogramas_acumulados = array();
+			$letras_subprogramas_acumuladas = array();
 
             foreach($subprogramas as $subprograma){
 				$i++;
@@ -433,9 +433,9 @@ class avanceTrimestral extends MX_Controller
                         $sheet->setCellValue("M".$i, $acumuladoa->numero);
 						$sheet->setCellValue("N".$i, $porcentajeAcumulado);
 
-						if ($meta->tipo == 'principal') {
+						if ($meta->tipo == 'principal' || $meta->tipo == 'Principal') {
 							$letras_metas_principales[] = 'K'. $i;
-							$letras_metas_principales_acumulados[] = 'N'.$i;
+							$letras_metas_principales_acumuladas[] = 'N'.$i;
 						}
                     }
                     $proyectos = $posicion_proyecto + 1;
@@ -463,7 +463,7 @@ class avanceTrimestral extends MX_Controller
 						->setFormatCode('##0.00');
 
 				$letras_subprogramas[] = 'K' . $posicion_subprograma;
-				$letras_subprogramas_acumulados[] = 'N' . $posicion_subprograma;
+				$letras_subprogramas_acumuladas[] = 'N' . $posicion_subprograma;
 			}
 
 			$letras_subprogramas = implode(',', $letras_subprogramas);
@@ -475,9 +475,9 @@ class avanceTrimestral extends MX_Controller
 			$sheet->getStyle('K' . $posicion_programa)->getNumberFormat()
 					->setFormatCode('##0.00');
 
-			$letras_subprogramas_acumulados = implode(',', $letras_subprogramas_acumulados);
-			if ($letras_subprogramas_acumulados != "") {
-				$sheet->setCellValue('N' . $posicion_programa, "=IF(COUNT($letras_subprogramas_acumulados)>0, AVERAGE($letras_subprogramas_acumulados), \"No aplica\")");
+			$letras_subprogramas_acumuladas = implode(',', $letras_subprogramas_acumuladas);
+			if ($letras_subprogramas_acumuladas != "") {
+				$sheet->setCellValue('N' . $posicion_programa, "=IF(COUNT($letras_subprogramas_acumuladas)>0, AVERAGE($letras_subprogramas_acumuladas), \"No aplica\")");
 			} else {
 				$sheet->setCellValue('N' . $posicion_programa, "No aplica");
 			}

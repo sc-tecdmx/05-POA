@@ -354,7 +354,7 @@ class avanceMensual extends MX_Controller
                     foreach($metas as $meta){
 						$i++;
 						$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_bordes_internos);
-                        if($meta->tipo == 'principal'){
+                        if($meta->tipo == 'principal' || $meta->tipo == 'Principal'){
                             $metat = 'MP';
 							$sheet->getStyle('A'.$i.':N'.$i)->applyFromArray($estilo_meta_principal);
                         } else {
@@ -411,9 +411,9 @@ class avanceMensual extends MX_Controller
                         $sheet->setCellValue("M".$i, $acumuladoa->numero);
 						$sheet->setCellValue("N".$i, $porcentajeAcumulado);
 
-						if ($meta->tipo == 'principal') {
+						if ($meta->tipo == 'principal' || $meta->tipo == 'Principal') {
 							$letras_metas_principales[] = 'K'. $i;
-							$letras_metas_principales_acumulados[] = 'N'.$i;
+							$letras_metas_principales_acumuladas[] = 'N'.$i;
 						}
                     }
                     $proyectos = $posicion_proyecto + 1;
