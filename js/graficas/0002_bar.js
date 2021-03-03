@@ -2,6 +2,18 @@ $(document).ready(function() {
     $('#tablaConsolidado').empty();
     $('#tablaAvanceMensual').empty();
 
+    $('#jstree').jstree()
+
+	$('#jstree').on("changed.jstree", function (e, data){
+		console.log(data.selected)
+	})
+
+	$('#demoButton').on('click', function () {
+		$('#jstree').jstree(true).select_node('child_node_1');
+		$('#jstree').jstree('select_node', 'child_node_1');
+		$.jstree.reference('#jstree').select_node('child_node_1');
+	});
+
     $("#monthSel").change(function () {
         var id = $('#monthSel').val();
         $.ajax({

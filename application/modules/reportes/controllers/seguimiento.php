@@ -24,10 +24,18 @@ class seguimiento extends MX_Controller
     private function _programas()
     {
         if ($query = $this->seguimientoModel->getProgramas($this->session->userdata('ejercicio'))) {
-            $programas = array('' => '-Seleccione un programa -');
+            /* $programas = array('' => '-Seleccione un programa -');
             foreach ($query as $row) {
                 $programas[$row->programa_id] = $row->nombre;
-            }
+            } */
+			$programas = array();
+			foreach ($query as $row) {
+				$detail = array(
+					"id" => $row->programa_id,
+					"nombre" => $row->nombre
+				);
+				array_push($programas, $detail);
+			}
             return $programas;
         }
     }

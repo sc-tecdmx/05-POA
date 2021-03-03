@@ -53,7 +53,19 @@
                 <div class="col-9">
                     <div class="tab-content" id="v-pills-tabContent">
                         <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                             <div class="row">
+							<div id="jstree">
+								<ul>
+									<?php foreach ($programas as $programa): ?>
+									<li data-id="<?php echo $programa["id"]; ?>"><?php echo $programa["nombre"]; ?>
+										<ul>
+											<li id="child_node_1">Child node 1</li>
+											<li>Child node 2</li>
+										</ul>
+									</li>
+									<?php endforeach; ?>
+								</ul>
+							</div>
+                             <!--<div class="row">
                                  <div class="col-md-6">
                                      <?php echo form_dropdown('programasConsolidado', $programas, set_value('programasConsolidado',isset($row->programa_id)?$row->programa_id:''),'class="form-control" id="programasConsolidado" data-form="required"'); ?>
                                  </div>
@@ -84,7 +96,7 @@
                                 <div class="col-md-12 mt-4" id="tablaConsolidado">
 
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                             <div class="row">
