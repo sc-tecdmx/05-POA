@@ -4,63 +4,19 @@ $(document).ready(function() {
 
     $("#monthSel").change(function () {
         var id = $('#monthSel').val();
-        //console.log(id);
         $.ajax({
             url: base_url+'reportes/seguimiento/getDataMetas/' + id,
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             method: "GET",
             success: function(data) {
-            	console.log(data)
                 var arr = [];
                 var arr0 = [];
                 data.forEach(function(e, i){
                     arr.push(e.name);
                     arr0.push(e.value);
                 });
-                console.log(Object.values(data));
-                /* var myChart = echarts.init(document.getElementById('bar'));
 
-                // specify chart configuration item and data
-                var option = {
-                    title: {
-                        text: 'Avance',
-                        //subtext: ''
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {
-                            type: 'shadow'
-                        }
-                    },
-                    legend: {
-                        data: ['% de avance de metas']
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
-                    },
-                    xAxis: {
-                        type: 'value',
-                        boundaryGap: [0, 0.01]
-                    },
-                    yAxis: {
-                        type: 'category',
-                        data: arr
-                    },
-                    series: [
-                        {
-                            name: '% de avance de metas',
-                            type: 'bar',
-                            data: arr0
-                        }
-                    ]
-                };
-
-				// use configuration item and data specified to show chart
-                myChart.setOption(option); */
                 var densityCanvas = document.getElementById("bar");
 
                 var densityData = {
