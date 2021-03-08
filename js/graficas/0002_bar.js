@@ -14,7 +14,111 @@ $(document).ready(function() {
 		$.jstree.reference('#jstree').select_node('child_node_1');
 	});
 
-    $("#monthSel").change(function () {
+	$("#monthSel").change(function () {
+		var id = $('#monthSel').val();
+		$.ajax({
+			url: base_url+'reportes/seguimiento/getDataMetas/' + id,
+			dataType: 'json',
+			contentType: "application/json; charset=utf-8",
+			method: "GET",
+			success: function(data) {
+				var colors = Highcharts.getOptions().colors;
+				$.each(colors, function(i, color) {
+					colors[i] = {
+						/*linearGradient: { x1: 0, y1: 0, x2: 1, y2: 0},
+						stops: [
+							[0, '#4D2C82'],
+							[0.3, 'white'],
+							[1, '#4D2C82']
+						]*/
+						linearGradient: { x1: 0, y1: 1, x2: 0, y2: 0},
+						//radialGradient: { cx: 0.5, cy: 0.3, r: 0.7},
+						stops: [
+							[0, '#A696C0'],
+							[1, '#4D2C82'/*Highcharts.Color(color).brighten(-0.3).get('rgb')*/]
+						]
+					};
+				});
+				var chart = new Highcharts.Chart({
+					chart: {
+						height: data.altura,
+						type: 'bar',
+						renderTo: 'chart-avance',
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false
+					},
+					colors: colors,
+					title: {
+						text: 'Avance de Proyectos'
+					},
+					subtitle: {
+						text: 'Enero - ' + data.mes
+					},
+					yAxis: {
+						title: {
+							text: 'Porcentaje de avance'
+						},
+						gridLineColor: '#d3d3d3'
+					},
+					xAxis: {
+						categories: data.clave,
+						labels: {
+							//rotation: -45,
+							//align: 'right',
+							style: {
+								color: '#4D2C82'
+							}
+						}
+					},
+					plotOptions: {
+						column: {
+							/*pointPadding: 0,
+							groupPadding: 0*/
+						}
+					},
+					legend: {
+						borderWidth: 0
+						//enabled: false
+					},
+					tooltip: {
+						formatter: function() {
+							if (this.point.y == -2) {
+								return '' + this.point.name + ': <b>No aplica</b>'
+							}
+							return '' + this.point.name + ': <b>' + this.point.y + '%</b>';
+						}
+					},
+					series: [{
+						type: 'column',
+						name: 'Proyectos',
+						data: data.contenido,
+						dataLabels: {
+							shadow: true,
+							borderRadius: 5,
+							x: 5,
+							backgroundColor: 'rgba(255, 255, 255, 0.7)',
+							borderWidth: 1,
+							borderColor: '#aaa',
+							enabled: true,
+							color: '#4D2C82',
+							style: {
+								//fontWeight: 'bold'
+							},
+							formatter: function() {
+								if (this.y == -2) {
+									return 'N/A';
+								}
+								return this.y + '%';
+							}
+						}
+					}]
+				});
+			}
+		})
+	})
+
+    /* $("#monthSel").change(function () {
         var id = $('#monthSel').val();
         $.ajax({
             url: base_url+'reportes/seguimiento/getDataMetas/' + id,
@@ -32,19 +136,15 @@ $(document).ready(function() {
                 var densityCanvas = document.getElementById("bar");
 
                 var densityData = {
-                    label: 'Avance de Metas del Mes ',
+                    label: 'Prueba',
                     data: arr0,
                     borderWidth: 2,
                     hoverBorderWidth: 0,
-                    backgroundColor: 'rgba(110, 0, 101, 1)'
+                    backgroundColor: 'rgba(110, 0, 101, 1)',
+					barPercentage: 0.5
                 };
 
                 var chartOptions = {
-                    scales: {
-                        yAxes: [{
-                            barPercentage: 0.5
-                        }]
-                    },
                     elements: {
                         rectangle: {
                             borderSkipped: 'left',
@@ -65,7 +165,7 @@ $(document).ready(function() {
                 console.log(data);
             }
         });
-    });
+    }); */
 
     $('#seguimientOption').on('change', function () {
         const option = $('#seguimientOption').val()

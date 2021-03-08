@@ -99,7 +99,7 @@
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>-->
-    <!--<script src="<?php echo base_url().'js/highcharts/highcharts.js'; ?>"></script>-->
+    <script src="<?php echo base_url().'js/highcharts/highcharts.js'; ?>"></script>
     <!--Variable global JS-->
 	<script src="<?php echo base_url().'js/sweetalert2.js'; ?>"></script>
     <script src="<?php echo base_url('js/echarts.min.js');?>"></script>

@@ -31,8 +31,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="table-responsive">
-                        <!--<div id="bar" style="width: 1000px;height:800px;"></div>-->
-                        <canvas id="bar" width="400" height="400"></canvas>
+                        <div id="chart-avance"></div>
+                        <!--<canvas id="bar" width="400" height="400"></canvas>-->
                     </div>
 
                 </div>

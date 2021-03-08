@@ -407,24 +407,91 @@ class seguimiento extends MX_Controller
         }
     }
 
-    public function getDataMetas($id)
+    public function getDataMetas($mesId)
     {
         $graph = new Graficas_model();
-        $exist = $graph->getMetasComplementarias($id, $this->session->userdata('ejercicio'));
-        if(is_array($exist)){
-            $i = 0;
-            foreach($exist as $key){
-                $data[$i++] = array(
-                    'name' => $this->_is_exist($key->urnum) . ' ' . $this->_is_exist($key->ronum) . ' ' . $this->_is_exist($key->pgnum) . ' ' . $this->_is_exist($key->sbnum) . ' ' . $this->_is_exist($key->pynum),
-                    // 'value' => $this->_is_exist($key->porcentaje_real, TRUE),
-                    // 'value' => $this->_is_exist($key->metaPor, TRUE),
-                    'value' => $key->porcentaje_real
-                );
-            }
-            echo json_encode($data);
-        } else {
-            echo FALSE;
-        }
+		$programas = $graph->getPrograms($this->session->userdata('ejercicio'));
+		if ($programas) {
+			$elementos = 0;
+			$altura = 0;
+			$contenido = array();
+			foreach ($programas as $programa) {
+				$numero_programa = $programa->numero;
+				$nombre_programa = $programa->nombre;
+				$subprogramas = $graph->getSubprograms($programa->programa_id);
+				if ($subprogramas) {
+					foreach ($subprogramas as $subprograma) {
+						$numero_subprograma = $subprograma->numero;
+						$nombre_subprograma = $subprograma->nombre;
+						$proyectos = $graph->getProjects($subprograma->subprograma_id);
+						if ($proyectos) {
+							foreach ($proyectos as $proyecto) {
+								$numero_urg = $proyecto->numero_urg;
+								$numero_ro = $proyecto->numero_ro;
+								$numero_proyecto = $proyecto->numero;
+								$nombre_proyecto = $proyecto->nombre;
+
+								$palabras_array = explode(" ", $proyecto->nombre);
+								$palabras = "";
+								foreach($palabras_array as $key => $value) {
+									if ($key % 5 == 0 && $key != 0) {
+										$palabras .= "<br />" . $value . " ";
+									} else {
+										$palabras .= $value . " ";
+									}
+								}
+
+								$palabras = trim($palabras);
+
+								$meta_principal = $graph->getPrincipalGoal($proyecto->proyecto_id);
+								$avance = 0;
+								if ($meta_principal) {
+									foreach($meta_principal as $meta) {
+										$programadas = $graph->getAccumulatedProgrammedGoal($mesId, $meta->meta_id);
+										$acumuladas = $graph->getCumulatedProgrammedGoal($mesId, $meta->meta_id);
+										if ($programadas && $acumuladas) {
+											$acumulada_programada = $programadas->numero;
+											$acumulada_alcanzada = $acumuladas->numero;
+											$avance = $acumulada_programada == 0 ? "-2" : number_format(($acumulada_alcanzada / $acumulada_programada), 1) . "%";
+										}
+									}
+								}
+
+								$palabras_2 = "<span style=\"color: #305ACB;\">Meta programada acumulada: $acumulada_programada</span><br />"
+									. "<span style=\"color: #2195DA;\">Meta alcanzada acumulada: $acumulada_alcanzada</span>";
+
+								$palabras = $palabras_2 . "<br />" . $palabras;
+
+								//if ($avance != "no-aplica") {
+								$contenido[] = array(
+									'name' => $palabras,
+									'y' => floatval(str_replace(",", "", $avance))
+								);
+								//}
+
+								$elementos++;
+								$clave[] = $numero_urg . "-" . $numero_ro . "-" . $numero_programa . "-" . $numero_subprograma . "-" . $numero_proyecto;
+							}
+						}
+					}
+				}
+			}
+			$altura = $elementos * 45;
+			if ($altura <= 400) {
+				$altura = 400;
+			}
+
+			$mes = $this->seguimiento_model->getNombreMes($mesId);
+
+			$datos = array(
+				"contenido" => $contenido,
+				"clave" => $clave,
+				"altura" => $altura,
+				"mes" => ucfirst($mes->nombre)
+			);
+
+			echo json_encode($datos);
+		}
     }
 
     public function index()

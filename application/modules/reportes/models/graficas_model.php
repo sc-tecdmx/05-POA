@@ -93,4 +93,83 @@ class Graficas_model extends CI_Model
         } */
     }
 
+    public function getPrograms($ejercicioId) {
+		$this->db->select('programa_id, numero, nombre');
+		$this->db->where('programas.ejercicio_id', $ejercicioId);
+		$this->db->from('programas');
+		// $this->db->orderBy('numero');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+	}
+
+	public function getSubprograms($programaId) {
+    	$this->db->select('subprograma_id, numero, nombre');
+    	$this->db->where('programa_id', $programaId);
+    	$this->db->from('subprogramas');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+	}
+
+	public function getProjects($subprogramaId) {
+    	$this->db->select('proyectos.*, unidades_responsables_gastos.numero as numero_urg, responsables_operativos.numero as numero_ro');
+		$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
+		$this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
+		$this->db->where('subprograma_id', $subprogramaId);
+    	$this->db->from('proyectos');
+		if($this->session->userdata('area')) {
+			$this->db->where_in('responsables_operativos.responsable_operativo_id', $this->session->userdata('area'));
+		}
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+	}
+
+	public function getPrincipalGoal($proyectoId) {
+    	$this->db->where('tipo', 'principal');
+    	$this->db->where('proyecto_id', $proyectoId);
+    	$this->db->from('metas');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+	}
+
+	public function getResults($mes, $metaId) {
+    	$this->db->select('SUM(meses_metas_programadas.numero) as acumulada_programada, SUM(meses_metas_alcanzadas.numero) as acumulada alcanzada');
+		$this->db->where('meses_metas_programadas.meta_id', $metaId);
+		$this->db->where('meses_metas_alcanzadas.meta_id', $metaId);
+		$this->db->where('mes_id <=', $mes);
+		$this->db->from('meses_metas_alcanzadas, meses_metas_programadas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+	}
+
+	public function getAccumulatedProgrammedGoal($mesId, $metaId) {
+		$this->db->select_sum('numero');
+		$this->db->where('mes_id <=', $mesId);
+		$this->db->where('meta_id', $metaId);
+		$this->db->from('meses_metas_programadas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+	}
+
+	public function getCumulatedProgrammedGoal($mesId, $metaId) {
+		$this->db->select_sum('numero');
+		$this->db->where('mes_id <=', $mesId);
+		$this->db->where('meta_id', $metaId);
+		$this->db->from('meses_metas_alcanzadas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+	}
 }
