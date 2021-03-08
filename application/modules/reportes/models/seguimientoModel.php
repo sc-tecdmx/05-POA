@@ -76,9 +76,21 @@ class seguimientoModel extends CI_Model
         }
     }
 
+	public function getMetasProgramadas($meta, $mes)
+	{
+		$this->db->select('numero');
+		$this->db->where('meta_id', $meta);
+		$this->db->where('mes_id >=', $mes);
+		$this->db->from('meses_metas_programadas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->result();
+		}
+	}
+
     public function getMetasAlcanzadas($meta, $mes)
     {
-        $this->db->select('numero');
+        $this->db->select('numero, explicacion');
         $this->db->where('meta_id', $meta);
         $this->db->where('mes_id', $mes);
         $this->db->from('meses_metas_alcanzadas');
@@ -87,6 +99,18 @@ class seguimientoModel extends CI_Model
             return $query->row();
         }
     }
+
+	public function getMetasAlcanzadasResult($meta, $mes)
+	{
+		$this->db->select('numero, explicacion');
+		$this->db->where('meta_id', $meta);
+		$this->db->where('mes_id >=', $mes);
+		$this->db->from('meses_metas_alcanzadas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->result();
+		}
+	}
 
     public function getPorcentajeAvance($meta, $mes)
     {

@@ -1,3 +1,7 @@
+function obtenerMetasCollapse(proyecto_id, mes) {
+	return $.get(base_url + 'reportes/seguimiento/obtenerMetasCollapse/'+proyecto_id+'/'+mes);
+}
+
 $(document).ready(function() {
     $('#tablaConsolidado').empty();
     $('#tablaAvanceMensual').empty();
@@ -13,14 +17,7 @@ $(document).ready(function() {
 				var colors = Highcharts.getOptions().colors;
 				$.each(colors, function(i, color) {
 					colors[i] = {
-						/*linearGradient: { x1: 0, y1: 0, x2: 1, y2: 0},
-						stops: [
-							[0, '#4D2C82'],
-							[0.3, 'white'],
-							[1, '#4D2C82']
-						]*/
 						linearGradient: { x1: 0, y1: 1, x2: 0, y2: 0},
-						//radialGradient: { cx: 0.5, cy: 0.3, r: 0.7},
 						stops: [
 							[0, '#A696C0'],
 							[1, '#4D2C82'/*Highcharts.Color(color).brighten(-0.3).get('rgb')*/]
@@ -52,22 +49,16 @@ $(document).ready(function() {
 					xAxis: {
 						categories: data.clave,
 						labels: {
-							//rotation: -45,
-							//align: 'right',
 							style: {
 								color: '#4D2C82'
 							}
 						}
 					},
 					plotOptions: {
-						column: {
-							/*pointPadding: 0,
-							groupPadding: 0*/
-						}
+						column: {}
 					},
 					legend: {
 						borderWidth: 0
-						//enabled: false
 					},
 					tooltip: {
 						formatter: function() {
@@ -110,9 +101,7 @@ $(document).ready(function() {
 		animated: "fast",
 		collapsed: true,
 		unique: true,
-		//persist: "cookie",
 		toggle: function() {
-			//$('li.my-proyecto').children('ul').empty();
 			if ($(this).hasClass('my-proyecto')) {
 				$(this).removeClass('my-proyecto');
 				var $ul = $(this).children('ul');

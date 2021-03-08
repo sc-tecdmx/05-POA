@@ -497,6 +497,7 @@ class seguimiento extends MX_Controller
     private function _avanceFichaPoa()
 	{
     	$tabla = '';
+    	// obtener mes para consulta
     	$numero_mes = 1;
 		$tabla .= '
 			<div class="avance-ficha-poa">
@@ -532,6 +533,137 @@ class seguimiento extends MX_Controller
 		}
 		$tabla .= '</ul></li></div>';
 		return $tabla;
+	}
+
+	private function _obtenerNombreMes($numero_mes) {
+		$mes = "";
+		switch ($numero_mes) {
+			case "1":
+				$mes = "enero";
+				break;
+			case "2":
+				$mes = "febrero";
+				break;
+			case "3":
+				$mes = "marzo";
+				break;
+			case "4":
+				$mes = "abril";
+				break;
+			case "5":
+				$mes = "mayo";
+				break;
+			case "6":
+				$mes = "junio";
+				break;
+			case "7":
+				$mes = "julio";
+				break;
+			case "8":
+				$mes = "agosto";
+				break;
+			case "9":
+				$mes = "septiembre";
+				break;
+			case "10":
+				$mes = "octubre";
+				break;
+			case "11":
+				$mes = "noviembre";
+				break;
+			case "12":
+				$mes = "diciembre";
+				break;
+			default:
+				break;
+		}
+		return $mes;
+	}
+
+	public function obtenerMetasCollapse ($proyectoId, $mesId)
+	{
+		$tabla = '';
+		$metas = $this->seguimientoModel->getMetas('principal', $proyectoId);
+		if ($metas) {
+			$tabla .= "<li class='my-meta' rel='$proyectoId' rev='$mesId'><span>Meta Principal</span>";
+			$tabla .= "<ul class='quinto-nivel'>";
+			foreach ($metas as $meta) {
+				$tabla .= "<li><span>$meta->nombre</span>";
+				$tabla .= "<ul class='sexto-nivel'>";
+				$tabla .= "<div class='contenido-metas'>";
+				$unidadMedida = $this->seguimientoModel->getUnidadMedida($meta->meta_id);
+				$tabla .= "<div class='div-unidad-medida'>Unidad de medida: $unidadMedida->nombre</div>";
+				$tabla .= "<table class='formulario-4'>";
+				$tabla .= "<thead>";
+				$tabla .= "<tr>";
+				$tabla .= "<th></th>";
+				for ($i = 1; $i <= $mesId; $i++) {
+					$tabla .= "<th>" . ucwords($this->_obtenerNombreMes($i)) . "</th>";
+				}
+				$tabla .= "</tr>";
+				$tabla .= "</thead>";
+				$metasProgramadas = $this->seguimientoModel->getMetasProgramadas($meta->meta_id, $mesId);
+				$programado_array = array();
+				$acumulado = 0;
+				if ($metasProgramadas) {
+					$tabla .= "<tbody>";
+					$tabla .= "<tr>";
+					$tabla .= "<td class='key-left primer-columna'>Programado</td>";
+					foreach($metasProgramadas as $metaProgramada) {
+						$acumulado += $metaProgramada->numero;
+						$tabla .= "<td>$metaProgramada->numero</td>";
+						$programado_array[] = $metaProgramada->numero;
+					}
+					$tabla .= '</tr>';
+
+					$metasAlcanzadas = $this->seguimientoModel->getMetasAlcanzadasResult($meta->meta_id, $mesId);
+					$alcanzado_array = array();
+					$acumulado = 0;
+					if ($metasAlcanzadas) {
+						$tabla .= "<tr>";
+						$tabla .= "<td class='key-left primer-columna'>Alcanzado</td>";
+						foreach ($metasAlcanzadas as $metaAlcanzada) {
+							if ($metaAlcanzada->explicacion == "") {
+								$explicacion = "No existe explicación del avance físico para este mes";
+							}
+							$acumulado += $metaAlcanzada->numero;
+							$tabla .= "<td class='explicacion-granular' rel='$explicacion'>$metaAlcanzada->numero</td>";
+							$alcanzado_array[] = $metaAlcanzada->numero;
+						}
+						$tabla .= "</tr>";
+
+						$tabla .= "<tr>";
+						$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance respecto del mes</td>";
+						for ($i = 0; $i < count($programado_array); $i++) {
+							$avance_mes = $programado_array[$i] == 0 ? "No aplica" : number_format(($alcanzado_array[$i] / $programado_array[$i]), 1) . "%";
+							$tabla .= "<td>$avance_mes</td>";
+						}
+						$tabla .= "</tr>";
+
+						$tabla .= "<tr>";
+						$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance acumulado</td>";
+						for ($i = 0; $i < count($programado_array); $i++) {
+							$acumulada_programada = 0;
+							$acumulada_alcanzada = 0;
+							for ($j = 0; $j <= $i; $j++) {
+								$acumulada_programada += $programado_array[$j];
+								$acumulada_alcanzada += $alcanzado_array[$j];
+							}
+							$avance_meses = $acumulada_programada == 0 ? "No aplica" : number_format(($acumulada_alcanzada / $acumulada_programada), 1) . "%";
+							$tabla .= "<td>$avance_meses</td>";
+						}
+						$tabla .= "</tr>";
+						$tabla .= "</tbody>";
+						$tabla .= "</table>";
+						$tabla .= "</div>";
+						$tabla .= "</ul></li>";
+					}
+					
+				}
+			}
+			$tabla .= "</ul>";
+			echo $tabla;
+		}
 	}
 
     public function index()
