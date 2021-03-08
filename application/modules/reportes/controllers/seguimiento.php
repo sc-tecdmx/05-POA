@@ -494,6 +494,46 @@ class seguimiento extends MX_Controller
 		}
     }
 
+    private function _avanceFichaPoa()
+	{
+    	$tabla = '';
+    	$numero_mes = 1;
+		$tabla .= '
+			<div class="avance-ficha-poa">
+				<div class="periodo-avance">
+					Periodo: Enero - Enero					
+				</div>
+				<ul class="collapse-programas treeview" id="tree-programas">
+					<li class="open">
+						<span>Programa Operativo Anual '.$this->session->userdata('anio').'</span>
+						<ul class="primer-nivel">';
+		if ($programas = $this->seguimientoModel->getProgramas($this->session->userdata('ejercicio'))) {
+			foreach ($programas as $programa) {
+				$tabla .= '<li><span>'.$programa->numero.' - '.$programa->nombre.'</span>';
+				$tabla .= "<ul class='segundo-nivel'>";
+				$subprogramas = $this->seguimientoModel->getSubprogramas($programa->programa_id);
+				if ($subprogramas) {
+					foreach ($subprogramas as $subprograma) {
+						$tabla .= '<li><span>'.$subprograma->numero.'-'. $subprograma->nombre.'</span>';
+						$tabla .= "<ul class='tercer-nivel'>";
+
+						$proyectos = $this->seguimientoModel->getProyectos($subprograma->subprograma_id);
+						foreach($proyectos as $proyecto) {
+							$tabla .= "<li class='my-proyecto' rel='$proyecto->proyecto_id' rev='$numero_mes'><span>{$proyecto->urnum}-{$proyecto->ronum}-{$programa->numero}-{$subprograma->numero}-{$proyecto->pynum} - {$proyecto->pynom}</span>";
+							$tabla .= "<ul class='cuarto-nivel'>";
+							$tabla .= "</ul></li>";
+						}
+						$tabla .= '</ul></li>';
+					}
+				}
+				$tabla .= '</ul></li>';
+			}
+			$tabla .= '</ul></li>';
+		}
+		$tabla .= '</ul></li></div>';
+		return $tabla;
+	}
+
     public function index()
     {
         $data = array();
@@ -505,6 +545,7 @@ class seguimiento extends MX_Controller
         $data['seccion'] = 'Reportes Seguimiento';
         $data['js']      = 'graficas/0002_bar.js';
         $data['programas'] = $this->_programas();
+        $data['avance_ficha_poa'] = $this->_avanceFichaPoa();
         $data['header']  = $this->load->view('home/home_header', $data, TRUE);
         $data['menu']    = $this->load->view('home/home_menu_r', $data, TRUE);
         $data['main']    = $this->load->view('seguimiento', $data, TRUE);

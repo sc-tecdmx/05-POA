@@ -29,7 +29,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/hover.css'; ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/bootstrap-select.css'; ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/select2.min.css'; ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/treejs/style.min.css'; ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'css/treeview/jquery.treeview.css'; ?>">
 </head>
 
 <body id="page-top">
@@ -103,7 +103,7 @@
     <!--Variable global JS-->
 	<script src="<?php echo base_url().'js/sweetalert2.js'; ?>"></script>
     <script src="<?php echo base_url('js/echarts.min.js');?>"></script>
-    <script src="<?php echo base_url('js/treejs/jstree.min.js');?>"></script>
+    <script src="<?php echo base_url('js/treeview/jquery.treeview.js');?>"></script>
     <script>
         var base_url = '<?php echo base_url(); ?>';
     </script>

@@ -2,18 +2,6 @@ $(document).ready(function() {
     $('#tablaConsolidado').empty();
     $('#tablaAvanceMensual').empty();
 
-    $('#jstree').jstree()
-
-	$('#jstree').on("changed.jstree", function (e, data){
-		console.log(data.selected)
-	})
-
-	$('#demoButton').on('click', function () {
-		$('#jstree').jstree(true).select_node('child_node_1');
-		$('#jstree').jstree('select_node', 'child_node_1');
-		$.jstree.reference('#jstree').select_node('child_node_1');
-	});
-
 	$("#monthSel").change(function () {
 		var id = $('#monthSel').val();
 		$.ajax({
@@ -118,54 +106,30 @@ $(document).ready(function() {
 		})
 	})
 
-    /* $("#monthSel").change(function () {
-        var id = $('#monthSel').val();
-        $.ajax({
-            url: base_url+'reportes/seguimiento/getDataMetas/' + id,
-            dataType: 'json',
-            contentType: "application/json; charset=utf-8",
-            method: "GET",
-            success: function(data) {
-                var arr = [];
-                var arr0 = [];
-                data.forEach(function(e, i){
-                    arr.push(e.name);
-                    arr0.push(e.value);
-                });
+	$('#tree-programas').treeview({
+		animated: "fast",
+		collapsed: true,
+		unique: true,
+		//persist: "cookie",
+		toggle: function() {
+			//$('li.my-proyecto').children('ul').empty();
+			if ($(this).hasClass('my-proyecto')) {
+				$(this).removeClass('my-proyecto');
+				var $ul = $(this).children('ul');
+				var proyecto_id = $(this).attr('rel');
+				var mes = $(this).attr('rev');
 
-                var densityCanvas = document.getElementById("bar");
-
-                var densityData = {
-                    label: 'Prueba',
-                    data: arr0,
-                    borderWidth: 2,
-                    hoverBorderWidth: 0,
-                    backgroundColor: 'rgba(110, 0, 101, 1)',
-					barPercentage: 0.5
-                };
-
-                var chartOptions = {
-                    elements: {
-                        rectangle: {
-                            borderSkipped: 'left',
-                        }
-                    }
-                };
-
-                var barChart = new Chart(densityCanvas, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: arr,
-                        datasets: [densityData],
-                    },
-                    options: chartOptions
-                });
-            },
-            error: function(data) {
-                console.log(data);
-            }
-        });
-    }); */
+				$.when(obtenerMetasCollapse(proyecto_id, mes)).then(function(data) {
+					$ul.html(data);
+					$ul.treeview({
+						animated: "fast",
+						collapsed: true,
+						unique: true
+					});
+				});
+			}
+		}
+	});
 
     $('#seguimientOption').on('change', function () {
         const option = $('#seguimientOption').val()
