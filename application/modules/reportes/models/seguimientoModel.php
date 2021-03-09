@@ -169,9 +169,21 @@ class seguimientoModel extends CI_Model
         }
     }
 
+	public function getMetasResueltasResult($meta, $mes)
+	{
+		$this->db->select('numero');
+		$this->db->where('meta_id', $meta);
+		$this->db->where('mes_id >=', $mes);
+		$this->db->from('meses_metas_complementarias_resueltos');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->result();
+		}
+	}
+
     public function getUnidadMedida($meta)
     {
-        $this->db->select('unidades_medidas.nombre');
+        $this->db->select('unidades_medidas.nombre, porcentajes');
         $this->db->join('unidades_medidas', 'metas.unidad_medida_id = unidades_medidas.unidad_medida_id');
         $this->db->where('metas.meta_id', $meta);
         $this->db->from('metas');

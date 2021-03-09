@@ -656,14 +656,174 @@ class seguimiento extends MX_Controller
 						$tabla .= "</tbody>";
 						$tabla .= "</table>";
 						$tabla .= "</div>";
+						$tabla .= "</div>";
 						$tabla .= "</ul></li>";
 					}
-					
 				}
 			}
 			$tabla .= "</ul>";
-			echo $tabla;
+
+			/* $tabla .= "<li><span>Metas Complementarias</span>";
+			$tabla .= "<ul class='quinto-nivel'>";
+			$tabla .= "<li><span>hola</span>";
+			$tabla .= "<li><span>nombre</span>";
+			$tabla .= "<ul class='sexto-nivel'>";
+			$tabla .= "<div class='contenido-metas'>";
+			$tabla .= "<div class='div-unidad-medida'>Unidad de medida: </div>";
+			$tabla .= "<table class='formulario-4'>";
+			$tabla .= "<thead>";
+			$tabla .= "<tr>";
+			$tabla .= "<th></th>";
+			$tabla .= "<th>Enero</th>";
+			$tabla .= "</tr>";
+			$tabla .= "</thead>";
+			$tabla .= "<tbody>";
+			$tabla .= "<tr>";
+			$tabla .= "<td class='key-left primer-columna'>Programado</td>";
+			$tabla .= "<td>100</td>";
+			$tabla .= '</tr>';
+			$tabla .= "<tr>";
+			$tabla .= "<td class='key-left primer-columna'>Alcanzado</td>"; */
+
+
+			$metasComplementarias = $this->seguimientoModel->getMetas('complementaria', $proyectoId);
+			if ($metasComplementarias) {
+				$tabla .= "<li><span>Metas Complementarias</span>";
+				$tabla .= "<ul class='quinto-nivel'>";
+				foreach ($metasComplementarias as $metaComplementaria) {
+					$tabla .= "<li><span>$metaComplementaria->nombre</span>";
+					$tabla .= "<ul class='sexto-nivel'>";
+					$tabla .= "<div class='contenido-metas'>";
+					$unidadMedidaC = $this->seguimientoModel->getUnidadMedida($metaComplementaria->meta_id);
+					$tabla .= "<div class='div-unidad-medida'>Unidad de medida: $unidadMedidaC->nombre</div>";
+					$tabla .= "<table class='formulario-4'>";
+					$tabla .= "<thead>";
+					$tabla .= "<tr>";
+					$tabla .= "<th></th>";
+					for ($i = 1; $i <= $mesId; $i++) {
+						$tabla .= "<th>" . ucwords($this->_obtenerNombreMes($i)) . "</th>";
+					}
+					$tabla .= "</tr>";
+					$tabla .= "</thead>";
+					if ($unidadMedidaC->porcentajes == '0') {
+						$metasProgramadasC = $this->seguimientoModel->getMetasProgramadas($metaComplementaria->meta_id, $mesId);
+						if ($metasProgramadasC) {
+							$programadoC_array = array();
+							$acumuladoC = 0;
+							$tabla .= "<tbody>";
+							$tabla .= "<tr>";
+							$tabla .= "<td class='key-left primer-columna'>Programado</td>";
+							foreach ($metasProgramadasC as $metaProgramadaC) {
+								$acumuladoC += $metaProgramadaC->numero;
+								$tabla .= "<td>$metaProgramadaC->numero</td>";
+								$programadoC_array[] = $metaProgramadaC->numero;
+							}
+							$tabla .= '</tr>';
+							$metasAlcanzadasC = $this->seguimientoModel->getMetasAlcanzadasResult($metaComplementaria->meta_id, $mesId);
+							if ($metasAlcanzadasC) {
+								$alcanzadoC_array = array();
+								$acumuladoC = 0;
+								$tabla .= "<tr>";
+								$tabla .= "<td class='key-left primer-columna'>Alcanzado</td>";
+								foreach ($metasAlcanzadasC as $metaAlcanzadaC) {
+									$explicacion = $metaAlcanzadaC->explicacion;
+
+									if ($explicacion == "") {
+										$explicacion = "No existe explicaci&oacute;n del avance f&iacute;sico para este mes";
+									}
+									$acumuladoC += $metaAlcanzadaC->numero;
+									$tabla .= "<td class='explicacion-granular' rel='$explicacion'>$metaAlcanzadaC->numero</td>";
+									$alcanzadoC_array[] = $metaAlcanzadaC->numero;
+								}
+								$tabla .= "</tr>";
+
+								$tabla .= "<tr>";
+								$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance respecto del mes</td>";
+								for ($i = 0; $i < count($programadoC_array); $i++) {
+									$avance_mes = $programado_array[$i] == 0 ? "No aplica" : number_format(($alcanzadoC_array[$i] / $programadoC_array[$i]), 1) . "%";
+									$tabla .= "<td>$avance_mes</td>";
+								}
+								$tabla .= "</tr>";
+
+								$tabla .= "<tr>";
+								$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance acumulado</td>";
+								for ($i = 0; $i < count($programadoC_array); $i++) {
+									$acumuladaC_programada = 0;
+									$acumuladaC_alcanzada = 0;
+									for ($j = 0; $j <= $i; $j++) {
+										$acumuladaC_programada += $programadoC_array[$j];
+										$acumuladaC_alcanzada += $alcanzadoC_array[$j];
+									}
+									$avance_meses = $acumuladaC_programada == 0 ? "No aplica" : number_format(($acumuladaC_alcanzada / $acumuladaC_programada), 1) . "%";
+									$tabla .= "<td>$avance_meses</td>";
+								}
+							}
+						}
+					} else {
+						$atendidos = $this->seguimientoModel->getMetasResueltasResult($metaComplementaria->meta_id, $mesId);
+						if ($atendidos) {
+							$atendidos_array = array();
+							$acumuladoAtendido = 0;
+							$tabla .= "<tbody>";
+							$tabla .= "<tr>";
+							$tabla .= "<td class='key-left primer-columna'>Atendidos</td>";
+							foreach ($atendidos as $atendido) {
+								$acumuladoAtendido += $atendido->numero;
+								$tabla .= "<td>$atendido->numero</td>";
+								$atendidos_array[] = $atendido->numero;
+							}
+							$tabla .= '</tr>';
+							$recibidos = $this->seguimientoModel->getMetasAlcanzadasResult($metaComplementaria->meta_id, $mesId);
+							if ($recibidos) {
+								$recibidos_array = array();
+								$acumuladoResuelto = 0;
+								$tabla .= "<tr>";
+								$tabla .= "<td class='key-left primer-columna'>Recibidos</td>";
+								foreach ($recibidos as $recibido) {
+									$explicacion = $recibido->explicacion;
+
+									if ($explicacion == "") {
+										$explicacion = "No existe explicación del avance físico para este mes";
+									}
+									$acumuladoResuelto += $recibido->numero;
+									$tabla .= "<td class='explicacion-granular' rel='$explicacion'>$recibido->numero</td>";
+									$recibidos_array[] = $recibido->numero;
+								}
+								$tabla .= "</tr>";
+
+								$tabla .= "<tr>";
+								$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance respecto del mes</td>";
+								for ($i = 0; $i < count($atendidos_array); $i++) {
+									$avance_mes = $recibidos_array[$i] == 0 ? "No aplica" : number_format(($atendidos_array[$i] / $recibidos_array[$i]), 1) . "%";
+									$tabla .= "<td>$avance_mes</td>";
+								}
+								$tabla .= "</tr>";
+
+								$tabla .= "<tr>";
+								$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance acumulado</td>";
+								for ($i = 0; $i < count($atendidos_array); $i++) {
+									$acumulada_recibidos = 0;
+									$acumulada_atendidos = 0;
+									for ($j = 0; $j <= $i; $j++) {
+										$acumulada_recibidos += $recibidos_array[$j];
+										$acumulada_atendidos += $atendidos_array[$j];
+									}
+									$avance_meses = $acumulada_recibidos == 0 ? "No aplica" : number_format(($acumulada_atendidos / $acumulada_recibidos), 1) . "%";
+									$tabla .= "<td>$avance_meses</td>";
+								}
+							}
+						}
+					}
+					$tabla .= "</tr>";
+					$tabla .= "</tbody>";
+					$tabla .= "</table>";
+					$tabla .= "</div>";
+					$tabla .= "</ul></li>";
+				}
+			}
 		}
+		$tabla .= "</ul>";
+		echo $tabla;
 	}
 
     public function index()
