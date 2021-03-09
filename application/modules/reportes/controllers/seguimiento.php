@@ -497,8 +497,8 @@ class seguimiento extends MX_Controller
     private function _avanceFichaPoa()
 	{
     	$tabla = '';
-    	// obtener mes para consulta
-    	$numero_mes = 1;
+    	$ejercicio = $this->seguimientoModel->getMonthCutoffDate($this->session->userdata('ejercicio'));
+    	$numero_mes = $ejercicio->ultimo_mes_visible;
 		$tabla .= '
 			<div class="avance-ficha-poa">
 				<div class="periodo-avance">
@@ -663,29 +663,6 @@ class seguimiento extends MX_Controller
 			}
 			$tabla .= "</ul>";
 
-			/* $tabla .= "<li><span>Metas Complementarias</span>";
-			$tabla .= "<ul class='quinto-nivel'>";
-			$tabla .= "<li><span>hola</span>";
-			$tabla .= "<li><span>nombre</span>";
-			$tabla .= "<ul class='sexto-nivel'>";
-			$tabla .= "<div class='contenido-metas'>";
-			$tabla .= "<div class='div-unidad-medida'>Unidad de medida: </div>";
-			$tabla .= "<table class='formulario-4'>";
-			$tabla .= "<thead>";
-			$tabla .= "<tr>";
-			$tabla .= "<th></th>";
-			$tabla .= "<th>Enero</th>";
-			$tabla .= "</tr>";
-			$tabla .= "</thead>";
-			$tabla .= "<tbody>";
-			$tabla .= "<tr>";
-			$tabla .= "<td class='key-left primer-columna'>Programado</td>";
-			$tabla .= "<td>100</td>";
-			$tabla .= '</tr>';
-			$tabla .= "<tr>";
-			$tabla .= "<td class='key-left primer-columna'>Alcanzado</td>"; */
-
-
 			$metasComplementarias = $this->seguimientoModel->getMetas('complementaria', $proyectoId);
 			if ($metasComplementarias) {
 				$tabla .= "<li><span>Metas Complementarias</span>";
@@ -794,7 +771,7 @@ class seguimiento extends MX_Controller
 								$tabla .= "<tr>";
 								$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance respecto del mes</td>";
 								for ($i = 0; $i < count($atendidos_array); $i++) {
-									$avance_mes = $recibidos_array[$i] == 0 ? "No aplica" : number_format(($atendidos_array[$i] / $recibidos_array[$i]), 1) . "%";
+									$avance_mes = $recibidos_array[$i] == 0 ? "No aplica" : number_format(($atendidos_array[$i] / $recibidos_array[$i])*100, 1) . "%";
 									$tabla .= "<td>$avance_mes</td>";
 								}
 								$tabla .= "</tr>";
@@ -808,7 +785,7 @@ class seguimiento extends MX_Controller
 										$acumulada_recibidos += $recibidos_array[$j];
 										$acumulada_atendidos += $atendidos_array[$j];
 									}
-									$avance_meses = $acumulada_recibidos == 0 ? "No aplica" : number_format(($acumulada_atendidos / $acumulada_recibidos), 1) . "%";
+									$avance_meses = $acumulada_recibidos == 0 ? "No aplica" : number_format(($acumulada_atendidos / $acumulada_recibidos)*100, 1) . "%";
 									$tabla .= "<td>$avance_meses</td>";
 								}
 							}

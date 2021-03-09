@@ -80,7 +80,7 @@ class seguimientoModel extends CI_Model
 	{
 		$this->db->select('numero');
 		$this->db->where('meta_id', $meta);
-		$this->db->where('mes_id >=', $mes);
+		$this->db->where('mes_id <=', $mes);
 		$this->db->from('meses_metas_programadas');
 		$query = $this->db->get();
 		if($query->num_rows()>0){
@@ -104,7 +104,7 @@ class seguimientoModel extends CI_Model
 	{
 		$this->db->select('numero, explicacion');
 		$this->db->where('meta_id', $meta);
-		$this->db->where('mes_id >=', $mes);
+		$this->db->where('mes_id <=', $mes);
 		$this->db->from('meses_metas_alcanzadas');
 		$query = $this->db->get();
 		if($query->num_rows()>0){
@@ -173,7 +173,7 @@ class seguimientoModel extends CI_Model
 	{
 		$this->db->select('numero');
 		$this->db->where('meta_id', $meta);
-		$this->db->where('mes_id >=', $mes);
+		$this->db->where('mes_id <=', $mes);
 		$this->db->from('meses_metas_complementarias_resueltos');
 		$query = $this->db->get();
 		if($query->num_rows()>0){
@@ -193,4 +193,14 @@ class seguimientoModel extends CI_Model
         }
         return false;
     }
+
+    public function getMonthCutoffDate($ejercicioId) {
+    	$this->db->where('ejercicio_id', $ejercicioId);
+    	$this->db->from('ejercicios');
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		}
+		return false;
+	}
 }
