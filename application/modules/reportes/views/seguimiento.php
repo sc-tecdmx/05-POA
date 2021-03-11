@@ -75,7 +75,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <?php echo form_dropdown('programasAvanceMensual', $programas, set_value('programasAvanceMensual',isset($row->programa_id)?$row->programa_id:''),'class="form-control" id="programasAvanceMensual" data-form="required"'); ?>
+                                    <?php echo form_dropdown('programasAvanceMensual', $selectProgramas, set_value('programasAvanceMensual',isset($row->programa_id)?$row->programa_id:''),'class="form-control" id="programasAvanceMensual" data-form="required"'); ?>
                                 </div>
                                 <div class="col-md-6 mt-2">
                                     <select id="subprogramasAvanceMensual" class="form-control">

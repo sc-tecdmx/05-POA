@@ -40,190 +40,201 @@ class seguimiento extends MX_Controller
         }
     }
 
-    private function _is_exist($data, $type = FALSE)
-    {
-        if (isset($data)) {
-            return $data;
-        } else {
-            if (! $type) {
-                return '  ';
-            } else {
-                return 0;
-            }
-        }
-    }
+    private function _selectProgramas()
+	{
+		if ($query = $this->seguimientoModel->getProgramas($this->session->userdata('ejercicio'))) {
+			$programas = array('' => '-Seleccione un programa -');
+			foreach ($query as $row) {
+				$programas[$row->programa_id] = $row->nombre;
+			}
+			return $programas;
+		}
+	}
 
-    private function _getProyectos($subprograma)
-    {
-        $res = $this->seguimientoModel->getProyectos($subprograma);
-        $j = 1;
-        $tabla = '';
-        foreach($res as $row){
-            if($j == 1){
-                $tabla .= '
-                <div class="card">
-                    <div class="card-header" id="heading'.$j.'">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
-                              '.$row->nombre.'
-                            </button>
-                        </h5>
-                    </div>
+	private function _is_exist($data, $type = FALSE)
+	{
+		if (isset($data)) {
+			return $data;
+		} else {
+			if (! $type) {
+				return '  ';
+			} else {
+				return 0;
+			}
+		}
+	}
 
-                    <div id="collapse'.$j.'" class="collapse show" aria-labelledby="heading'.$j.'" data-parent="#accordion">
-                        <div class="card-body">
-                            <p>Hola</p>
-                        </div>
-                    </div>
-                </div>';
-            } else {
-                $tabla .= '
-                <div class="card">
-                    <div class="card-header" id="heading'.$j.'">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
-                              '.$row->nombre.'
-                            </button>
-                        </h5>
-                    </div>
+	private function _getProyectos($subprograma)
+	{
+		$res = $this->seguimientoModel->getProyectos($subprograma);
+		$j = 1;
+		$tabla = '';
+		foreach($res as $row){
+			if($j == 1){
+				$tabla .= '
+				<div class="card">
+					<div class="card-header" id="heading'.$j.'">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
+							  '.$row->nombre.'
+							</button>
+						</h5>
+					</div>
 
-                    <div id="collapse'.$j.'" class="collapse" aria-labelledby="heading'.$j.'" data-parent="#accordion">
-                        <div class="card-body">
-                            <p>Hola</p>
-                        </div>
-                    </div>
-                </div>';
-            }
-            $j++;
-        }
-        $tabla .= '</div>';
-        return $tabla;
-    }
+					<div id="collapse'.$j.'" class="collapse show" aria-labelledby="heading'.$j.'" data-parent="#accordion">
+						<div class="card-body">
+							<p>Hola</p>
+						</div>
+					</div>
+				</div>';
+			} else {
+				$tabla .= '
+				<div class="card">
+					<div class="card-header" id="heading'.$j.'">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
+							  '.$row->nombre.'
+							</button>
+						</h5>
+					</div>
 
-    private function _getSubprogramas($programa)
-    {
-        $res = $this->seguimientoModel->getSubprogramas($programa);
-        $tabla = '<div id="accordion1">';
-        for($j=0;$j<count($res);$j++){
-            if($j == 0){
-                $tabla .= '
-                <div class="card">
-                    <div class="card-header" id="heading'.$j.'">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
-                              '.$res[$j]->nombre.'
-                            </button>
-                        </h5>
-                    </div>
-                            
-                    <div id="collapse'.$j.'" class="collapse show" aria-labelledby="heading'.$j.'" data-parent="#accordion1">
-                        <div class="card-body">';
-                $proyectos = $this->_getProyectos($res[$j]->subprograma_id);
-                $tabla .= '</div>
-                    </div>
-                </div>';
-            } else {
-                $tabla .= '
-                <div class="card">
-                    <div class="card-header" id="heading'.$j.'">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
-                              '.$res[$j]->nombre.'
-                            </button>
-                        </h5>
-                    </div>
-                            
-                    <div id="collapse'.$j.'" class="collapse" aria-labelledby="heading'.$j.'" data-parent="#accordion1">
-                        <div class="card-body">';
-                $proyectos = $this->_getProyectos($res[$j]->subprograma_id);
-                $tabla .= $proyectos;
-                $tabla .= '</div>
-                    </div>
-                </div>';
-            }
-        }
-        $tabla .= '</div>';
-        return $tabla;
-    }
+					<div id="collapse'.$j.'" class="collapse" aria-labelledby="heading'.$j.'" data-parent="#accordion">
+						<div class="card-body">
+							<p>Hola</p>
+						</div>
+					</div>
+				</div>';
+			}
+			$j++;
+		}
+		$tabla .= '</div>';
+		return $tabla;
+	}
 
-    public function getConsolidadoSubprogramas($programa = false)
-    {
-        $res = $this->seguimientoModel->getSubprogramas($programa);
-        $data = array();
-        if($res){
-            foreach ($res as $row){
-                $data['subprograma_id'][] = $row->subprograma_id;
-                $data['nombre'][] = $row->nombre;
-            }
-            echo json_encode($data);
-        }
-    }
+	private function _getSubprogramas($programa)
+	{
+		$res = $this->seguimientoModel->getSubprogramas($programa);
+		$tabla = '<div id="accordion1">';
+		for($j=0;$j<count($res);$j++){
+			if($j == 0){
+				$tabla .= '
+				<div class="card">
+					<div class="card-header" id="heading'.$j.'">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
+							  '.$res[$j]->nombre.'
+							</button>
+						</h5>
+					</div>
+							
+					<div id="collapse'.$j.'" class="collapse show" aria-labelledby="heading'.$j.'" data-parent="#accordion1">
+						<div class="card-body">';
+				$proyectos = $this->_getProyectos($res[$j]->subprograma_id);
+				$tabla .= '</div>
+					</div>
+				</div>';
+			} else {
+				$tabla .= '
+				<div class="card">
+					<div class="card-header" id="heading'.$j.'">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$j.'" aria-expanded="true" aria-controls="collapse'.$j.'">
+							  '.$res[$j]->nombre.'
+							</button>
+						</h5>
+					</div>
+							
+					<div id="collapse'.$j.'" class="collapse" aria-labelledby="heading'.$j.'" data-parent="#accordion1">
+						<div class="card-body">';
+				$proyectos = $this->_getProyectos($res[$j]->subprograma_id);
+				$tabla .= $proyectos;
+				$tabla .= '</div>
+					</div>
+				</div>';
+			}
+		}
+		$tabla .= '</div>';
+		return $tabla;
+	}
 
-    public function getConsolidadoProyectos($subprograma = false)
-    {
-        $res = $this->seguimientoModel->getProyectos($subprograma);
-        $data = array();
-        if($res){
-            foreach ($res as $row){
-                $data['clave'][] = $row->urnum.'-'.$row->ronum.'-'.$row->pgnum.'-'.$row->sbnum.'-'.$row->pynum;
-                $data['nombre'][] = $row->pynom;
-                $data['id'][] = $row->proyecto_id;
-            }
-            echo json_encode($data);
-        }
-    }
+	public function getConsolidadoSubprogramas($programa = false)
+	{
+		$res = $this->seguimientoModel->getSubprogramas($programa);
+		$data = array();
+		if($res){
+			foreach ($res as $row){
+				$data['subprograma_id'][] = $row->subprograma_id;
+				$data['nombre'][] = $row->nombre;
+			}
+			echo json_encode($data);
+		}
+	}
 
-    public function getConsolidadoMetas($meta = false, $proyecto = false)
-    {
-        $res = $this->seguimientoModel->getMetas($meta, $proyecto);
-        $data = array();
-        if($res){
-            foreach ($res as $row){
-                $data['meta'][] = $row->meta_id;
-                $data['nombre'][] = $row->nombre;
-            }
-            echo json_encode($data);
-        }
-    }
+	public function getConsolidadoProyectos($subprograma = false)
+	{
+		$res = $this->seguimientoModel->getProyectos($subprograma);
+		$data = array();
+		if($res){
+			foreach ($res as $row){
+				$data['clave'][] = $row->urnum.'-'.$row->ronum.'-'.$row->pgnum.'-'.$row->sbnum.'-'.$row->pynum;
+				$data['nombre'][] = $row->pynom;
+				$data['id'][] = $row->proyecto_id;
+			}
+			echo json_encode($data);
+		}
+	}
 
-    public function getConsolidadoRespuesta($meta = false)
-    {
-        $mesVisible = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
-        $mes = $mesVisible ? $mesVisible->mes_id : date('n');
-        $mesesVisibles = array();
-        if($mes == '1'){
-            array_push($mesesVisibles, $mesVisible->mes_id);
-        } else {
-            for($i = 1; $i <= $mes; $i++){
-                array_push($mesesVisibles, $i);
-            }
-        }
-        $meses = array();
-        if ($mes == '1') {
-            $nombreMes = 'Enero';
-            $nombreAcumulado = $nombreMes;
-        } else {
-            $nombreMes = $this->seguimientoModel->getNombreMes($mes);
-            $nombreAcumulado = 'Enero - '.ucfirst($nombreMes->nombre);
-        }
-        $unidadMedida = $this->seguimientoModel->getUnidadMedida($meta) ? $this->seguimientoModel->getUnidadMedida($meta)->nombre : '';
-        $tabla = '
-        <div>
-            <h4>Periodo: '.$nombreAcumulado.'</h4>
-            <h4>Unidad de Medida: '.$unidadMedida.'</h4>
-        </div>';
-        $tabla .= '
-            <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <td></td>';
-        /* $meses = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
-        $mesesVisibles = array();
-        foreach($meses as $mes){
-            $tabla .= '<td class="text-center">'.ucfirst($mes->nombre).'</td>';
-            array_push($mesesVisibles, $mes->mes_id);
-        } */
+	public function getConsolidadoMetas($meta = false, $proyecto = false)
+	{
+		$res = $this->seguimientoModel->getMetas($meta, $proyecto);
+		$data = array();
+		if($res){
+			foreach ($res as $row){
+				$data['meta'][] = $row->meta_id;
+				$data['nombre'][] = $row->nombre;
+			}
+			echo json_encode($data);
+		}
+	}
+
+	public function getConsolidadoRespuesta($meta = false)
+	{
+		$mesVisible = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
+		$mes = $mesVisible ? $mesVisible->mes_id : date('n');
+		$mesesVisibles = array();
+		if($mes == '1'){
+			array_push($mesesVisibles, $mesVisible->mes_id);
+		} else {
+			for($i = 1; $i <= $mes; $i++){
+				array_push($mesesVisibles, $i);
+			}
+		}
+		$meses = array();
+		if ($mes == '1') {
+			$nombreMes = 'Enero';
+			$nombreAcumulado = $nombreMes;
+		} else {
+			$nombreMes = $this->seguimientoModel->getNombreMes($mes);
+			$nombreAcumulado = 'Enero - '.ucfirst($nombreMes->nombre);
+		}
+		$unidadMedida = $this->seguimientoModel->getUnidadMedida($meta) ? $this->seguimientoModel->getUnidadMedida($meta)->nombre : '';
+		$tabla = '
+		<div>
+			<h4>Periodo: '.$nombreAcumulado.'</h4>
+			<h4>Unidad de Medida: '.$unidadMedida.'</h4>
+		</div>';
+		$tabla .= '
+			<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+				<tr>
+					<td></td>';
+		/* $meses = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
+		$mesesVisibles = array();
+		foreach($meses as $mes){
+			$tabla .= '<td class="text-center">'.ucfirst($mes->nombre).'</td>';
+			array_push($mesesVisibles, $mes->mes_id);
+		} */
         // obtener los nombres de los meses
         for($i = 0; $i < count($mesesVisibles); $i++){
             $mes = $this->seguimientoModel->getNombreMes($mesesVisibles[$i]);
@@ -814,6 +825,7 @@ class seguimiento extends MX_Controller
         $data['seccion'] = 'Reportes Seguimiento';
         $data['js']      = 'graficas/0002_bar.js';
         $data['programas'] = $this->_programas();
+        $data['selectProgramas'] = $this->_selectProgramas();
         $data['avance_ficha_poa'] = $this->_avanceFichaPoa();
         $data['header']  = $this->load->view('home/home_header', $data, TRUE);
         $data['menu']    = $this->load->view('home/home_menu_r', $data, TRUE);

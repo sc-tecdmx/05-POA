@@ -1461,7 +1461,7 @@ class seguimiento extends MX_Controller
         $acumuladoa = $this->seguimiento_model->getAvanceAlcanzadoAcumulado($mes, $res->meta_id);
         $tabla .= '<td>'.$acumuladoa->numero.'</td>';
         $pacm = $this->seguimiento_model->getPorcentajeAcumulado($res->meta_id, $mes);
-        $tabla .= '<td>'.$pacm->porcentaje_real.'</td>
+        $tabla .= '<td>'.$pacm->porcentaje.'</td>
         </tr>';
         $tabla .= '</tbody>
             </table>
@@ -1535,7 +1535,7 @@ class seguimiento extends MX_Controller
             $tabla .= '
             <td>'.$acumuladoa->numero.'</td>';
             $pacm = $this->seguimiento_model->getPorcentajeAcumulado($complementaria->meta_id, $mes);
-            $tabla .= '<td>'.$pacm->porcentaje_real.'</td>
+            $tabla .= '<td>'.$pacm->porcentaje.'</td>
         </tr>';
             $i++;
         }

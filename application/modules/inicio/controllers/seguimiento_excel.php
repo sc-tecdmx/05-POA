@@ -918,7 +918,7 @@ class seguimiento_excel extends MX_Controller
         $acumuladoa = $this->seguimiento_model->getAvanceAlcanzadoAcumulado($mes, $res->meta_id);
         $this->excel->getActiveSheet()->setCellValue("O13", $acumuladoa->numero);
         $pacm = $this->seguimiento_model->getPorcentajeAcumulado($res->meta_id, $mes);
-        $this->excel->getActiveSheet()->setCellValue("Q13", $pacm->porcentaje_real);
+        $this->excel->getActiveSheet()->setCellValue("Q13", $pacm->porcentaje);
 
         $explicaciones = $this->seguimiento_model->getExplicacionesMP($mes, $res->meta_id);
         $cadena = '';
@@ -971,7 +971,7 @@ class seguimiento_excel extends MX_Controller
             $acumuladoa = $this->seguimiento_model->getAvanceAlcanzadoAcumulado($mes, $complementaria->meta_id);
             $this->excel->getActiveSheet()->setCellValue("O".$i, $acumuladoa->numero);
             $pacm = $this->seguimiento_model->getPorcentajeAcumulado($complementaria->meta_id, $mes);
-            $this->excel->getActiveSheet()->setCellValue("Q".$i, $pacm->porcentaje_real);
+            $this->excel->getActiveSheet()->setCellValue("Q".$i, $pacm->porcentaje);
             $i++;
         }
 

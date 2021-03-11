@@ -96,8 +96,8 @@ class Graficas_model extends CI_Model
     public function getPrograms($ejercicioId) {
 		$this->db->select('programa_id, numero, nombre');
 		$this->db->where('programas.ejercicio_id', $ejercicioId);
+		// $this->db->order_by('numero', 'ASC');
 		$this->db->from('programas');
-		// $this->db->orderBy('numero');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			return $query->result();
@@ -107,6 +107,7 @@ class Graficas_model extends CI_Model
 	public function getSubprograms($programaId) {
     	$this->db->select('subprograma_id, numero, nombre');
     	$this->db->where('programa_id', $programaId);
+		// $this->db->order_by('numero', 'ASC');
     	$this->db->from('subprogramas');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
@@ -119,6 +120,7 @@ class Graficas_model extends CI_Model
 		$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
 		$this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
 		$this->db->where('subprograma_id', $subprogramaId);
+		$this->db->order_by('unidades_responsables_gastos.numero', 'ASC');
     	$this->db->from('proyectos');
 		if($this->session->userdata('area')) {
 			$this->db->where_in('responsables_operativos.responsable_operativo_id', $this->session->userdata('area'));
