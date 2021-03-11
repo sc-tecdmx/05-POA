@@ -269,6 +269,7 @@ class aperturaProgramatica extends MX_Controller
         $sheet->setCellValue("E3", 'PY');
         $sheet->setCellValue("F3", 'Denominación');
         $sheet->setCellValue("H3", 'Unidad de medida');
+        $sheet->setCellValue("I3", 'Meses');
         $sheet->setCellValue("I4", 'Ene');
         $sheet->setCellValue("J4", 'Feb');
         $sheet->setCellValue("K4", 'Mar');

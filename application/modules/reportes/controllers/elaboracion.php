@@ -202,7 +202,10 @@ class elaboracion extends MX_Controller
 	public function getAperturaProgramatica($meta = false)
 	{
 		$tabla = '';
+		$unidadMedida = $this->seguimientoModel->getUnidadMedida($meta);
 		$tabla .= '
+			<h4>Periodo: Enero - Diciembre</h4>
+			<h5>Unidad Medida: '.ucfirst($unidadMedida->nombre).'</h5>
             <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
@@ -211,12 +214,15 @@ class elaboracion extends MX_Controller
 		$mesVisible = $this->seguimientoModel->getMesVisible($this->session->userdata('ejercicio'));
 		$mes = $mesVisible ? $mesVisible->mes_id : date('n');
 		$mesesVisibles = array();
-		if($mes == '1'){
+		/* if($mes == '1'){
 			array_push($mesesVisibles, $mesVisible->mes_id);
 		} else {
 			for($i = 1; $i <= $mes; $i++){
 				array_push($mesesVisibles, $i);
 			}
+		} */
+		for($i = 1; $i <= 12; $i++){
+			array_push($mesesVisibles, $i);
 		}
 		$meses = array();
 		// obtener los nombres de los meses
@@ -224,6 +230,7 @@ class elaboracion extends MX_Controller
 			$mes = $this->seguimientoModel->getNombreMes($mesesVisibles[$i]);
 			$tabla .= '<td class="text-center">'.ucfirst($mes->nombre).'</td>';
 		}
+		$tabla .= '<td class="text-center">Total</td>';
 		$tabla .= '</tr></thead>';
 		$porcentaje = $this->seguimientoModel->getTipoMeta($meta);
 		$tabla .= '
@@ -231,10 +238,13 @@ class elaboracion extends MX_Controller
             <tr>
                 <td>Programado</td>
         ';
+		$acumuladoProgramado = 0;
 		for($i = 0; $i < count($mesesVisibles); $i++){
 			$programados = $this->seguimientoModel->getMetasProgramados($meta, $mesesVisibles[$i]);
 			$tabla .= '<td class="text-center">'.$programados->numero.'</td>';
+			$acumuladoProgramado += $programados->numero;
 		}
+		$tabla.= '<td class="text-center">'.$acumuladoProgramado.'</td>';
 		$tabla .= '</tr>';
 		$tabla .= '</tr>';
 		$tabla .= '</tbody>';

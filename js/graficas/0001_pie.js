@@ -54,6 +54,249 @@ $(document).ready(function() {
         }
     });
 
+	/* var chart = new Highcharts.Chart({
+		colors: ['#C4B9D5', '#B5A7CB', '#A696C0', '#9E8DBB', '#8872AC', '#826CA8', '#6B4F97', '#5C3E8C'],
+		chart: {
+			renderTo: 'chart',
+			plotBackgroundColor: null,
+			plotBorderWidth: null,
+			plotShadow: false
+		},
+		title: {
+			text: 'Proyectos por programas'
+		},
+		tooltip: {
+			formatter: function() {
+				var proy = "proyecto";
+				if (this.point.y > 1) {
+					proy = 'proyectos';
+				}
+				return '' + this.point.name + ': <b>' + this.point.y + ' ' + proy + '</b>';
+			}
+		},
+		plotOptions: {
+			series: {
+				//animation: false,
+				events: {
+					click: function() {
+						//alert('xxx');
+					}
+				}
+			},
+			pie: {
+				allowPointSelect: true,
+				cursor: 'pointer',
+				dataLabels: {
+					enabled: true,
+					color: '#000000',
+					connectorColor: '#000000',
+					formatter: function() {
+						return '' + this.point.name + ': <b>' + this.point.y + '</b>';
+					}
+				},
+				point: {
+					events: {
+						click: function() {
+							nombre_programa = this.name;
+							$.when(obtenerMatrizColores()).then(function(colores) {
+								$.when(obtenerGraficaProyectos('php/menu/reportes/graficas/obtener_grafica_proyectos.php?nombre=' + nombre_programa)).then(function(data) {
+									var chart = new Highcharts.Chart({
+										colors: colores,
+										chart: {
+											renderTo: 'chart',
+											plotBackgroundColor: null,
+											plotBorderWidth: null,
+											plotShadow: false,
+											height: 380,
+											width: 295,
+											animation: false,
+											spaceRight: 0,
+											spaceLeft: 0,
+											marginLeft: 0,
+											events: {
+												load: function() {
+													////
+													$('#chart-2, #regresar-chart-1').remove();
+													$('#chart').prepend('<div id="regresar-chart-1">&laquo; Regresar</div>');
+													$('#chart').append('<div id="chart-2"></div>');
+													$.when(obtenerMatrizColores()).then(function(colores) {
+														$.when(obtenerGraficaProyectos('php/menu/reportes/graficas/obtener_grafica_proyectos_subprogramas.php?nombre=' + nombre_programa)).then(function(data) {
+															var chart = new Highcharts.Chart({
+																colors: colores,
+																chart: {
+																	renderTo: 'chart-2',
+																	plotBackgroundColor: null,
+																	plotBorderWidth: null,
+																	plotShadow: false,
+																	width: 800
+																},
+																title: {
+																	text: 'Programa: ' + nombre_programa + ' - Proyectos por subprogramas'
+																},
+																tooltip: {
+																	formatter: function() {
+																		var proy = "proyecto";
+																		if (this.point.y > 1) {
+																			proy = 'proyectos';
+																		}
+																		return '' + this.point.name + ': <b>' + this.point.y + ' ' + proy + '</b>';
+																	}
+																},
+																plotOptions: {
+																	pie: {
+																		allowPointSelect: true,
+																		cursor: 'pointer',
+																		dataLabels: {
+																			enabled: true,
+																			color: '#000000',
+																			connectorColor: '#000000',
+																			formatter: function() {
+																				return '' + this.point.name + ': <b>' + this.point.y + '</b>';
+																			}
+																		},
+																		point: {
+																			events: {
+																				click: function() {
+																					//////
+																				}
+																			}
+																		}
+																	}
+																},
+																series: [{
+																	type: 'pie',
+																	name: 'Browser share',
+																	data: data
+																}]
+															});
+														});
+													}); /////
+												}
+											}
+										},
+										title: {
+											text: 'Proyectos por programas'
+										},
+										legend: {
+											layout: 'vertical',
+											borderWidth: 0,
+											margin: 5,
+											labelFormatter: function() {
+												return this.name + ': <b>' + this.y + '</b>';
+											}
+										},
+										tooltip: {
+											enabled: false
+										},
+										plotOptions: {
+											pie: {
+												allowPointSelect: true,
+												cursor: 'pointer',
+												dataLabels: {
+													enabled: true,
+													color: '#000000',
+													connectorColor: '#000000',
+													formatter: function() {
+														return '' + this.point.name + ': <b>' + this.point.y + '</b>';
+													}
+												},
+												point: {
+													events: {
+														click: function() {
+															var nombre = this.name;
+															$('#chart-2').remove();
+															$('#chart').append('<div id="chart-2"></div>');
+															$.when(obtenerMatrizColores()).then(function(colores) {
+																$.when(obtenerGraficaProyectos('php/menu/reportes/graficas/obtener_grafica_proyectos_subprogramas.php?nombre=' + nombre)).then(function(data) {
+																	var chart = new Highcharts.Chart({
+																		colors: colores,
+																		chart: {
+																			renderTo: 'chart-2',
+																			plotBackgroundColor: null,
+																			plotBorderWidth: null,
+																			plotShadow: false
+																		},
+																		title: {
+																			text: 'Programa: ' + nombre + ' - Proyectos por subprogramas'
+																		},
+																		tooltip: {
+																			formatter: function() {
+																				var proy = "proyecto";
+																				if (this.point.y > 1) {
+																					proy = 'proyectos';
+																				}
+																				return '' + this.point.name + ': <b>' + this.point.y + ' ' + proy + '</b>';
+																			}
+																		},
+																		plotOptions: {
+																			pie: {
+																				allowPointSelect: true,
+																				cursor: 'pointer',
+																				dataLabels: {
+																					enabled: true,
+																					color: '#000000',
+																					connectorColor: '#000000',
+																					formatter: function() {
+																						return '' + this.point.name + ': <b>' + this.point.y + '</b>';
+																					}
+																				},
+																				point: {
+																					events: {
+																						click: function() {
+																							//////
+																						}
+																					}
+																				}
+																			}
+																		},
+																		series: [{
+																			type: 'pie',
+																			name: 'Browser share',
+																			data: data
+																		}]
+																	});
+																});
+															}); /////
+														}
+													}
+												},
+												dataLabels: {
+													enabled: false
+												},
+												showInLegend: true
+											},
+											series: {
+												//animation: false,
+												events: {
+													click: function() {
+														//alert('xxx');
+													}
+												},
+												visible: true
+											}
+										},
+										series: [{
+											pointPadding: 0,
+											groupPadding: 0,
+											type: 'pie',
+											name: 'Browser share',
+											data: data
+										}]
+									});
+								});
+							});
+						}
+					}
+				}
+			}
+		},
+		series: [{
+			type: 'pie',
+			name: 'Browser share',
+			data: data
+		}]
+	}); */
+
     $('#tabla_proyectos').DataTable({
         "language": {
             "url": "../js/spanish.json"
