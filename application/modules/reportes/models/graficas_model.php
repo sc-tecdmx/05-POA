@@ -104,11 +104,46 @@ class Graficas_model extends CI_Model
 		}
 	}
 
+	public function getProgramsGraph($ejercicioId) {
+    	$this->db->select('programas.programa_id, UPPER(programas.nombre) as nombre, programas.numero');
+    	$this->db->join('subprogramas', 'programas.programa_id = subprogramas.programa_id');
+    	$this->db->join('proyectos', 'subprogramas.subprograma_id = proyectos.subprograma_id');
+    	$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
+    	$this->db->where('programas.ejercicio_id', $ejercicioId);
+		if($this->session->userdata('area')) {
+			$this->db->where_in('responsables_operativos.responsable_operativo_id', $this->session->userdata('area'));
+		}
+		$this->db->from('programas');
+		$this->db->group_by('programas.programa_id');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+	}
+
 	public function getSubprograms($programaId) {
     	$this->db->select('subprograma_id, numero, nombre');
     	$this->db->where('programa_id', $programaId);
 		// $this->db->order_by('numero', 'ASC');
     	$this->db->from('subprogramas');
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}
+	}
+
+	public function getSubprogramsGraph($programas, $ejercicioId) {
+		$this->db->select('subprogramas.subprograma_id, subprogramas.numero, subprogramas.nombre');
+		$this->db->join('programas', 'subprogramas.programa_id = programas.programa_id');
+		$this->db->join('proyectos', 'subprogramas.subprograma_id = proyectos.subprograma_id');
+		$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
+		if($this->session->userdata('area')) {
+			$this->db->where_in('responsables_operativos.responsable_operativo_id', $this->session->userdata('area'));
+		}
+		$this->db->where_in('programas.programa_id', $programas);
+		$this->db->where('programas.ejercicio_id', $ejercicioId);
+		$this->db->group_by('subprogramas.subprograma_id');
+		$this->db->from('subprogramas');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			return $query->result();
@@ -169,6 +204,45 @@ class Graficas_model extends CI_Model
 		$this->db->where('mes_id <=', $mesId);
 		$this->db->where('meta_id', $metaId);
 		$this->db->from('meses_metas_alcanzadas');
+		$query = $this->db->get();
+		if($query->num_rows()>0){
+			return $query->row();
+		}
+	}
+
+	public function getTotalPrograms($programas, $subprogramas, $ejercicioId) {
+    	$sql = "SELECT COUNT(*) as 'total_programa', nombre_programa FROM (
+        SELECT py.numero, py.nombre, pg.nombre as 'nombre_programa' FROM proyectos py, subprogramas sp, programas pg, responsables_operativos ro, unidades_responsables_gastos urg
+        WHERE py.subprograma_id = sp.subprograma_id
+        AND sp.programa_id = pg.programa_id
+        AND py.responsable_operativo_id = ro.responsable_operativo_id
+        AND ro.unidad_responsable_gasto_id = urg.unidad_responsable_gasto_id
+        AND urg.numero != '01'
+        AND pg.ejercicio_id = '$ejercicioId'
+        AND pg.programa_id IN ($programas)
+        AND sp.subprograma_id IN ($subprogramas)
+        UNION ALL
+        SELECT DISTINCT py.numero, '', pg.nombre as 'nombre_programa' FROM proyectos py, subprogramas sp, programas pg, responsables_operativos ro, unidades_responsables_gastos urg
+        WHERE py.subprograma_id = sp.subprograma_id
+        AND sp.programa_id = pg.programa_id
+        AND py.responsable_operativo_id = ro.responsable_operativo_id
+        AND ro.unidad_responsable_gasto_id = urg.unidad_responsable_gasto_id
+        AND urg.numero = '01'
+        AND pg.ejercicio_id = '$ejercicioId'
+        AND pg.programa_id IN ($programas)
+        AND sp.subprograma_id IN ($subprogramas)) as proyectos
+    GROUP BY nombre_programa ORDER BY 2";
+    	$query = $this->db->query($sql);
+    	echo $this->db->last_query();
+		if($query->num_rows()>0){
+			return $query->result();
+		}
+	}
+
+	public function checkProgram($nombrePrograma, $ejercicioId) {
+    	$this->db->where('ejercicio_id', $ejercicioId);
+    	$this->db->where('nombre', $nombrePrograma);
+    	$this->db->from('programas');
 		$query = $this->db->get();
 		if($query->num_rows()>0){
 			return $query->row();

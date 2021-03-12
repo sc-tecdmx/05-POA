@@ -15,7 +15,7 @@
             <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <div id="pie" style="width: 700px;height:500px;"></div>
+                        <div id="chart" style="width: 700px;height:500px;"></div>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 <div class="col-md-8">
                     <p>Apertura Programática</p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 text-right">
                     <a href="<?php echo base_url('reportes/aperturaProgramatica/index') ?>" target="_blank" class="btn btn-success"><i class="fa fa-fw fa-file-excel"></i>Generar</a>
                 </div>
             </div>

@@ -50,21 +50,103 @@ class elaboracion extends MX_Controller
         }
     }
 
-    public function getData()
+    public function obtenerMatrizColores()
+	{
+		$colores[] = array('#C4B9D5', '#B5A7CB', '#A696C0', '#9E8DBB', '#8872AC', '#826CA8', '#6B4F97', '#5C3E8C');
+		shuffle($colores);
+
+		echo json_encode($colores[0]);
+	}
+
+    public function getData($programa = false)
     {
-        $ejercicio = $this->home_inicio->get_ejercicio();
-        $res = $this->graficas_model->getProgramas($ejercicio->ejercicio_id);
+        $res = $this->graficas_model->getProgramas($this->session->userdata('ejercicio'));
         $i = 0;
         if($res){
             foreach ($res as $row) {
-                $data[$i++] = array(
-                    'name'  => $row->nombre,
-                    'value' => $row->y,
-                    // 'value' => number_format($this->_calculaPorcentajes($ejercicio->ejercicio_id, $row->y), 2)
-                );
+				$palabras_array = explode(' ', $row->nombre);
+				$palabras = "";
+				foreach ($palabras_array as $key => $value) {
+					if ($key % 5 == 0 && $key != 0) {
+						$palabras .= "<br />" . $value . " ";
+					} else {
+						$palabras .= $value . " ";
+					}
+				}
+
+				$palabras = trim($palabras);
+				$datos[] = array(
+					$palabras,
+					intval($row->y)
+				);
             }
-            echo json_encode($data);
+            echo json_encode($datos);
         }
+		/* $ejercicio = $this->session->userdata('anio');
+		$programas = $this->graficas_model->getProgramsGraph($this->session->userdata('ejercicio'));
+		if ($programas) {
+			$programas_array = "";
+			$indice = 0;
+			foreach ($programas as $programa) {
+				if ($indice == 0) {
+					$programas_array = "" . $programa->programa_id . "";
+				} else {
+					$programas_array .= ", ". $programa->programa_id . "";
+				}
+				$indice++;
+			}
+			$subprogramas = $this->graficas_model->getSubprogramsGraph($programas_array, $this->session->userdata('ejercicio'));
+			if ($subprogramas) {
+				$subprogramas_array = '';
+				$indice = 0;
+				foreach ($subprogramas as $subprograma) {
+					if ($indice == 0) {
+						$subprogramas_array = "" . $subprograma->subprograma_id . "";
+					} else {
+						$subprogramas_array .= ", ". $subprograma->subprograma_id . "";
+					}
+					$indice++;
+				}
+				$totales = $this->graficas_model->getTotalPrograms($programas_array, $subprogramas_array, $this->session->userdata('ejercicio'));
+				if ($totales) {
+					$i = 0;
+					foreach ($totales as $total) {
+						$palabras_array = explode(' ', $total->nombre_programa);
+						$palabras = "";
+						foreach ($palabras_array as $key => $value) {
+							if ($key % 5 == 0 && $key != 0) {
+								$palabras .= "<br />" . $value . " ";
+							} else {
+								$palabras .= $value . " ";
+							}
+						}
+
+						$palabras = trim($palabras);
+
+						$checkProgram = $this->graficas_model->checkProgram($total->nombre_programa, $this->session->userdata('ejercicio'));
+
+						$existe_programa = $checkProgram ? true : false;
+
+						if ($existe_programa && $programa) {
+							$datos[] = array(
+								'sliced' => true,
+								'selected' => true,
+								'name' => $palabras,
+								'y' => intval($total->total_programa)
+							);
+						} else {
+							$datos[] = array(
+								$palabras,
+								intval($total->total_programa)
+							);
+						}
+
+						$i++;
+					}
+					echo json_encode($datos);
+				}
+			}
+		} */
     }
 
     public function aperturaProgramatica()
