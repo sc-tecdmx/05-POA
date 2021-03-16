@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 class avanceTrimestral extends MX_Controller
 {
@@ -41,6 +42,17 @@ class avanceTrimestral extends MX_Controller
 		$spreadsheet = new Spreadsheet(); // instantiate Spreadsheet
 
 		$sheet = $spreadsheet->getActiveSheet();
+
+		/* $logo = base_url('images/balanza.jpg');
+		$drawing = new Drawing();
+		$drawing->setName('Logo');
+		$drawing->setDescription('Logo');
+		$drawing->setPath($logo);
+		$drawing->setCoordinates('A1');
+		$drawing->setHeight(25);
+		$drawing->setOffsetX(25);
+		$drawing->setOffsetY(7);
+		$drawing->setWorksheet($spreadsheet->getActiveSheet()); */
         // $sheet->setActiveSheetIndex(0);
         $ejercicio = $this->home_inicio->get_ejercicio();
         $sheet->setTitle('Avance Trimestral y Acumulado');
@@ -231,17 +243,6 @@ class avanceTrimestral extends MX_Controller
 				),
 			)
 		);
-
-		/* $logo = base_url('images/logo1-TEDF.png');
-		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-		$drawing->setName('Logo');
-		$drawing->setDescription('Logo');
-		$drawing->setPath($logo);
-		$drawing->setCoordinates('A1:B1');
-		$drawing->setOffsetX(110);
-		$drawing->setRotation(25);
-		$drawing->getShadow()->setVisible(true);
-		$drawing->getShadow()->setDirection(45); */
 
         $sheet->getStyle("B1")->getFont()->setBold(true);
         $sheet->getStyle("B2")->getFont()->setBold(true);

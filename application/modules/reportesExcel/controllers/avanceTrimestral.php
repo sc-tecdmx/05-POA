@@ -3,6 +3,7 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class avanceTrimestral extends MX_Controller
@@ -37,6 +38,15 @@ class avanceTrimestral extends MX_Controller
 
 		$spreadsheet = new Spreadsheet(); // instantiate Spreadsheet
 		$sheet = $spreadsheet->getActiveSheet();
+
+		$drawing = new Drawing();
+		$drawing->setName('Logo');
+		$drawing->setDescription('Logo');
+		$drawing->setPath('../../../images/logo11-TEDF.png');
+		$drawing->setHeight(25);
+		$drawing->setOffsetX(25);
+		$drawing->setOffsetY(7);
+		$drawing->setWorksheet($spreadsheet->getActiveSheet());
 
         $ejercicio = $this->home_inicio->get_ejercicio();
         $sheet->setTitle('Avance Trimestral y Acumulado');

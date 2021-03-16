@@ -192,6 +192,9 @@ class fichaPoaPdf extends MX_Controller
 									$tabla_meta_principal .= '<td colspan="2" class="borde encabezado encabezado-doble-mes">TOTAL ANUAL</td>';
 									$tabla_meta_principal .= '<td class="borde encabezado encabezado-mes">' . $acumulado . '</td>';
 									$tabla_meta_principal .= '</tr>';
+									$tabla_meta_principal .= '</table>';
+									$tabla_meta_principal .= '<table class="espacio"><tr><td></td></tr></table>';
+
 								}
 							}
 						}
@@ -207,7 +210,7 @@ class fichaPoaPdf extends MX_Controller
 						$tabla_meta_complementaria .= '<td colspan="9" class="borde encabezado encabezado-completo">METAS COMPLEMENTARIAS</td>';
 						$tabla_meta_complementaria .= '</tr>';
 						$tabla_meta_complementaria .= '<tr>';
-						$tabla_meta_complementaria .= '<td class="borde encabezado encabezado-meta">Denominaci&oacute;n de la Meta</td>';
+						$tabla_meta_complementaria .= '<td class="borde encabezado encabezado-meta">Denominación de la Meta</td>';
 						$tabla_meta_complementaria .= '<td class="borde encabezado encabezado-unidad">UM</td>';
 						$tabla_meta_complementaria .= '<td class="borde encabezado encabezado-mes">ENE</td>';
 						$tabla_meta_complementaria .= '<td class="borde encabezado encabezado-mes">FEB</td>';
@@ -317,9 +320,8 @@ class fichaPoaPdf extends MX_Controller
 				}
 
 				$indicadores = $this->pdf_model->getIndicadores($projectInfo->proyecto_id);
-
+				$tabla_indicadores = '';
 				if ($indicadores) {
-					$tabla_indicadores = '';
 					$tabla_indicadores .= '<table class="tabla indicadores" cellpadding="2">';
 					$tabla_indicadores .= '<tr>';
 					if ($projectInfo->ejercicio >= 2014) {
@@ -401,9 +403,9 @@ class fichaPoaPdf extends MX_Controller
 					$tabla_acciones_sustantivas .= '<table class="espacio"><tr><td></td></tr></table>';
 				}
 
+				$tabla_derechos_humanos = '';
 				if ($projectInfo->ejercicio <= 2013) {
 					$accionesSustantivasDerechosHumanos = $this->pdf_model->getAccionesSustantivasDerechosHumanos($projectInfo->proyecto_id);
-					$tabla_derechos_humanos = '';
 					if ($accionesSustantivasDerechosHumanos) {
 						$tabla_derechos_humanos .= '<table class="tabla derechos-humano" cellpadding="2">';
 						$tabla_derechos_humanos .= '<tr>';
@@ -539,10 +541,10 @@ class fichaPoaPdf extends MX_Controller
 				}
 			}
 
-			$html = <<<EOD
+			$html = '
 				<style>
 					table.tabla {
-						font-size: 30px;
+						font-size: 10px;
 					}
 					td.borde {
 						border: 0.5px solid #000;
@@ -760,7 +762,7 @@ class fichaPoaPdf extends MX_Controller
 						width: 44%;
 						text-align: center; 
 						font-weight: bold;
-						font-size: 36px;
+						font-size: 15px;
 					}
 					td.imagen-poa {
 						width: 30%;
@@ -779,8 +781,8 @@ class fichaPoaPdf extends MX_Controller
 				</style>
 				<table class="tabla logo" cellpadding="2" style="width: 100%;">
 					<tr>
-						<td class="imagen-poa"><img src="logo-ficha.png" height="32" /></td>
-						<td class="titulo-poa">PROGRAMA OPERATIVO ANUAL $projectInfo->ejercicio<br /><span style="font-size: 30px;">FICHA DESCRIPTIVA DE PROYECTO</span></td>
+						<td class="imagen-poa"><img src="'.base_url('img/logo-ficha.png').'" height="32" /></td>
+						<td class="titulo-poa">PROGRAMA OPERATIVO ANUAL '.$projectInfo->ejercicio.'<br /><span style="font-size: 15px;">FICHA DESCRIPTIVA DE PROYECTO</span></td>
 					</tr>
 				</table>
 				<table class="espacio"><tr><td></td></tr></table>
@@ -791,21 +793,21 @@ class fichaPoaPdf extends MX_Controller
 					</tr>
 					<tr>
 						<td class="borde encabezado encabezado-dos" valign="middle">Unidad Responsable:</td>
-						<td colspan="2" class="borde dato">$projectInfo->numero_urg - $projectInfo->nombre_urg</td>
+						<td colspan="2" class="borde dato">'.$projectInfo->numero_urg.' - '.$projectInfo->nombre_urg.'</td>
 					</tr>
 					<tr>
 						<td class="borde encabezado encabezado-dos" valign="middle">Responsable Operativo:</td>
-						<td colspan="2" class="borde dato">$projectInfo->numero_ro - $projectInfo->nombre_ro</td>
+						<td colspan="2" class="borde dato">'.$projectInfo->numero_ro.' - '.$projectInfo->nombre_ro.'</td>
 					</tr>
 					<tr>
 						<td class="borde encabezado encabezado-dos" valign="middle">Responsable de la ficha:</td>
-						<td colspan="2" class="borde dato">$projectInfo->responsable_ficha</td>
+						<td colspan="2" class="borde dato">'.$projectInfo->responsable_ficha.'</td>
 					</tr>
 				</table>
 				<table class="espacio"><tr><td></td></tr></table>
 				<table class="tabla identificacion-programatica" cellpadding="2">
 					<tr>
-						<td rowspan="2" class="borde encabezado encabezado-cuatro">Identificaci&oacute;n Program&aacute;tica</td>
+						<td rowspan="2" class="borde encabezado encabezado-cuatro">Identificación Programática</td>
 						<td class="borde encabezado encabezado-uno">UR</td>
 						<td class="borde encabezado encabezado-uno">RO</td>
 						<td class="borde encabezado encabezado-uno">P</td>
@@ -813,64 +815,64 @@ class fichaPoaPdf extends MX_Controller
 						<td class="borde encabezado encabezado-uno">PY</td>
 					</tr>
 					<tr>
-						<td class="borde dato-uno">$projectInfo->numero_urg</td>
-						<td class="borde dato-uno">$projectInfo->numero_ro</td>
-						<td class="borde dato-uno">$projectInfo->numero_programa</td>
-						<td class="borde dato-uno">$projectInfo->numero_subprograma</td>
-						<td class="borde dato-uno">$projectInfo->numero</td>
+						<td class="borde dato-uno">'.$projectInfo->numero_urg.'</td>
+						<td class="borde dato-uno">'.$projectInfo->numero_ro.'</td>
+						<td class="borde dato-uno">'.$projectInfo->numero_programa.'</td>
+						<td class="borde dato-uno">'.$projectInfo->numero_subprograma.'</td>
+						<td class="borde dato-uno">'.$projectInfo->numero.'</td>
 					</tr>
 				</table>
 				<table class="espacio"><tr><td></td></tr></table>
 				<table class="tabla descripcion-claves" cellpadding="2">
 					<tr>
-						<td colspan="5" class="borde encabezado encabezado-completo">Descripci&oacute;n de claves</td>
+						<td colspan="5" class="borde encabezado encabezado-completo">Descripción de claves</td>
 					</tr>
 					<tr>
 						<td class="borde encabezado encabezado-dos">Programa</td>
 						<td class="borde encabezado encabezado-medio">Subprograma</td>
 						<td class="borde encabezado encabezado-tres">Proyecto</td>
 						<td class="borde encabezado encabezado-uno">TP</td>
-						<td class="borde encabezado encabezado-uno">Versi&oacute;n</td>
+						<td class="borde encabezado encabezado-uno">Versión</td>
 					</tr>
 					<tr>
-						<td class="borde dato-dos">$projectInfo->numero_programa - $projectInfo->nombre_programa</td>
-						<td class="borde dato-medio">$projectInfo->numero_subprograma - $projectInfo->nombre_subprograma</td>
-						<td class="borde dato-tres">$projectInfo->numero - $projectInfo->nombre</td>
-						<td class="borde dato-uno">$projectInfo->tipo</td>
-						<td class="borde dato-uno">$projectInfo->version</td>
+						<td class="borde dato-dos">'.$projectInfo->numero_programa.' - '.$projectInfo->nombre_programa.'</td>
+						<td class="borde dato-medio">'.$projectInfo->numero_subprograma.' - '. $projectInfo->nombre_subprograma.'</td>
+						<td class="borde dato-tres">'.$projectInfo->numero.' - '.$projectInfo->nombre.'</td>
+						<td class="borde dato-uno">'.$projectInfo->tipo.'</td>
+						<td class="borde dato-uno">'.$projectInfo->version.'</td>
 					</tr>
 				</table>
 				<table class="espacio"><tr><td></td></tr></table>
-				$tabla_objetivo  
+				'.$tabla_objetivo.'  
 				<table class="tabla justificacion-proyecto" cellpadding="2">
 					<tr>
-						<td colspan="2" class="borde titulo-tabla">Justificaci&oacute;n del Proyecto</td>
+						<td colspan="2" class="borde titulo-tabla">Justificación del Proyecto</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td colspan="3" class="borde dato-completo">$projectInfo->justificacion</td>
+						<td colspan="3" class="borde dato-completo">'.$projectInfo->justificacion.'</td>
 					</tr>
 				</table>
 				<table class="espacio"><tr><td></td></tr></table>
 				<table class="tabla descripcion-proyecto" cellpadding="2">
 					<tr>
-						<td colspan="2" class="borde titulo-tabla">Descripci&oacute;n y Alcance del Proyecto</td>
+						<td colspan="2" class="borde titulo-tabla">Descripción y Alcance del Proyecto</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td colspan="3" class="borde dato-completo">$projectInfo->descripcion</td>
+						<td colspan="3" class="borde dato-completo">'.$projectInfo->descripcion.'</td>
 					</tr>
 				</table>
-				<table class="espacio"><tr><td></td></tr></table>
-				$tabla_meta_principal
-				$tabla_meta_complementaria
-				$tabla_indicadores
-				$tabla_acciones_sustantivas
-				$tabla_derechos_humanos
-				$tabla_equidad_genero
+				<table class="espacio"><tr><td></td></tr></table>'
+				.$tabla_meta_principal.''
+				.$tabla_meta_complementaria.''
+				.$tabla_indicadores.''
+				.$tabla_acciones_sustantivas.''
+				.$tabla_derechos_humanos.''
+				.$tabla_equidad_genero.'
 				<table class="tabla periodo-ejecucion" cellpadding="2">
 					<tr>
-						<td rowspan="4" class="borde encabezado encabezado-periodo izquierda">Periodo de Ejecuci&oacute;n del Proyecto</td>
+						<td rowspan="4" class="borde encabezado encabezado-periodo izquierda">Periodo de Ejecución del Proyecto</td>
 						<td class="borde encabezado encabezado-mes-periodo">ENE</td>
 						<td class="borde encabezado encabezado-mes-periodo">FEB</td>
 						<td class="borde encabezado encabezado-mes-periodo">MAR</td>
@@ -879,12 +881,12 @@ class fichaPoaPdf extends MX_Controller
 						<td class="borde encabezado encabezado-mes-periodo">JUN</td>
 					</tr>
 					<tr>
-						<td class="borde dato-mes-periodo">$periodo_array[enero]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[febrero]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[marzo]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[abril]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[mayo]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[junio]</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['enero'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['febrero'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['marzo'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['abril'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['mayo'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['junio'].'</td>
 					</tr>
 					<tr>
 						<td class="borde encabezado encabezado-mes-periodo">JUL</td>
@@ -895,35 +897,36 @@ class fichaPoaPdf extends MX_Controller
 						<td class="borde encabezado encabezado-mes-periodo">DIC</td>
 					</tr>
 					<tr>
-						<td class="borde dato-mes-periodo">$periodo_array[julio]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[agosto]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[septiembre]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[octubre]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[noviembre]</td>
-						<td class="borde dato-mes-periodo">$periodo_array[diciembre]</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['julio'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['agosto'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['septiembre'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['octubre'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['noviembre'].'</td>
+						<td class="borde dato-mes-periodo">'.$periodo_array['diciembre'].'</td>
 					</tr>
 				</table>
 				<table class="espacio"><tr><td></td></tr></table>
 				<table class="tabla periodo-ejecucion" cellpadding="2">
 					<tr>
-						<td class="borde encabezado encabezado-fecha derecha">FECHA DE ELABORACI&Oacute;N DE LA FICHA:</td>
-						<td class="borde encabezado encabezado-fecha-2">$fecha</td>
+						<td class="borde encabezado encabezado-fecha derecha">FECHA DE ELABORACIÓN DE LA FICHA:</td>
+						<td class="borde encabezado encabezado-fecha-2">'.$fecha.'</td>
 					</tr>
 				</table>
 				<table class="espacio"><tr><td></td></tr></table>
 				<table class="tabla firmas" cellpadding="2">
 					<tr>
-						<td class="borde-inferior dato-firma"><br /><br /><br /><br /><br /><br />$projectInfo->nombre_responsable_operativo<br />$projectInfo->cargo_responsable_operativo</td>
-						<td class="borde-inferior dato-firma-2"><br /><br /><br /><br /><br /><br /><br />$projectInfo->nombre_titular</td>
+						<td class="borde-inferior dato-firma"><br /><br /><br /><br /><br /><br />'.$projectInfo->nombre_responsable_operativo.'<br />'.$projectInfo->cargo_responsable_operativo.'</td>
+						<td class="borde-inferior dato-firma-2"><br /><br /><br /><br /><br /><br /><br />'.$projectInfo->nombre_titular.'</td>
 					</tr>
 					<tr>
-						<td class="borde-superior dato-responsable">$leyenda_nombre_cargo_firma_ro</td>
+						<td class="borde-superior dato-responsable">'.$leyenda_nombre_cargo_firma_ro.'</td>
 						<td class="borde-superior dato-titular">Nombre y Firma del Titular de la Unidad Responsable</td>
 					</tr>
-				</table>
-			EOD;
+				</table>';
 
 			// output the HTML content
+			$pdf->SetXY(10, 5);
+			$pdf->Image('img/logo_ficha.png', '', '', 40, 0, '', '', 'L', false, 300, '', false, false, 1, false, false, false);
 			$pdf->writeHTML($html, true, false, true, false, '');
 		}
 
