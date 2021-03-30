@@ -165,25 +165,13 @@ $(document).ready(function() {
 			});
 			return
 		}
-		console.log(selected)
 		$.ajax({
 			url: base_url+'reportes/fichaPoaPdf/index',
 			type: 'POST',
 			data: { proyectos: selected },
 			success: function(response) {
-				console.log(response)
-				// window.location.href = response.url;
-				/* if(response === '422'){
-					swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: 'El número alcanzado es mayor al programado.'
-					});
-				} else {
-					if( response.url ){
-						window.location.href = response.url;
-					}
-				} */
+				const data = JSON.parse(response)
+				window.open(data.file, '_blank');
 			},
 			error: function(data) {
 				console.log(data);

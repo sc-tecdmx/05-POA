@@ -932,10 +932,17 @@ class fichaPoaPdf extends MX_Controller
 
 		$pdf->Output(FCPATH . $dir . $filename, 'F');
 
+		header('Content-type: application/pdf');
+		header('Content-Disposition: attachment; filename="'.$filename.'"');
+
+		$salida = base_url('fichasPOA/'.$filename);
+		// $file = readfile($salida);
+
 		$this->load->helper('url');
 		echo json_encode(array(
 			'path' => FCPATH . $dir . $filename,
-			'url' => base_url($dir . $filename)
+			'url' => base_url($dir . $filename),
+			'file' => $salida
 		));
 	}
 

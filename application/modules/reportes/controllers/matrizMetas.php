@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 
 class matrizMetas extends MX_Controller
@@ -156,6 +157,18 @@ class matrizMetas extends MX_Controller
 		$spreadsheet = new Spreadsheet(); // instantiate Spreadsheet
 
 		$sheet = $spreadsheet->getActiveSheet();
+
+		if (file_exists($logo = __DIR__.'/../../../../images/logo11-TEDF.png')) {
+			$drawing = new Drawing();
+			$drawing->setName('Logo');
+			$drawing->setDescription('Logo');
+			$drawing->setPath($logo);
+			$drawing->setCoordinates('A1');
+			$drawing->setHeight(55);
+			$drawing->setOffsetX(55);
+			$drawing->setOffsetY(7);
+			$drawing->setWorksheet($sheet);
+		}
 
 		// Estilos
 		$styleArray = array(

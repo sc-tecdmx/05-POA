@@ -2,12 +2,13 @@
 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+require 'vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 class avanceTrimestral extends MX_Controller
@@ -43,17 +44,18 @@ class avanceTrimestral extends MX_Controller
 
 		$sheet = $spreadsheet->getActiveSheet();
 
-		/* $logo = base_url('images/balanza.jpg');
-		$drawing = new Drawing();
-		$drawing->setName('Logo');
-		$drawing->setDescription('Logo');
-		$drawing->setPath($logo);
-		$drawing->setCoordinates('A1');
-		$drawing->setHeight(25);
-		$drawing->setOffsetX(25);
-		$drawing->setOffsetY(7);
-		$drawing->setWorksheet($spreadsheet->getActiveSheet()); */
-        // $sheet->setActiveSheetIndex(0);
+		if (file_exists($logo = __DIR__.'/../../../../images/logo11-TEDF.png')) {
+			$drawing = new Drawing();
+			$drawing->setName('Logo');
+			$drawing->setDescription('Logo');
+			$drawing->setPath($logo);
+			$drawing->setCoordinates('A1');
+			$drawing->setHeight(55);
+			$drawing->setOffsetX(55);
+			$drawing->setOffsetY(7);
+			$drawing->setWorksheet($sheet);
+		}
+
         $ejercicio = $this->home_inicio->get_ejercicio();
         $sheet->setTitle('Avance Trimestral y Acumulado');
 
@@ -486,13 +488,21 @@ class avanceTrimestral extends MX_Controller
 					->setFormatCode('##0.00');
         }
 
-		$writer = new Xlsx($spreadsheet); // instantiate Xlsx
+		// $writer = new Xlsx($spreadsheet); // instantiate Xlsx
+		$writer = new Xls($spreadsheet);
 
 		$filename = 'avance_trimestral_'.$mnombre; // set filename for excel file to be exported
 
 		header('Content-Type: application/vnd.ms-excel'); // generate excel file
-		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+		header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
 		header('Cache-Control: max-age=0');
+
+		// readfile($filename);
+
+		// unlink($filename);
+
+		/* $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+		$writer->save("05featuredemo.xlsx"); */
 
 		$writer->save('php://output');    // download file
     }

@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class avanceMensual extends MX_Controller
@@ -29,7 +29,19 @@ class avanceMensual extends MX_Controller
 		$spreadsheet = new Spreadsheet(); // instantiate Spreadsheet
 
 		$sheet = $spreadsheet->getActiveSheet();
-        // $sheet->setActiveSheetIndex(0);
+
+		if (file_exists($logo = __DIR__.'/../../../../images/logo11-TEDF.png')) {
+			$drawing = new Drawing();
+			$drawing->setName('Logo');
+			$drawing->setDescription('Logo');
+			$drawing->setPath($logo);
+			$drawing->setCoordinates('A1');
+			$drawing->setHeight(55);
+			$drawing->setOffsetX(55);
+			$drawing->setOffsetY(7);
+			$drawing->setWorksheet($sheet);
+		}
+		
         $ejercicio = $this->home_inicio->get_ejercicio();
         $sheet->setTitle('Avance Trimestral y Acumulado');
 

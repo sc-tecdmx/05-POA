@@ -39,14 +39,17 @@ class avanceTrimestral extends MX_Controller
 		$spreadsheet = new Spreadsheet(); // instantiate Spreadsheet
 		$sheet = $spreadsheet->getActiveSheet();
 
-		$drawing = new Drawing();
-		$drawing->setName('Logo');
-		$drawing->setDescription('Logo');
-		$drawing->setPath('../../../images/logo11-TEDF.png');
-		$drawing->setHeight(25);
-		$drawing->setOffsetX(25);
-		$drawing->setOffsetY(7);
-		$drawing->setWorksheet($spreadsheet->getActiveSheet());
+		if (file_exists($logo = __DIR__.'/../../../../images/logo11-TEDF.png')) {
+			$drawing = new Drawing();
+			$drawing->setName('Logo');
+			$drawing->setDescription('Logo');
+			$drawing->setPath($logo);
+			$drawing->setCoordinates('A1');
+			$drawing->setHeight(55);
+			$drawing->setOffsetX(55);
+			$drawing->setOffsetY(7);
+			$drawing->setWorksheet($sheet);
+		}
 
         $ejercicio = $this->home_inicio->get_ejercicio();
         $sheet->setTitle('Avance Trimestral y Acumulado');
