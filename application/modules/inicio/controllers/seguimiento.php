@@ -1404,8 +1404,7 @@ class seguimiento extends MX_Controller
         }
         $proyecto = $this->input->post('proyecto');
         $res = $this->seguimiento_model->getMetaPrincipalAvance($mes, $proyecto);
-        $tabla = '';
-        $tabla .= '
+        $tabla = '
             <div class="row mt-5">
                 <div class="col-md-6"></div>
                 <div class="col-md-6">

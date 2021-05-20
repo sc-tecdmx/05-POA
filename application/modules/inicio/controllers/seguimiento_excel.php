@@ -385,12 +385,32 @@ class seguimiento_excel extends MX_Controller
         $pacm = $this->seguimiento_model->getPorcentajeAcumulado($res->meta_id, $mes);
         $sheet->setCellValue("Q14", $pacm->porcentaje);
 
-        $explicaciones = $this->seguimiento_model->getExplicacionesMP($mes, $res->meta_id);
-        $cadena = '';
-        foreach ($explicaciones as $explicacion){
-            $cadena .= $explicacion->nombre.' '.$explicacion->explicacion."\n";
-        }
-        $sheet->setCellValue("A16", $cadena);
+		$metascom = $this->seguimiento_model->getMetasComplementarias($proyecto);
+		$nmeses = $this->seguimiento_model->getMesesHabilitadosAvance($mes);
+		$tabla = '';
+		foreach($nmeses as $nmes) {
+			$tabla .= ucfirst($nmes->nombre)."\n";
+			$exp = '';
+			foreach ($metascom as $metac) {
+				$explicaciones = $this->seguimiento_model->getExplicacionesMP($nmes->mes_id, $metac->meta_id);
+				foreach($explicaciones as $explicacion){
+					if($explicacion->explicacion != ''){
+						$exp .= $explicacion->explicacion.PHP_EOL;
+					} else {
+						$exp .= "No existe comentario ".PHP_EOL;
+					}
+				}
+			}
+			$tabla .= $exp;
+		}
+
+		$sheet->getStyle('A16')->getAlignment()->setWrapText(true);
+		$caracteres_nombre_proyecto = strlen($tabla);
+		if ($caracteres_nombre_proyecto > 185) {
+			$sheet->getRowDimension(16)->setRowHeight(intval($caracteres_nombre_proyecto / 185) * 14 + 14);
+		}
+
+        $sheet->setCellValue("A16", $tabla);
 
 		$sheet->getStyle("A19")->getFont()->setBold(true);
 
