@@ -339,10 +339,10 @@ $(document).ready(function(){
     $('#selectAvance').on('change', function () {
         $('#principal').empty()
         if($('input:radio[name=gridRadios]:checked').val() == 'mensual'){
-            var mes = $('#selectAvance').val()
-            console.log(mes)
-            var url = window.location.pathname;
-            var proyecto = url.substring(url.lastIndexOf('/') + 1);
+            const mes = $('#selectAvance').val()
+            const url = window.location.pathname;
+			const arrayUrl = url.split('/')
+			const proyecto = arrayUrl[5]
             $.ajax({
                 url: base_url+'inicio/seguimiento/getMesDetalles',
                 type: 'POST',
@@ -358,20 +358,24 @@ $(document).ready(function(){
             });
         } else if($('input:radio[name=gridRadios]:checked').val() == 'trimestral') {
             var mes = $('#selectAvance').val()
-            var url = window.location.pathname;
-            var proyecto = url.substring(url.lastIndexOf('/') + 1);
-            $.ajax({
-                url: base_url+'inicio/seguimiento/getTrimestralDetalles',
-                type: 'POST',
-                data: { mes, proyecto },
-                success: function(data) {
-                    $('#tablaAvances').css('display', 'block')
-                    $('#tablaAvances').html(data)
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
+			if (mes) {
+				const url = window.location.pathname;
+				const arrayUrl = url.split('/')
+				const proyecto = arrayUrl[5]
+				console.log(proyecto)
+				$.ajax({
+					url: base_url+'inicio/seguimiento/getTrimestralDetalles',
+					type: 'POST',
+					data: { mes, proyecto },
+					success: function(data) {
+						$('#tablaAvances').css('display', 'block')
+						$('#tablaAvances').html(data)
+					},
+					error: function(data) {
+						console.log(data);
+					}
+				});
+			}
         }
     })
 

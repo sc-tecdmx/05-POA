@@ -728,7 +728,7 @@ class seguimiento extends MX_Controller
 								$tabla .= "<tr>";
 								$tabla .= "<td class='key-left primer-columna'>Porcentaje de avance respecto del mes</td>";
 								for ($i = 0; $i < count($programadoC_array); $i++) {
-									$avance_mes = $programado_array[$i] == 0 ? "No aplica" : number_format(($alcanzadoC_array[$i] / $programadoC_array[$i]), 1) . "%";
+									$avance_mes = $programadoC_array[$i] == 0 ? "No aplica" : number_format(($alcanzadoC_array[$i] / $programadoC_array[$i]), 1) . "%";
 									$tabla .= "<td>$avance_mes</td>";
 								}
 								$tabla .= "</tr>";

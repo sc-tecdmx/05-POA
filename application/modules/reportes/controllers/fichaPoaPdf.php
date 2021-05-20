@@ -781,7 +781,7 @@ class fichaPoaPdf extends MX_Controller
 				</style>
 				<table class="tabla logo" cellpadding="2" style="width: 100%;">
 					<tr>
-						<td class="imagen-poa"><img src="'.base_url('img/logo-ficha.png').'" height="32" /></td>
+						<td class="imagen-poa"><!--<img src="'.base_url('img/logo-te-sin-fondo_0.png').'" height="32" />--></td>
 						<td class="titulo-poa">PROGRAMA OPERATIVO ANUAL '.$projectInfo->ejercicio.'<br /><span style="font-size: 15px;">FICHA DESCRIPTIVA DE PROYECTO</span></td>
 					</tr>
 				</table>
@@ -926,7 +926,7 @@ class fichaPoaPdf extends MX_Controller
 
 			// output the HTML content
 			$pdf->SetXY(10, 5);
-			$pdf->Image('img/logo_ficha.png', '', '', 40, 0, '', '', 'L', false, 300, '', false, false, 1, false, false, false);
+			$pdf->Image('img/logo-te-sin-fondo_0.png', '', '', 30, 0, '', '', 'L', false, 300, '', false, false, 1, false, false, false);
 			$pdf->writeHTML($html, true, false, true, false, '');
 		}
 
