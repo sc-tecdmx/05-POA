@@ -30,7 +30,7 @@ class avanceMensual extends MX_Controller
 
 		$sheet = $spreadsheet->getActiveSheet();
 
-		if (file_exists($logo = __DIR__.'/../../../../images/logo11-TEDF.png')) {
+		if (file_exists($logo = __DIR__.'/../../../../img/logo-te-sin-fondo_0.png')) {
 			$drawing = new Drawing();
 			$drawing->setName('Logo');
 			$drawing->setDescription('Logo');
@@ -41,7 +41,7 @@ class avanceMensual extends MX_Controller
 			$drawing->setOffsetY(7);
 			$drawing->setWorksheet($sheet);
 		}
-		
+
         $ejercicio = $this->home_inicio->get_ejercicio();
         $sheet->setTitle('Avance Trimestral y Acumulado');
 
