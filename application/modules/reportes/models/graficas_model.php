@@ -155,7 +155,7 @@ class Graficas_model extends CI_Model
 		$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
 		$this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
 		$this->db->where('subprograma_id', $subprogramaId);
-		$this->db->order_by('unidades_responsables_gastos.numero', 'ASC');
+		$this->db->order_by('numero_urg', 'ASC');
     	$this->db->from('proyectos');
 		if($this->session->userdata('area')) {
 			$this->db->where_in('responsables_operativos.responsable_operativo_id', $this->session->userdata('area'));
