@@ -357,61 +357,54 @@ class matrizMetas extends MX_Controller
 			)
 		);
 
-        /* $objDrawing = new PHPExcel_Worksheet_Drawing();
-        $objDrawing->setName('Logo');
-        $objDrawing->setDescription('Logo');
-        $objDrawing->setPath(base_url('/images/logo1-TEDF.png'));
-        $objDrawing->setHeight(45);
-        $objDrawing->setOffsetX(30);
-        $objDrawing->setOffsetY(12);
-        $objDrawing->setWorksheet($this->excel->getActiveSheet()); */
-
-        // Definición de encabezados estaticos
-        $sheet->mergeCells("A1:O1");
-        $sheet->mergeCells("A2:O2");
-        $sheet->mergeCells("A3:A4");
-        $sheet->mergeCells("B3:B4");
-        $sheet->mergeCells("C3:C4");
-        $sheet->mergeCells("D3:D4");
-        $sheet->mergeCells("E3:E4");
-        $sheet->mergeCells("F3:G4");
-        $sheet->mergeCells("H3:H4");
-        $sheet->mergeCells("I3:I4");
-
         // Definición de encabezados dinamicos
         $letra = $this->_obtenerLetra($mes);
-        $sheet->mergeCells("J3:".$letra.'3');
+        $sheet->mergeCells("J4:".$letra.'4');
         $ultimaLetra = $this->_obtenerUltimaLetra($letra);
-        $sheet->mergeCells($ultimaLetra."3:".$ultimaLetra."4");
+
+		// Definición de encabezados estaticos
+		$sheet->mergeCells("A1:".$ultimaLetra."1");
+		$sheet->mergeCells("A2:".$ultimaLetra."2");
+		$sheet->mergeCells("A3:".$ultimaLetra."3");
+		$sheet->mergeCells("A4:A5");
+		$sheet->mergeCells("B4:B5");
+		$sheet->mergeCells("C4:C5");
+		$sheet->mergeCells("D4:D5");
+		$sheet->mergeCells("E4:E5");
+		$sheet->mergeCells("F4:G5");
+		$sheet->mergeCells("H4:H5");
+		$sheet->mergeCells("I4:I5");
+
+        $sheet->mergeCells($ultimaLetra."4:".$ultimaLetra."5");
         $sheet->getStyle('A1:'.$ultimaLetra.'2')->applyFromArray($styleArray);
-		$sheet->getStyle('A3:'.$ultimaLetra.'4')->applyFromArray($estilo_encabezado);
+		$sheet->getStyle('A4:'.$ultimaLetra.'5')->applyFromArray($estilo_encabezado);
 
         $sheet->setCellValue("A1", 'PROGRAMA OPERATIVO ANUAL '.$this->session->userdata('anio'));
         $sheet->setCellValue("A2", 'AVANCE DE PROYECTOS');
 
-        $sheet->setCellValue("A3", 'URG');
-        $sheet->setCellValue("B3", 'RO');
-        $sheet->setCellValue("C3", 'PG');
-        $sheet->setCellValue("D3", 'SP');
-        $sheet->setCellValue("E3", 'PY');
-        $sheet->setCellValue("F3", 'Denominación');
-        $sheet->setCellValue("H3", 'Unidad de medida');
-        $sheet->setCellValue("I3", 'Meta');
-        $sheet->setCellValue("J3", 'Meses');
+        $sheet->setCellValue("A4", 'URG');
+        $sheet->setCellValue("B4", 'RO');
+        $sheet->setCellValue("C4", 'PG');
+        $sheet->setCellValue("D4", 'SP');
+        $sheet->setCellValue("E4", 'PY');
+        $sheet->setCellValue("F4", 'Denominación');
+        $sheet->setCellValue("H4", 'Unidad de medida');
+        $sheet->setCellValue("I4", 'Meta');
+        $sheet->setCellValue("J4", 'Meses');
 
         for($j = 1; $j <= $mes; $j++){
             $nombreMes = $this->home_inicio->getMesesSmall($j);
             if($nombreMes){
-                $sheet->setCellValue($columnas[$j-1]."4", $nombreMes->small);
+                $sheet->setCellValue($columnas[$j-1]."5", $nombreMes->small);
 				$sheet->getColumnDimension($columnas[$j-1])->setWidth(6);
             }
         }
 
-        $sheet->setCellValue($ultimaLetra."3", 'Total');
+        $sheet->setCellValue($ultimaLetra."4", 'Total');
 		$sheet->getColumnDimension($ultimaLetra)->setWidth(6);
 
         $programas = $this->reportes->getProgramas($this->session->userdata('ejercicio'));
-        $i = 4;
+        $i = 5;
         foreach($programas as $programa) {
             $i++;
             $sheet->mergeCells('F'.$i.':G'.$i);

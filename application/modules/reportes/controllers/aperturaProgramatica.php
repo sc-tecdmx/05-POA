@@ -236,20 +236,21 @@ class aperturaProgramatica extends MX_Controller
         $sheet->getStyle("A6")->getFont()->setBold(true);
         $sheet->getStyle("A7")->getFont()->setBold(true);
 
-        $sheet->mergeCells("B1:R1");
-        $sheet->mergeCells("B2:R2");
-        $sheet->mergeCells("A3:A4");
-        $sheet->mergeCells("B3:B4");
-        $sheet->mergeCells("C3:C4");
-        $sheet->mergeCells("D3:D4");
-        $sheet->mergeCells("E3:E4");
-        $sheet->mergeCells("F3:G4");
-        $sheet->mergeCells("H3:H4");
-        $sheet->mergeCells("I3:T3");
-        $sheet->mergeCells("U3:U4");
+        $sheet->mergeCells("A1:U1");
+        $sheet->mergeCells("A2:U2");
+        $sheet->mergeCells("A3:U3");
+        $sheet->mergeCells("A4:A5");
+        $sheet->mergeCells("B4:B5");
+        $sheet->mergeCells("C4:C5");
+        $sheet->mergeCells("D4:D5");
+        $sheet->mergeCells("E4:E5");
+        $sheet->mergeCells("F4:G5");
+        $sheet->mergeCells("H4:H5");
+        $sheet->mergeCells("I4:T4");
+        $sheet->mergeCells("U4:U5");
 
-        $sheet->getStyle('B1:R2')->applyFromArray($styleArray);
-		$sheet->getStyle('A3:U4')->applyFromArray($estilo_encabezado);
+        $sheet->getStyle('A1:R3')->applyFromArray($styleArray);
+		$sheet->getStyle('A4:U5')->applyFromArray($estilo_encabezado);
 
 		$sheet->getColumnDimension('A')->setWidth(4);
 		$sheet->getColumnDimension('B')->setWidth(3);
@@ -273,33 +274,33 @@ class aperturaProgramatica extends MX_Controller
 		$sheet->getColumnDimension('T')->setWidth(10);
 		$sheet->getColumnDimension('U')->setWidth(10);
 
-        $sheet->setCellValue("B1", 'PROGRAMA OPERATIVO ANUAL '.$this->session->userdata('anio'));
-        $sheet->setCellValue("B2", 'PROYECTOS');
+        $sheet->setCellValue("A1", 'PROGRAMA OPERATIVO ANUAL '.$this->session->userdata('anio'));
+        $sheet->setCellValue("A2", 'PROYECTOS');
 
-        $sheet->setCellValue("A3", 'URG');
-        $sheet->setCellValue("B3", 'RO');
-        $sheet->setCellValue("C3", 'PG');
-        $sheet->setCellValue("D3", 'SP');
-        $sheet->setCellValue("E3", 'PY');
-        $sheet->setCellValue("F3", 'Denominación');
-        $sheet->setCellValue("H3", 'Unidad de medida');
-        $sheet->setCellValue("I3", 'Meses');
-        $sheet->setCellValue("I4", 'Ene');
-        $sheet->setCellValue("J4", 'Feb');
-        $sheet->setCellValue("K4", 'Mar');
-        $sheet->setCellValue("L4", 'Abr');
-        $sheet->setCellValue("M4", 'May');
-        $sheet->setCellValue("N4", 'Jun');
-        $sheet->setCellValue("O4", 'Jul');
-        $sheet->setCellValue("P4", 'Ago');
-        $sheet->setCellValue("Q4", 'Sep');
-        $sheet->setCellValue("R4", 'Oct');
-        $sheet->setCellValue("S4", 'Nov');
-        $sheet->setCellValue("T4", 'Dic');
-        $sheet->setCellValue("U3", 'Total');
+        $sheet->setCellValue("A4", 'URG');
+        $sheet->setCellValue("B4", 'RO');
+        $sheet->setCellValue("C4", 'PG');
+        $sheet->setCellValue("D4", 'SP');
+        $sheet->setCellValue("E4", 'PY');
+        $sheet->setCellValue("F4", 'Denominación');
+        $sheet->setCellValue("H4", 'Unidad de medida');
+        $sheet->setCellValue("I4", 'Meses');
+        $sheet->setCellValue("I5", 'Ene');
+        $sheet->setCellValue("J5", 'Feb');
+        $sheet->setCellValue("K5", 'Mar');
+        $sheet->setCellValue("L5", 'Abr');
+        $sheet->setCellValue("M5", 'May');
+        $sheet->setCellValue("N5", 'Jun');
+        $sheet->setCellValue("O5", 'Jul');
+        $sheet->setCellValue("P5", 'Ago');
+        $sheet->setCellValue("Q5", 'Sep');
+        $sheet->setCellValue("R5", 'Oct');
+        $sheet->setCellValue("S5", 'Nov');
+        $sheet->setCellValue("T5", 'Dic');
+        $sheet->setCellValue("U4", 'Total');
 
         $programas = $this->reportes->getProgramas($ejercicio);
-        $i = 5;
+        $i = 6;
         foreach($programas as $programa) {
 			$sheet->mergeCells("F".$i.":G".$i);
             $sheet->setCellValue("C".$i, $programa->numero);

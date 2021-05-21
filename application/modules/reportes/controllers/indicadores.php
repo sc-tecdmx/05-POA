@@ -264,17 +264,18 @@ class indicadores extends MX_Controller
 
         $sheet->mergeCells("A1:I1");
         $sheet->mergeCells("A2:I2");
+        $sheet->mergeCells("A3:I3");
 
-        $sheet->mergeCells("A3:A4");
-        $sheet->mergeCells("B3:B4");
-        $sheet->mergeCells("C3:C4");
-        $sheet->mergeCells("D3:D4");
-        $sheet->mergeCells("E3:E4");
-        $sheet->mergeCells("F3:F4");
-        $sheet->mergeCells("G3:G4");
-        $sheet->mergeCells("H3:I3");
+        $sheet->mergeCells("A4:A5");
+        $sheet->mergeCells("B4:B5");
+        $sheet->mergeCells("C4:C5");
+        $sheet->mergeCells("D4:D5");
+        $sheet->mergeCells("E4:E5");
+        $sheet->mergeCells("F4:F5");
+        $sheet->mergeCells("G4:G5");
+        $sheet->mergeCells("H4:I4");
 
-		$i = 3;
+		$i = 4;
 		$sheet->getStyle('A' . $i . ':A' . ($i + 1))->getAlignment()->setWrapText(true);
 		$sheet->getStyle('B' . $i . ':B' . ($i + 1))->getAlignment()->setWrapText(true);
 		$sheet->getStyle('C' . $i . ':C' . ($i + 1))->getAlignment()->setWrapText(true);
@@ -298,25 +299,25 @@ class indicadores extends MX_Controller
 		$sheet->getRowDimension($i)->setRowHeight(30);
 		$sheet->getRowDimension($i + 1)->setRowHeight(30);
 
-        $sheet->getStyle('A1:I2')->applyFromArray($styleArray);
-		$sheet->getStyle('A3:I4')->applyFromArray($estilo_encabezado);
+        $sheet->getStyle('A1:I3')->applyFromArray($styleArray);
+		$sheet->getStyle('A4:I5')->applyFromArray($estilo_encabezado);
 
         $sheet->setCellValue("A1", 'PROGRAMA OPERATIVO ANUAL '.$ejercicio);
         $sheet->setCellValue("A2", 'INDICADORES DEL TEDF AL  '.$ultimoDiaMes.$ejercicio);
 
-        $sheet->setCellValue("A3", 'Número de Proyecto');
-        $sheet->setCellValue("B3", 'PERIODO QUE SE REPORTA (MENSUAL, TRIMESTRAL Y ANUAL)');
-        $sheet->setCellValue("C3", 'TIPO DE INDICADOR');
-        $sheet->setCellValue("D3", 'DENOMINACIÓN DEL INDICADOR');
-        $sheet->setCellValue("E3", 'OBJETIVO DEL INDICADOR');
-        $sheet->setCellValue("F3", 'FÓRMULA');
-        $sheet->setCellValue("G3", 'METAS');
-        $sheet->setCellValue("H3", 'RESULTADOS');
-        $sheet->setCellValue("H4", 'TRIMESTRAL');
-        $sheet->setCellValue("I4", 'ACUMULADO');
+        $sheet->setCellValue("A4", 'Número de Proyecto');
+        $sheet->setCellValue("B4", 'PERIODO QUE SE REPORTA (MENSUAL, TRIMESTRAL Y ANUAL)');
+        $sheet->setCellValue("C4", 'TIPO DE INDICADOR');
+        $sheet->setCellValue("D4", 'DENOMINACIÓN DEL INDICADOR');
+        $sheet->setCellValue("E4", 'OBJETIVO DEL INDICADOR');
+        $sheet->setCellValue("F4", 'FÓRMULA');
+        $sheet->setCellValue("G4", 'METAS');
+        $sheet->setCellValue("H4", 'RESULTADOS');
+        $sheet->setCellValue("H5", 'TRIMESTRAL');
+        $sheet->setCellValue("I5", 'ACUMULADO');
 
         $proyectos = $this->home_inicio->get_projects($this->session->userdata('ejercicio'));
-        $i = 5;
+        $i = 6;
         foreach($proyectos as $proyecto) {
             $clave = $proyecto->urnum.'-'.$proyecto->ronum.'-'.$proyecto->pgnum.'-'.$proyecto->sbnum.'-'.$proyecto->pynum;
             $sheet->setCellValue("A".$i, $clave);
