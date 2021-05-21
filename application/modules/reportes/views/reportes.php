@@ -79,7 +79,7 @@
 						<table class="table table-striped" id="tabla_proyectos">
 							<thead>
 							<tr>
-								<th></th>
+								<th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
 								<th>URG</th>
 								<th>RO</th>
 								<th>PG</th>

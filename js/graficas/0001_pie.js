@@ -59,11 +59,18 @@ $(document).ready(function() {
         }
     });
 
-    $('#tabla_proyectos').DataTable({
+    var table = $('#tabla_proyectos').DataTable({
         "language": {
             "url": "../js/spanish.json"
         }
     });
+
+	$('#example-select-all').on('click', function(){
+		// Get all rows with search applied
+		var rows = table.rows({ 'search': 'applied' }).nodes();
+		// Check/uncheck checkboxes for all rows in the table
+		$('input[type="checkbox"]', rows).prop('checked', this.checked);
+	});
 
 	/**
 	 * Funciones para obtener los select de Consolidado
