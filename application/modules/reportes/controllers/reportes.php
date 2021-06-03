@@ -60,9 +60,8 @@ class Reportes extends MX_Controller
         $graph = new Graficas_model();
         $exist = $graph->getMetasComplementarias($id);
         if (is_array($exist)) {
-            $i = 0;
             foreach ($exist as $key) {
-                $data[$i++] = array(
+                $data[] = array(
                     'name' => $this->_is_exist($key->numUniResGas) . ' ' . $this->_is_exist($key->numResOp) . ' ' . $this->_is_exist($key->progNum) . ' ' . $this->_is_exist($key->subNum) . ' ' . $this->_is_exist($key->proyNum) . ' ' . $this->_is_exist($key->metaNum),
                     'value' => $this->_is_exist($key->porcentaje, TRUE),
                 );

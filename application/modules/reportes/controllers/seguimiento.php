@@ -418,6 +418,45 @@ class seguimiento extends MX_Controller
         }
     }
 
+    public function getNewDataMetas($mesId)
+	{
+		$graph = new Graficas_model();
+		$programs = $graph->getNewPrograms();
+		$programs_ids = array();
+		$subprograms_ids = array();
+		foreach ($programs as $program) {
+			$programs_ids[] = $program->id;
+		}
+		$subprograms = $graph->getNewSubprograms($programs_ids);
+		foreach ($subprograms as $subprogram) {
+			$subprograms_ids[] = $subprogram->id;
+		}
+		$totalPrograms = $graph->getNewTotalPrograms($this->session->userdata('ejercicio'), $programs_ids, $subprograms_ids);
+		foreach ($totalPrograms as $totalProgram) {
+			$words_array = explode(" ", utf8_encode($totalProgram->nombre_programa));
+			$words = '';
+			foreach ($words_array as $key => $value) {
+				if ($key % 5 == 0 && $key != 0) {
+					$words .= "<br />" . $value . " ";
+				} else {
+					$words .= $value . " ";
+				}
+			}
+
+			$words = trim($words);
+
+			$datos = array(
+				"contenido" => $contenido,
+				"clave" => $clave,
+				"altura" => $altura,
+				"mes" => ucfirst($mes->nombre)
+			);
+
+			echo json_encode($datos);
+
+		}
+	}
+
     public function getDataMetas($mesId)
     {
         $graph = new Graficas_model();
@@ -487,6 +526,7 @@ class seguimiento extends MX_Controller
 					}
 				}
 			}
+			sort($clave);
 			$altura = $elementos * 45;
 			if ($altura <= 400) {
 				$altura = 400;
