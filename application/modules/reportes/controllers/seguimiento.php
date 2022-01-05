@@ -526,7 +526,28 @@ class seguimiento extends MX_Controller
 					}
 				}
 			}
-			sort($clave);
+			// print_r($clave);
+			// echo '<br>';
+			$nuevasClaves = $clave;
+			sort($nuevasClaves);
+			// print_r($nuevasClaves);
+			// ciclo para obtener los nuevos indices
+			$indices = [];
+			foreach($nuevasClaves as $clv){
+				$indices[] = array_search($clv, $clave);
+			}
+			$content = [];
+			foreach ($indices as $indice) {
+				$content[] = array(
+					'name' => $contenido[$indice]['name'],
+					'y' => $contenido[$indice]['y']
+				);
+			}
+			// print_r($content);
+			// die();
+			// echo '<br>';
+			// print_r($indices);
+			// die();
 			$altura = $elementos * 45;
 			if ($altura <= 400) {
 				$altura = 400;
@@ -535,8 +556,8 @@ class seguimiento extends MX_Controller
 			$mes = $this->seguimiento_model->getNombreMes($mesId);
 
 			$datos = array(
-				"contenido" => $contenido,
-				"clave" => $clave,
+				"contenido" => $content,
+				"clave" => $nuevasClaves,
 				"altura" => $altura,
 				"mes" => ucfirst($mes->nombre)
 			);
