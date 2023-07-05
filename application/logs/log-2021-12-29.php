@@ -1,0 +1,33 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2021-12-29 00:38:16 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 00:38:47 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:40:02 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:40:10 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:40:56 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:41:16 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:41:17 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:41:24 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:41:52 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:41:54 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:42:01 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:42:07 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 02:42:09 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:32:33 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:32:43 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:33:00 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:34:27 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:34:29 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:34:47 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:35:13 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 15:35:15 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 16:34:51 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:19 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:22 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:23 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:25 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:26 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:32 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:32 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:33 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167
+ERROR - 2021-12-29 18:31:36 --> Severity: Notice --> Undefined variable: user_data C:\xampp\htdocs\cpoa\application\modules\inicio\models\ingreso_model.php 167

@@ -1,0 +1,30 @@
+{
+    "name": "inversionesTres",
+    "valor": 3,
+    "config": [
+        {
+            "idModulo": 29
+        },
+        {
+            "idModulo": 30
+        },
+        {
+            "idModulo": 31
+        },
+        {
+            "idModulo": 32
+        },
+        {
+            "idModulo": 33
+        },
+        {
+            "idModulo": 34
+        },
+        {
+            "idModulo": 35
+        },
+        {
+            "idModulo": 36
+        }
+    ]
+}
