@@ -548,6 +548,7 @@ class Usuarios extends MX_Controller {
 							'apellido'			  => $this->input->post('apellido'),
                             'segundo_apellido'    => $this->input->post('sApellido'),
 							'area_id'             => $this->input->post('area_id'),
+							'perfil'              => $this->input->post('permiso'),
 							'activo'			  => '1'
 						);
 
