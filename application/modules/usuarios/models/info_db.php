@@ -113,4 +113,39 @@ class info_db extends CI_Model
             return true;
         }
     }
+
+    public function obtenerNombreResponsableOperativo($responsableId)
+    {
+        $this->db->where('responsable_operativo_id', $responsableId);
+        $this->db->from('responsables_operativos');
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            return $query->row();
+        }
+    }
+
+    public function obtenerIdEjercicioResponsableOperativo($nombre, $ejercicio)
+    {
+        $this->db->select('responsables_operativos.*');
+        $this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
+        $this->db->where('responsables_operativos.nombre', $nombre);
+        $this->db->where('unidades_responsables_gastos.ejercicio_id', $ejercicio);
+        $this->db->from('responsables_operativos');
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            return $query->row();
+        }
+    }
+
+    public function consultaUsuariosResponsablesOperativos($responsableOperativoId, $usuario)
+    {
+        $this->db->where('responsable_operativo_id', $responsableOperativoId);
+        $this->db->where('usuario_poa_id', $usuario);
+        $this->db->from('usuarios_responsables_operativos');
+        $query = $this->db->get();
+        if($query->num_rows()>0){
+            return true;
+        }
+        return false;
+    }
 }
