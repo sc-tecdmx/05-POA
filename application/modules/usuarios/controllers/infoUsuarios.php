@@ -115,19 +115,38 @@ class infoUsuarios extends MX_Controller
 
         foreach ($responsables as $responsable) {
             // Obtener nombre del responsable operativo
-            $nombreResponsableOperativo = $this->info_db->obtenerNombreResponsableOperativo($responsable);
-            foreach($ejercicios as $ejercicio) {
-                $idEjercicioResponsableOperativo = $this->info_db->obtenerIdEjercicioResponsableOperativo($nombreResponsableOperativo->nombre, $ejercicio);
-                if ($idEjercicioResponsableOperativo) {
-                    if (!$this->info_db->consultaUsuariosResponsablesOperativos($idEjercicioResponsableOperativo->responsable_operativo_id, $usuario)) {
+            $responsableOperativo = $this->info_db->obtenerInformacionResponsableOperativo($responsable);
+
+            if ($responsableOperativo) {
+                $info = $this->info_db->obtenerResponsablesEjercicios($responsableOperativo->numero, $ejercicios);
+                if ($info) {
+                    foreach ($info as $ro) {
                         $datos = array(
                             'usuario_poa_id' => $usuario,
-                            'responsable_operativo_id' => $idEjercicioResponsableOperativo->responsable_operativo_id
+                            'responsable_operativo_id' => $ro->responsable_operativo_id
                         );
-                        $this->general->insertaBase('usuarios_responsables_operativos', $datos);
+                        $this->general->insertaBase('usuarios_responsables_operativos', $datos); 
                     }
                 }
             }
+            /* echo '<br>';
+            echo $responsableOperativo->numero;
+            foreach($ejercicios as $ejercicio) {
+                $idEjercicioResponsableOperativo = $this->info_db->obtenerIdEjercicioResponsableOperativo($nombreResponsableOperativo->nombre, $ejercicio);
+                echo '<br>';
+                print_r($idEjercicioResponsableOperativo);
+                if ($idEjercicioResponsableOperativo) {
+                    if (!$this->info_db->consultaUsuariosResponsablesOperativos($idEjercicioResponsableOperativo->responsable_operativo_id, $usuario)) {
+                        echo '<br>Ultima validación<br>';
+                        echo 'Responsable Operativo: '.$idEjercicioResponsableOperativo->responsable_operativo_id;
+                        /* $datos = array(
+                            'usuario_poa_id' => $usuario,
+                            'responsable_operativo_id' => $idEjercicioResponsableOperativo->responsable_operativo_id
+                        );
+                        $this->general->insertaBase('usuarios_responsables_operativos', $datos); 
+                    }
+                }
+            } */
         }
         return true;
     }
