@@ -68,9 +68,9 @@ class Usuarios extends MX_Controller {
                     <div class="col-md-5 mt-2">
                         <select class="selectpicker form-control unidad'.$i.'" id="areaSelect'.$row->unidad_responsable_gasto_id.'" multiple>';
                 $tabla .= $this->_getResponsablesOperativos($row->unidad_responsable_gasto_id);
-                $tabla.= '
-                        </select>
-                    </div>';
+                $tabla.= '</select>';
+				$tabla .= '<input type="hidden" id="urg'.$i.'" value="'.$row->unidad_responsable_gasto_id.'">';
+            	$tabla .= '</div>';
                 $i++;
                 $j++;
             }

@@ -127,26 +127,28 @@ $(document).ready(function () {
 		const permiso = $('#permiso').val()
 		const ejercicios = $('#ejercicio').val()
 		const maxres = $('#totalResponsables').val()
-		let responsables = []
-		console.log($('.unidad1').selectpicker('val'))
-		// checar porque no se esta recogiendo los valores de las unidades
+		let urgro = []
 		for(let i = 1; i <= maxres; i++){
-			if($('.unidad'+i).selectpicker('val') != []){
-				let max = $('.unidad'+i).selectpicker('val').length
+			let roLength = $('.unidad'+i).selectpicker('val').length
+			if(roLength > 0){
 				let responsablesOperativos = $('.unidad'+i).selectpicker('val')
-				for(let j = 0; j < max; j++){
-					responsables.push(responsablesOperativos[j])
-				}
+				let urg = $('#urg'+i).val()
+				
+				let data = {
+					urg,
+					responsablesOperativos
+				};
+				urgro.push(data);
+				console.log('El valor a enviar es: ' + JSON.stringify(urgro));
 				// responsables[i] = Array.from($('.unidad'+i).selectpicker('val'))
 			}
 		}
 		const url = window.location.pathname;
 		const usuario = url.substring(url.lastIndexOf('/') + 1);
-		console.log(responsables);
 		$.ajax({
 			url: base_url+'usuarios/infoUsuarios/postPermisos',
 			method: "POST",
-			data: { permiso, ejercicios, responsables, usuario },
+			data: { permiso, ejercicios, urgro, usuario },
 			success: function(data) {
 				console.log(data)
 				swal.fire({

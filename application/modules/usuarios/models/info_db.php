@@ -35,13 +35,15 @@ class info_db extends CI_Model
 
     public function getResponsablesOperativos($usuario, $area)
     {
-        $this->db->select('usuarios_responsables_operativos.responsable_operativo_id');
+        $this->db->select('usuarios_responsables_operativos.responsable_operativo_id, responsables_operativos.numero');
         $this->db->join('responsables_operativos', 'usuarios_responsables_operativos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
         $this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
         $this->db->where('unidades_responsables_gastos.unidad_responsable_gasto_id', $area);
         $this->db->where('usuarios_responsables_operativos.usuario_poa_id', $usuario);
         $this->db->from('usuarios_responsables_operativos');
         $query = $this->db->get();
+        // echo '<br>';
+        // echo $this->db->last_query();
         return $query->result();
     }
 
@@ -116,7 +118,7 @@ class info_db extends CI_Model
 
     public function obtenerInformacionResponsableOperativo($responsableId)
     {
-        $this->db->where('responsable_operativo_id', $responsableId);
+        $this->db->where('numero', $responsableId);
         $this->db->from('responsables_operativos');
         $query = $this->db->get();
         if($query->num_rows()>0){
@@ -171,4 +173,43 @@ class info_db extends CI_Model
         }
         return false;
     } */
+
+    // Nuevas peticiones a BD
+    public function getUnidadResponsableGasto($idUrg)
+    {
+        $this->db->where('unidad_responsable_gasto_id', $idUrg);
+        $this->db->from('unidades_responsables_gastos');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) return $query->row();
+        return false;
+    }
+
+    public function getUnidadesResponsablesGastoEjercicios($numeroUrg, $ejercicios)
+    {
+        $this->db->where('numero', $numeroUrg);
+        $this->db->where_in('ejercicio_id', $ejercicios);
+        $this->db->from('unidades_responsables_gastos');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) return $query->result();
+        return false;
+    }
+
+    public function getResponsableOperativo($idResponsable)
+    {
+        $this->db->where('responsable_operativo_id', $idResponsable);
+        $this->db->from('responsables_operativos');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) return $query->row();
+        return false;
+    }
+
+    public function getResponsableOperativoEjercicio($numeroResponsable, $urg)
+    {
+        $this->db->where('numero', $numeroResponsable);
+        $this->db->where('unidad_responsable_gasto_id', $urg);
+        $this->db->from('responsables_operativos');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) return $query->row();
+        return false;
+    }
 }

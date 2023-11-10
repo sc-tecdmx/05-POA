@@ -28,7 +28,7 @@ class infoUsuarios extends MX_Controller
     {
         // obtener tipo de usuario
         $res = $this->info_db->getTipoUsuario($usuario);
-        $data['tipo'] = $res?$res->perfil:'';
+        $data['tipo'] = $res ? $res->perfil : '';
 
         // obtener ejercicios a los que puede acceder
         $res = $this->info_db->getEjerciciosUsuario($usuario);
@@ -42,14 +42,19 @@ class infoUsuarios extends MX_Controller
         $unidades = $this->info_db->getUnidades($this->session->userdata('ejercicio'));
         foreach($unidades as $unidad){
             $responsablesJson = array();
+            $numerosJson = array();
             $responsables = $this->info_db->getResponsablesOperativos($usuario, $unidad->unidad_responsable_gasto_id);
+            // echo '<br>';
+            // print_r($responsables);
             if($responsables){
                 foreach($responsables as $responsable){
                     array_push($responsablesJson, $responsable->responsable_operativo_id);
+                    array_push($numerosJson, $responsable->numero);
                 }
                 $nuevo = array(
                     'unidad' => $unidad->unidad_responsable_gasto_id,
-                    'responsables' => $responsablesJson
+                    'responsables' => $responsablesJson,
+                    'numeros' => $numerosJson
 				);
                 array_push($unidadesJson, $nuevo);
             }
@@ -87,6 +92,56 @@ class infoUsuarios extends MX_Controller
     {
         $permiso = $this->input->post('permiso');
         $ejercicios = $this->input->post('ejercicios');
+        $urgros = $this->input->post('urgro');
+        $usuario = $this->input->post('usuario');
+
+        // borrar los datos del usuario en la tabla usuarios_responsables_operativos para asignar los nuevos permisos
+        $this->info_db->deletePermisosResponsablesUsuarios($usuario);
+
+        // borrar los datos del usuario en la tabla usuarios_ejercicios para asignar los nuevo ejercicios a los que puede acceder
+        $this->info_db->deleteEjerciciosUsuarios($usuario);
+
+        $datos = array(
+            'perfil' => $permiso,
+        );
+        $where = array(
+            'nsf' => $usuario
+        );
+        $this->general->actualizaBase('g_registros', $datos, $where);
+
+        $maxe = count($ejercicios);
+        for($i = 0; $i < $maxe; $i++){
+            $datos = array(
+                'usuario_id'    => $usuario,
+                'ejercicio_id'  => $ejercicios[$i]
+            );
+            $this->general->insertaBase('usuarios_ejercicios', $datos);
+        }
+
+        foreach ($urgros as $urgro) {
+            $urg = $this->info_db->getUnidadResponsableGasto($urgro['urg']);
+            if ($urg) {
+                $ejUrgs = $this->info_db->getUnidadesResponsablesGastoEjercicios($urg->numero, $ejercicios);
+                foreach($urgro['responsablesOperativos'] as $r) {
+                    $ro = $this->info_db->getResponsableOperativo($r);
+                    foreach ($ejUrgs as $ejUrg) {
+                        $responsableEjercicio = $this->info_db->getResponsableOperativoEjercicio($ro->numero, $ejUrg->unidad_responsable_gasto_id);
+                        $datos = array(
+                            'usuario_poa_id' => $usuario,
+                            'responsable_operativo_id' => $responsableEjercicio->responsable_operativo_id
+                        );
+                        $this->general->insertaBase('usuarios_responsables_operativos', $datos);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public function postPermisos1()
+    {
+        $permiso = $this->input->post('permiso');
+        $ejercicios = $this->input->post('ejercicios');
         $responsables = $this->input->post('responsables');
         $usuario = $this->input->post('usuario');
 
@@ -115,9 +170,18 @@ class infoUsuarios extends MX_Controller
 
         foreach ($responsables as $responsable) {
             // Obtener nombre del responsable operativo
-            $responsableOperativo = $this->info_db->obtenerInformacionResponsableOperativo($responsable);
-
-            if ($responsableOperativo) {
+            // $responsableOperativo = $this->info_db->obtenerInformacionResponsableOperativo($responsable);
+            $info = $this->info_db->obtenerResponsablesEjercicios($responsable, $ejercicios);
+            if ($info) {
+                foreach ($info as $ro) {
+                    $datos = array(
+                        'usuario_poa_id' => $usuario,
+                        'responsable_operativo_id' => $ro->responsable_operativo_id
+                    );
+                    $this->general->insertaBase('usuarios_responsables_operativos', $datos); 
+                }
+            }
+            /* if ($responsableOperativo) {
                 $info = $this->info_db->obtenerResponsablesEjercicios($responsableOperativo->numero, $ejercicios);
                 if ($info) {
                     foreach ($info as $ro) {
@@ -128,7 +192,7 @@ class infoUsuarios extends MX_Controller
                         $this->general->insertaBase('usuarios_responsables_operativos', $datos); 
                     }
                 }
-            }
+            } */
             /* echo '<br>';
             echo $responsableOperativo->numero;
             foreach($ejercicios as $ejercicio) {
