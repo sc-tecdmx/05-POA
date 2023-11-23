@@ -2,16 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main_model extends CI_Model {
-    /**
-     * Variable protegida para asignarle el nombre de la tabla
-     */
-    protected $table;
-
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('home/general');
-        $this->table = '';
     }
 
     #############################################################################

@@ -2,11 +2,6 @@
 
 class Ingreso_model extends CI_Model {
 
-	function __construct(){
-		parent::__construct();
-		$this->load->model('main_model');
-	}
-
 	/*
 	*Obtiene el password almacenado de un usuario
 	@param $usuario

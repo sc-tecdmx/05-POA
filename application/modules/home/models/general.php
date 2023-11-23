@@ -232,7 +232,7 @@ class General extends CI_Model {
         return $query;
     }
 
-    public function get_all_modulos($data = FALSE, $table)
+    public function get_all_modulos($data = FALSE, $table = FALSE)
     {
         if ($data == FALSE){
             $data = '*';
