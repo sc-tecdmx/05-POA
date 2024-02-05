@@ -129,7 +129,7 @@
                     <div class="carousel-caption">
                         <h3 class="h3-responsive">ACERCA DEL MÓDULO</h3>
                         <p>Derivado de la experiencia obtenida en la integración del POA en ejercicios anteriores se diseñó el Módulo del Programa Operativo Anual.</p>
-                        <btn class="btn" style=" background-color: #6e0065; color: white" data-toggle="modal" data-target="#aboutModal">Más...</btn>
+                        <btn class="btn" style=" background-color: #194891; color: white" data-toggle="modal" data-target="#aboutModal">Más...</btn>
                     </div>
                 </div>
                 <div class="carousel-item">
@@ -142,7 +142,7 @@
                     <div class="carousel-caption">
                         <h3 class="h3-responsive">MARCO LEGAL Y NORMATIVO</h3>
                         <p>Leyes, reglamentos, normas y lineamientos, entre otros, que regulan la elaboración y seguimiento del Programa Operativo Anual.</p>
-                        <btn class="btn" style=" background-color: #6e0065; color: white" data-toggle="modal" data-target="#legalModal">Más...</btn>
+                        <btn class="btn" style=" background-color: #194891; color: white" data-toggle="modal" data-target="#legalModal">Más...</btn>
                     </div>
                 </div>
                 <div class="carousel-item">
@@ -155,7 +155,7 @@
                     <div class="carousel-caption">
                         <h3 class="h3-responsive">MISIÓN</h3>
                         <p>El motivo o la razón de la existencia del TECDMX.</p>
-                        <btn class="btn" style=" background-color: #6e0065; color: white" data-toggle="modal" data-target="#misionModal">Más...</btn>
+                        <btn class="btn" style=" background-color: #194891; color: white" data-toggle="modal" data-target="#misionModal">Más...</btn>
                     </div>
                 </div>
                 <div class="carousel-item">
@@ -168,7 +168,7 @@
                     <div class="carousel-caption">
                         <h3 class="h3-responsive">VISIÓN</h3>
                         <p>Lo que el TECDMX debe ser y hacia dónde debe dirigirse.</p>
-                        <btn class="btn" style=" background-color: #6e0065; color: white" data-toggle="modal" data-target="#visionModal">Más...</btn>
+                        <btn class="btn" style=" background-color: #194891; color: white" data-toggle="modal" data-target="#visionModal">Más...</btn>
                     </div>
                 </div>
             </div>

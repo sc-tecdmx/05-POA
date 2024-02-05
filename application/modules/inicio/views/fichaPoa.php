@@ -94,7 +94,7 @@ td.subencabezado{
 </style>
 <table class="logo" cellpadding="2" style="width: 100%;">
     <tr>
-        <td rowspan="4" style="width: 18;"><img src="./img/logo_ficha.png" width="80" height="50" /></td>
+        <td rowspan="4" style="width: 18;"><img src="./img/TECDMX_400px.png" width="80" height="50" /></td>
 
     <tr>
         <td class="texto encabezado">PROGRAMA OPERATIVO ANUAL</td>

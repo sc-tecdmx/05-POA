@@ -1,7 +1,7 @@
 <div class="wrapper">
     <div class="row">
         <div class="col-md-8">
-            <h3 style="color: #6e0065"><img src="<?php echo base_url('img/logo-te-sin-fondo_0.png') ?>" height="50"> Módulo POA / <?php echo $this->session->userdata('modo')==='elaboracion' ? "Elaboración" : 'Seguimiento' ?> <?php echo $this->session->userdata('anio'); ?></h3>
+            <h3 style="color: #194891"><img src="<?php echo base_url('img/TECDMX_400px.png') ?>" height="50" style="margin-top: 5px; margin-left: 3px;"> Módulo POA / <?php echo $this->session->userdata('modo')==='elaboracion' ? "Elaboración" : 'Seguimiento' ?> <?php echo $this->session->userdata('anio'); ?></h3>
         </div>
         <div class="col-md-4">
             <div style="background-color: yellow; width: 50%" class="mt-3 text-center float-right mr-3">
