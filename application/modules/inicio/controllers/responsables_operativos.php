@@ -24,7 +24,7 @@ class Responsables_operativos extends MX_Controller
 
     private function _tabla()
     {
-        $res = $this->home_inicio->get_responsables();
+        $res = $this->home_inicio->get_responsables($this->session->userdata('ejercicio'));
         if($res){
             $tabla = '';
             foreach($res as $row){

@@ -45,6 +45,7 @@ class Home_inicio extends CI_Model
         }
         $this->db->from('proyectos');
         $query = $this->db->get();
+        echo $this->db->last_query();
         if($query->num_rows()>0){
             return $query->result();
         } else {
@@ -73,14 +74,15 @@ class Home_inicio extends CI_Model
      * Función para obtener los responsables operativos
      * @return mixed
      */
-    public function get_responsables()
+    public function get_responsables($ejercicio)
     {
-        $query = $this->db->query('SELECT unidades_responsables_gastos.numero as urnum, responsables_operativos.responsable_operativo_id, responsables_operativos.numero as ronum, responsables_operativos.nombre as ronom, responsables_operativos.responsable_operativo_id as roid
-        FROM responsables_operativos 
-        JOIN unidades_responsables_gastos ON responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id
-        JOIN ejercicios ON unidades_responsables_gastos.ejercicio_id = ejercicios.ejercicio_id
-        JOIN operaciones_ejercicios ON ejercicios.ejercicio_id = operaciones_ejercicios.ejercicio_id AND operaciones_ejercicios.tipo = \'elaboracion_proyectos\'');
-        if($this->db->affected_rows() >= 0){
+        $this->db->select('unidades_responsables_gastos.numero as urnum, responsables_operativos.responsable_operativo_id, responsables_operativos.numero as ronum, responsables_operativos.nombre as ronom, responsables_operativos.responsable_operativo_id as roid');
+        $this->db->from('responsables_operativos');
+        $this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
+        $this->db->join('ejercicios', 'unidades_responsables_gastos.ejercicio_id = ejercicios.ejercicio_id');
+        $this->db->where('unidades_responsables_gastos.ejercicio_id', $ejercicio);
+        $query = $this->db->get();
+        if($query->num_rows() >= 1){
             return $query->result();
         }
     }
