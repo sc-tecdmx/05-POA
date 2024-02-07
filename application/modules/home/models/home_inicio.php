@@ -45,7 +45,7 @@ class Home_inicio extends CI_Model
         }
         $this->db->from('proyectos');
         $query = $this->db->get();
-        echo $this->db->last_query();
+        // echo $this->db->last_query();
         if($query->num_rows()>0){
             return $query->result();
         } else {
