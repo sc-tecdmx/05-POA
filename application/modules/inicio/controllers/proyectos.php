@@ -209,7 +209,7 @@ class Proyectos extends MX_Controller
 
     private function _responsables()
     {
-        if ($query = $this->home_inicio->get_responsables()) {
+        if ($query = $this->home_inicio->get_responsables($this->session->userdata('ejercicio'))) {
             $responsables = array('' => '-Seleccione uno-');
             foreach ($query as $row) {
                 $responsables[$row->responsable_operativo_id] = $row->ronum.' - '.$row->ronom;
