@@ -454,7 +454,11 @@ class Proyectos extends MX_Controller
                 $tabla .= '<td class="dato texto">'.$row->metodo_calculo.'</td>';
                 $tabla .= '<td class="dato texto">'.$row->dnombre.'</td>';
                 $tabla .= '<td class="dato texto">'.$row->fnombre.'</td>';
-                $tabla .= '<td class="dato texto">'.$row->meta.'</td>';
+                if ($row->tipo == 'principal') {
+                    $tabla .= '<td class="dato texto">'.$row->meta.'</td>';
+                } else {
+                    $tabla .= '<td class="dato texto">'.$row->peso.'</td>';
+                }
                 $tabla .= '</tr>';
             }
             return $tabla;
