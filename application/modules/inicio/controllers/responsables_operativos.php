@@ -24,7 +24,7 @@ class Responsables_operativos extends MX_Controller
 
     private function _tabla()
     {
-        $res = $this->home_inicio->get_responsables();
+        $res = $this->home_inicio->get_responsables($this->session->userdata('ejercicio'));
         if($res){
             $tabla = '';
             foreach($res as $row){
@@ -109,7 +109,7 @@ class Responsables_operativos extends MX_Controller
             $datos = array(
                 'unidad_responsable_gasto_id'   => $this->input->post('unidad'),
                 'numero'                        => $this->input->post('numero'),
-                'nombre'                        => $this->input->post('nombre')
+                'nombre'                        => $this->input->post('nombre'),
             );
             $where = array('responsable_operativo_id' => $ro);
             $qry = $this->main_model->update($datos, 'responsables_operativos', $where);
@@ -143,12 +143,17 @@ class Responsables_operativos extends MX_Controller
         }
         //cargo menu
         $data["menu"]    = $this->load->view('home/home_menu',$data,TRUE);
+
+        $unidad = $this->home_inicio->get_unidad($this->session->userdata('area_id'));
+        $data['unidad'] = $unidad ? $unidad[0]->nombre : 'No se encontró la unidad';
         //cargo header
         $data["header"]  = $this->load->view('home/home_header',$data,TRUE);
         //paso seccion
         $data["seccion"] = "Inicio / Responsables Operativos";
         // tabla con todos los proyectos
         $data["tabla"]  = $this->_tabla();
+        /*print_r($data["tabla"]);
+        exit;*/
         // obtención del catalogo de unidades
         $data['unidades'] = $this->_unidades();
         //paso el main

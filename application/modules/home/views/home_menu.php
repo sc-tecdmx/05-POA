@@ -11,33 +11,38 @@
                 <a href="<?php echo base_url('inicio/proyectos') ?>">Proyectos</a>
             </li>
             <?php if($this->session->userdata('permiso') == 1): ?>
-            <li>
-                <a href="<?php echo base_url('inicio/unidades_responsables'); ?>">Unidades Responsables</a>
-            </li>
-            <li>
-                <a href="<?php echo base_url('inicio/responsables_operativos') ?>">Responsables Operativos</a>
-            </li>
-            <li>
-                <a href="<?php echo base_url('inicio/programas') ?>">Programas</a>
-            </li>
-            <li>
-                <a href="<?php echo base_url('inicio/subprogramas') ?>">Subprogramas</a>
-            </li>
-            <li>
-                <a href="<?php echo base_url('inicio/unidades_medida') ?>">Unidades de Medida</a>
-            </li>
-            <!--<li>
-                <a href="<?php echo base_url('inicio/areas') ?>">Áreas</a>
-            </li>-->
-            <li>
-                <a href="#">Derechos Humanos</a>
-            </li>
-            <li>
-                <a href="#">Equidad de Género</a>
-            </li>
-            <li>
-                <a href="<?php echo base_url('usuarios') ?>">Usuarios</a>
-            </li>
+                <li>
+                    <a href="<?php echo base_url('inicio/unidades_responsables'); ?>">Unidades Responsables</a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('inicio/responsables_operativos') ?>">Responsables Operativos</a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('inicio/programas') ?>">Programas</a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('inicio/subprogramas') ?>">Subprogramas</a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('inicio/unidades_medida') ?>">Unidades de Medida</a>
+                </li>
+                <!--<li>
+                    <a href="<?php echo base_url('inicio/areas') ?>">Áreas</a>
+                </li>-->
+                <li>
+                    <a href="#">Derechos Humanos</a>
+                </li>
+                <li>
+                    <a href="#">Equidad de Género</a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('usuarios') ?>">Usuarios</a>
+                </li>
+                <?php if($this->session->userdata('id_usr') == 97): ?>
+                    <li>
+                        <a href="<?php echo base_url('inicio/tablero_administrativo') ?>">Tablero de administración</a>
+                    </li>
+                <?php endif; ?>
             <?php endif; ?>
         </ul>
 

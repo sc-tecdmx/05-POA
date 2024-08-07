@@ -182,6 +182,8 @@ class Usuarios extends MX_Controller {
         $data['estados'] = catalogoInterno('estados');
         $data['seccion'] = 'Usuarios';
         $data['js']     = 'usuario/tabla_usuarios.js';
+        $unidad = $this->home_inicio->get_unidad($this->session->userdata('area_id'));
+        $data['unidad'] = $unidad ? $unidad[0]->nombre : 'No se encontró la unidad';
 		$data['header'] = $this->load->view('home/home_header', $data, TRUE);
 		$data['menu']   = $this->load->view('home/home_menu', $data, TRUE);
 		$data['main']   = $this->load->view('usuarios_vista', $data, TRUE);
@@ -263,7 +265,9 @@ class Usuarios extends MX_Controller {
 	 */
 	public function nuevoUsuario()
 	{
-
+		/*$postData = $this->input->post();
+	    print_r($postData);
+	    exit;*/
 		if (!$this->form_validation->run('usuario') == FALSE && !$this->form_validation->run('cambio_password') == FALSE) {
 		    $usuario_m = new General();
 		    //$user_m = new Users_model();
@@ -279,6 +283,7 @@ class Usuarios extends MX_Controller {
 						 * Inserción de datos en el registro de la tabla g_registros
 						 * @var array
 						 */
+						$validacion = $this->input->post('validacion') ? 1 : 0;
 						$data_registro = array(
 							'registro'			  => time(),
 							'nombre'			  => $this->input->post('nombre'),
@@ -289,6 +294,7 @@ class Usuarios extends MX_Controller {
 							'area_id'             => $this->input->post('area_id'),
 							'registro'			  => date_now(TRUE),
 							'perfil'              => $this->input->post('permiso'),
+							'validacion'          => $validacion,
 							'activo'			  => '1'
 						);
 
@@ -355,6 +361,9 @@ class Usuarios extends MX_Controller {
             'areas'    => $this->_areas(),
             'permiso'  => $this->_getPermisos(),
 		);
+
+		$unidad = $this->home_inicio->get_unidad($this->session->userdata('area_id'));
+        $data['unidad'] = $unidad ? $unidad[0]->nombre : 'No se encontró la unidad';
 
 		//cargo menu
 		$data["header"]  = $this->load->view('home/home_header',$data,TRUE);

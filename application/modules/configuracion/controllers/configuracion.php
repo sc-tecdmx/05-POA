@@ -229,7 +229,8 @@ class Configuracion extends MX_Controller
                         'ejercicio_id'  => $insert,
                         'numero'        => $unidad_medida->numero,
                         'nombre'        => $unidad_medida->nombre,
-                        'descripcion'   => $unidad_medida->descripcion
+                        'descripcion'   => $unidad_medida->descripcion,
+                        'porcentajes'   => $unidad_medida->porcentajes
                     );
                     $this->general->insertaBase('unidades_medidas', $datos);
                 }

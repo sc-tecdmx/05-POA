@@ -8144,7 +8144,7 @@ a {
   -webkit-transition: .3s all ease;
   -o-transition: .3s all ease;
   transition: .3s all ease;
-  color: #6e0065; }
+  color: #194891; }
   a:hover, a:focus {
     text-decoration: none !important;
     outline: none !important;
@@ -8209,7 +8209,7 @@ h1, h2, h3, h4, h5,
 #sidebar {
   min-width: 250px;
   max-width: 250px;
-  background: #6e0065 !important;
+  background: #194891 !important;
   color: #fff;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -8271,11 +8271,11 @@ h1, h2, h3, h4, h5,
       height: 40px;
       border-radius: 50%; }
       #sidebar .custom-menu .btn.btn-primary {
-        background: #6e0065 !important;
-        border-color: #6e0065; }
+        background: #194891 !important;
+        border-color: #194891; }
         #sidebar .custom-menu .btn.btn-primary:hover, #sidebar .custom-menu .btn.btn-primary:focus {
-          background: #6e0065 !important;
-          border-color: #6e0065!important; }
+          background: #194891 !important;
+          border-color: #194891!important; }
 
 a[data-toggle="collapse"] {
   position: relative; }
@@ -8334,3 +8334,12 @@ a[data-toggle="collapse"] {
   .form-control:-moz-placeholder {
     /* Firefox 18- */
     color: rgba(0, 0, 0, 0.3); }
+
+.finalizado-btn {
+  background: #f94b4b;
+  color: white;
+}
+.head-tab-admin {
+  background: #307aed !important;
+  color: white;
+}

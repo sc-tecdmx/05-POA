@@ -151,7 +151,7 @@ class Proyectos_model extends CI_Model
 
     public function get_indicadores($proyecto_id)
     {
-        $this->db->select('indicadores.*, unidades_medidas.nombre as umnom, dimensiones.nombre as dnombre, frecuencias.nombre as fnombre, metas.tipo');
+        $this->db->select('indicadores.*, unidades_medidas.nombre as umnom, dimensiones.nombre as dnombre, frecuencias.nombre as fnombre, metas.tipo, metas.peso');
         $this->db->join('metas', 'proyectos.proyecto_id = metas.proyecto_id');
         $this->db->join('indicadores', 'metas.meta_id = indicadores.meta_id');
         $this->db->join('unidades_medidas', 'indicadores.unidad_medida_id = unidades_medidas.unidad_medida_id');

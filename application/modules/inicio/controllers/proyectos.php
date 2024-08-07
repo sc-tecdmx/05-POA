@@ -110,59 +110,69 @@ class Proyectos extends MX_Controller
 
     private function _tabla()
     {
-	    $res = $this->home_inicio->get_projects($this->session->userdata('ejercicio'));
-	    $edicion = $this->home_inicio->get_verificacionElaboracion($this->session->userdata('ejercicio'));
-	    if($res){
-	        $tabla = '';
-	        foreach($res as $row){
-                $tabla .= '
-                <tr>
-					<td>' . $row->urnum . '</td>
-					<td>' . $row->ronum . '</td>
-					<td>' . $row->pgnum . '</td>
-					<td>' . $row->sbnum . '</td>
-					<td>' . $row->pynum . '</td>
-					<td>' . $row->pynom . '</td>
-					<td>';
-                $tabla .= '
-                    <a href="'.base_url('inicio/proyectos/view/'.$row->proyecto_id).'">
-                        <i class="fa fa-fw fa-eye" data-toggle="tooltip" data-placement="top" title="Ver"></i>
-                    </a>
-                    <a href="'.base_url('inicio/proyectos/generatePdf/'.$row->proyecto_id).'" target="_blank">
-                        <i class="fa fa-fw fa-file-export" data-toggle="tooltip" data-placement="top" title="PDF"></i>
-                    </a>
-                ';
-                if($this->session->userdata('modo') === 'seguimiento'){
+        if ($this->session->userdata('permiso') == 1 || ($this->session->userdata('permiso') != 1 && $this->session->userdata('area'))) {
+            $res = $this->home_inicio->get_projects($this->session->userdata('ejercicio'));
+            $edicion = $this->home_inicio->get_verificacionElaboracion($this->session->userdata('ejercicio'));
+            if($res){
+                $tabla = '';
+                foreach($res as $row){
                     $tabla .= '
-                        <a href="'.base_url('inicio/seguimiento/index/'.$row->proyecto_id).'">
-                            <i class="fa fa-fw fa-arrow-circle-right" data-toggle="tooltip" data-placement="top" title="Seguimiento"></i>
+                    <tr>
+                        <td style="display:none">' . $row->urnum . '' . $row->ronum . '' . $row->pgnum . '' . $row->sbnum . '' . $row->pynum . '</td>
+                        <td>' . $row->urnum . '</td>
+                        <td>' . $row->ronum . '</td>
+                        <td>' . $row->pgnum . '</td>
+                        <td>' . $row->sbnum . '</td>
+                        <td>' . $row->pynum . '</td>
+                        <td>' . $row->pynom . '</td>
+                        <td>';
+                    $tabla .= '
+                        <a href="'.base_url('inicio/proyectos/view/'.$row->proyecto_id).'">
+                            <i class="fa fa-fw fa-eye" data-toggle="tooltip" data-placement="top" title="Ver"></i>
                         </a>
-                        <a href="'.base_url('inicio/seguimiento/graficas/'.$row->proyecto_id).'">
-                            <i class="fa fa-fw fa-chart-pie" data-toggle="tooltip" data-placement="top" title="Graficas"></i>
-                        </a>';
-                } else {
-                    if($edicion->permitir_edicion_elaboracion == 'si'){
+                        <a href="'.base_url('inicio/proyectos/generatePdf/'.$row->proyecto_id).'" target="_blank">
+                            <i class="fa fa-fw fa-file-export" data-toggle="tooltip" data-placement="top" title="PDF"></i>
+                        </a>
+                    ';
+                    if($this->session->userdata('modo') === 'seguimiento'){
                         $tabla .= '
-                            <a href="'.base_url('inicio/proyectos/action/'.$row->proyecto_id).'">
-					            <i class="fa fa-fw fa-edit" data-toggle="tooltip" data-placement="top" title="Editar"></i>
+                            <a href="'.base_url('inicio/seguimiento/index/'.$row->proyecto_id).'">
+                                <i class="fa fa-fw fa-arrow-circle-right" data-toggle="tooltip" data-placement="top" title="Seguimiento"></i>
                             </a>
-                        ';
+                            <a href="'.base_url('inicio/seguimiento/graficas/'.$row->proyecto_id).'">
+                                <i class="fa fa-fw fa-chart-pie" data-toggle="tooltip" data-placement="top" title="Graficas"></i>
+                            </a>';
+                    } else {
+                        if($edicion->permitir_edicion_elaboracion == 'si' && $this->session->userdata('cerrado') == 0){
+                            $tabla .= '
+                                <a href="'.base_url('inicio/proyectos/action/'.$row->proyecto_id).'">
+                                    <i class="fa fa-fw fa-edit" data-toggle="tooltip" data-placement="top" title="Editar"></i>
+                                </a>
+                            ';
+                        }
+                        if($this->session->userdata('permiso') == 1 && $this->session->userdata('cerrado') == 0){
+                            $tabla .= '
+                            <btn class="btn btn-outline" style="cursor: pointer" onclick="eliminarProyecto('.$row->proyecto_id.')">
+                                <i class="fa fa-fw fa-trash" data-toggle="tooltip" data-placement="top" title="Eliminar"></i>
+                            </btn>
+                            ';
+                        }
                     }
-                    if($this->session->userdata('permiso') == 1){
-                        $tabla .= '
-					    <btn class="btn btn-outline" style="cursor: pointer" onclick="eliminarProyecto('.$row->proyecto_id.')">
-					        <i class="fa fa-fw fa-trash" data-toggle="tooltip" data-placement="top" title="Eliminar"></i>
-                        </btn>
-                        ';
-                    }
+                    $tabla .= '
+                        </td>
+                    </tr>  
+                    ';
                 }
-                $tabla .= '
-                    </td>
-                </tr>  
-                ';
+                return $tabla;
             }
-	        return $tabla;
         }
+
+        $tabla = '
+            <tr>
+                <td colspan=7>No hay información</td>
+            </tr>
+        ';
+        return $tabla;
     }
 
     private function _unidadesmp()
@@ -200,7 +210,7 @@ class Proyectos extends MX_Controller
 
     private function _responsables()
     {
-        if ($query = $this->home_inicio->get_responsables()) {
+        if ($query = $this->home_inicio->get_responsables($this->session->userdata('ejercicio'))) {
             $responsables = array('' => '-Seleccione uno-');
             foreach ($query as $row) {
                 $responsables[$row->responsable_operativo_id] = $row->ronum.' - '.$row->ronom;
@@ -445,7 +455,11 @@ class Proyectos extends MX_Controller
                 $tabla .= '<td class="dato texto">'.$row->metodo_calculo.'</td>';
                 $tabla .= '<td class="dato texto">'.$row->dnombre.'</td>';
                 $tabla .= '<td class="dato texto">'.$row->fnombre.'</td>';
-                $tabla .= '<td class="dato texto">'.$row->meta.'</td>';
+                if ($row->tipo == 'principal') {
+                    $tabla .= '<td class="dato texto">'.$row->meta.'</td>';
+                } else {
+                    $tabla .= '<td class="dato texto">'.$row->peso.'</td>';
+                }
                 $tabla .= '</tr>';
             }
             return $tabla;
@@ -873,6 +887,9 @@ class Proyectos extends MX_Controller
         // js
         $data['js']     = 'inicio/proyectos.js';
 
+        $unidad = $this->home_inicio->get_unidad($this->session->userdata('area_id'));
+        $data['unidad'] = $unidad ? $unidad[0]->nombre : 'No se encontró la unidad';
+
         //se cargan datos y vistas
         $data["header"] = $this->load->view('home/home_header', $data, TRUE);
         $data["menu"]   = $this->load->view('home/home_menu', $data, TRUE);
@@ -921,6 +938,10 @@ class Proyectos extends MX_Controller
 		}
 		//cargo menu
 		$data["menu"]    = $this->load->view('home/home_menu',$data,TRUE);
+
+        $unidad = $this->home_inicio->get_unidad($this->session->userdata('area_id'));
+        $data['unidad'] = $unidad ? $unidad[0]->nombre : 'No se encontró la unidad';
+
 		//cargo header
 		$data["header"]  = $this->load->view('home/home_header',$data,TRUE);
 		//paso seccion

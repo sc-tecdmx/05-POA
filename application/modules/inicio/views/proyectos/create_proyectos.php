@@ -11,7 +11,7 @@
             <div class="col-12">
                 <h3 class="card-text">
                     <?php
-                    echo (isset($update)?"Actualizar datos del proyecto":"Agregar nuevo proyecto");
+                    echo (isset($update)?"Actualizar datos del proyecto":"Agregar nuevo proyectox");
                     ?>
                     <a href="<?php echo base_url('inicio/proyectos');?>" class="btn btn-danger float-right">
                         Cancelar

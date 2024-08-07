@@ -158,7 +158,7 @@ class matrizMetas extends MX_Controller
 
 		$sheet = $spreadsheet->getActiveSheet();
 
-		if (file_exists($logo = __DIR__.'/../../../../img/logo-te-sin-fondo_0.png')) {
+		if (file_exists($logo = __DIR__.'/../../../../img/TECDMX_400px.png')) {
 			$drawing = new Drawing();
 			$drawing->setName('Logo');
 			$drawing->setDescription('Logo');

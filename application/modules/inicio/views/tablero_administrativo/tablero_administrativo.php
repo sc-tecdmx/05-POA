@@ -1,13 +1,13 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <h3>Unidades Responsables</h3>
+            <h3>Tablero administrativo</h3>
         </div>
-        <div class="col-md-6 text-right">
+        <!--<div class="col-md-6 text-right">
             <button class="btn btn-outline-primary" id="addUnidadResponsable">
                 Agregrar Unidad Responsable <i class="fa fa-fw fa-plus"></i>
             </button>
-        </div>
+        </div>-->
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -19,7 +19,6 @@
                         <th>Número</th>
                         <th>Nombre</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody id="lista_unidades">

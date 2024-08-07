@@ -73,7 +73,7 @@
                         <div class="col-md-8">
                             <div class="form-group ">
                                 <?php echo form_error('nombre'); ?>
-                                <label class="control-label" for="nombre">Nombre:</label>
+                                <label class="control-label" for="nombre">Nombrex:</label>
                                 <?php
                                 $data = array(
                                     'name'        => 'nombre',
@@ -88,6 +88,7 @@
                                 <small class="form-text text-muted">* Campo obligatorio</small>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">

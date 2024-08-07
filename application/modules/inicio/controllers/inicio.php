@@ -50,9 +50,11 @@ class inicio extends MX_Controller {
     private function _login_in()
     {//REGRESA $edo FALSE SI FALLA EL LOGUEO, TRUE EN EXITO
         $edo           = false;
-        $user_name     = $this->input->post('usuario');//SETEA USUARIO COMO user_name
+        $user_name     = $this->input->post('usuario');//SETEA USUARIO COMO unidades_responsable
         $user_password = $this->input->post('pass');//SETEA PASS COMO user_password
         // validación de asignación de permisos
+        echo "<br>debug";
+
         if($this->_verificaPermisos($user_name)){
             $data          = $this->ingreso_model->getPassUsr($user_name);//CONSULTA s_control con el $user_name
             if($data){
@@ -62,9 +64,13 @@ class inicio extends MX_Controller {
                         $nombre = $this->ingreso_model->getPassData($data->nsf);//CONSULTA g_registros con el $nsf
                         //Registramos el accseso del usuario y obtenemos su identificador de acceso
                         $this->session->set_userdata('permiso', $nombre->perfil);
+                        $this->session->set_userdata('validacion', $nombre->validacion);
+                        $this->session->set_userdata('cerrado', $nombre->cerrado);
+                        $this->session->set_userdata('area_id', $nombre->area_id);
                         if($nombre->perfil != '1'){
                             // obtener las areas que puede consultar
                             $areas = $this->ingreso_model->getAreaAccesos($data->nsf);
+                            
                             if($areas){
                                 $ro = array();
                                 foreach($areas as $area){

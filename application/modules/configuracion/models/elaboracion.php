@@ -447,7 +447,7 @@ class elaboracion extends CI_Model
 
 	public function get_projects($ejercicio)
 	{
-		$this->db->select('proyectos.*');
+		$this->db->select('proyectos.*,cerrada');
 		$this->db->join('responsables_operativos', 'proyectos.responsable_operativo_id = responsables_operativos.responsable_operativo_id');
 		$this->db->join('unidades_responsables_gastos', 'responsables_operativos.unidad_responsable_gasto_id = unidades_responsables_gastos.unidad_responsable_gasto_id');
 		$this->db->where('unidades_responsables_gastos.ejercicio_id', $ejercicio);

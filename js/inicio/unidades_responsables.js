@@ -1,5 +1,7 @@
 function editaUnidadResponsable(id) {
     $('#btnEditUnidad').css('display','block');
+    $('#btnAddUnidad').css('display','none');
+    $('#content-cerrada').css('display','block');
     $.ajax({
         url: base_url+'inicio/unidades_responsables/getUnidadResponsable/'+id,
         dataType: 'json',
@@ -8,6 +10,7 @@ function editaUnidadResponsable(id) {
         success: function(data) {
             $('#numero').val(data.numero)
             $('#nombre').val(data.nombre)
+            $('#cerrada').val(data.cerrada)
             $('#idUnidadResponsable').val(id)
             $('#unidadesResponsablesGastosModal').modal('show')
         },
@@ -62,8 +65,10 @@ $(document).ready(function(){
     });
 
     $('#addUnidadResponsable').on('click', function () {
+        $('#content-cerrada').css('display','none');
         $('#unidadesResponsablesGastosModal').modal('show')
         $('#btnAddUnidad').css('display','block');
+        $('#btnEditUnidad').css('display','none');
     })
 
     $('#btnCancelUnidad').on('click', function () {
@@ -110,10 +115,11 @@ $(document).ready(function(){
         var numero = $('#numero').val()
         var nombre = $('#nombre').val()
         var unidad = $('#idUnidadResponsable').val()
+        var cerrada = $('#cerrada').val()
         $.ajax({
             url: base_url+'inicio/unidades_responsables/putUnidadResponsable',
             method: "POST",
-            data: { numero, nombre, unidad },
+            data: { numero, nombre, unidad, cerrada },
             success: function(data) {
                 if(data === '400'){
                     swal.fire({

@@ -196,6 +196,17 @@
                         </div>
                     </div>
 
+                    <?php if($this->session->userdata('validacion') == 1): ?>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="permiso" class="control-label">Asignar validación:</label>
+                                <?php
+                                echo form_checkbox('validacion',1,'id="validacion"');
+                                ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
                     <?php  if(isset($activo)): ?>
                         <div class="col-md-6">
                             <div class="form-group">

@@ -136,6 +136,9 @@ class Unidades_medida extends MX_Controller
         }
         //cargo menu
         $data["menu"]    = $this->load->view('home/home_menu',$data,TRUE);
+
+        $unidad = $this->home_inicio->get_unidad($this->session->userdata('area_id'));
+        $data['unidad'] = $unidad ? $unidad[0]->nombre : 'No se encontró la unidad';
         //cargo header
         $data["header"]  = $this->load->view('home/home_header',$data,TRUE);
         //paso seccion
