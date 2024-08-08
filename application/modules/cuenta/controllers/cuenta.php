@@ -11,6 +11,7 @@ class Cuenta extends MX_Controller {
             'home/general',
             'cuenta_model',
             'inicio/main_model',
+            'home/home_inicio',
             'querys_db',
             'usuarios_db'
 
@@ -225,6 +226,9 @@ class Cuenta extends MX_Controller {
 					'user'     => $campo,
 					'mensaje'  => $mensaje
 				);
+
+				$unidad = $this->home_inicio->get_unidad($this->session->userdata('area_id'));
+        		$data['unidad'] = $unidad ? $unidad[0]->nombre : 'No se encontró la unidad';
 
 				$data['header']  = $this->load->view('home/home_header', $data, TRUE);
 				$data['menu'] 	  = $this->load->view('home/home_menu', $data, TRUE);

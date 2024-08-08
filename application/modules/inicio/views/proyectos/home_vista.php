@@ -1,12 +1,12 @@
 <!--<div class="container">-->
     <div class="row">
         <div class="col-md-6">
-            <h3>Proyectosx</h3>
+            <h3>Proyectos</h3>
         </div>
         <div class="col-md-6 text-right">
             <?php if($this->session->userdata('modo') === 'elaboracion' && $this->session->userdata('permiso') == 1 && $this->session->userdata('cerrado') == 0): ?>
                 <a class="btn btn-outline-primary rounded" href="<?php echo base_url('inicio/proyectos/action'); ?>">
-                    Agregar Proyectox <i class="fa fa-fw fa-plus"></i>
+                    Agregar Proyecto <i class="fa fa-fw fa-plus"></i>
                 </a>
             <?php endif; ?>
         </div>

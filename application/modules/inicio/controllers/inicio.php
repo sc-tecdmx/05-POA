@@ -63,6 +63,8 @@ class inicio extends MX_Controller {
                     if($compara){
                         $nombre = $this->ingreso_model->getPassData($data->nsf);//CONSULTA g_registros con el $nsf
                         //Registramos el accseso del usuario y obtenemos su identificador de acceso
+                        /*echo "<br>fdsa:" . $nombre->perfil; //Poner estos para debuguear
+                        exit;*/
                         $this->session->set_userdata('permiso', $nombre->perfil);
                         $this->session->set_userdata('validacion', $nombre->validacion);
                         $this->session->set_userdata('cerrado', $nombre->cerrado);
